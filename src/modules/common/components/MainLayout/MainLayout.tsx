@@ -11,8 +11,8 @@ export const MainLayout: FC = ({ children }) => {
             <Header />
             <Aside />
             <div className={styles.content}>{children}</div>
-            <Footer />
-            <TransponderCheck />
+            {/*<Footer />*/}
+            {/*<TransponderCheck />*/}
         </div>
     );
 };

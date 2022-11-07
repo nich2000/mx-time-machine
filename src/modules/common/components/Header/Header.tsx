@@ -9,7 +9,7 @@ export const Header = observer(() => {
     return (
         <div className={styles.header}>
             <SelectCompetition />
-            <Connect />
+            {/*<Connect />*/}
         </div>
     );
 });

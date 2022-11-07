@@ -25,7 +25,8 @@ export const Router: FC = observer(() => {
                 <Route path="/main/sportsmen" element={<SportsmenContainer />} />
                 <Route path="/main/reports" element={<ReportsContainer />} />
                 <Route path="/main/broadcasts" element={<BroadCastContainer />} />
-                <Route path="*" element={<Navigate replace to="/main/sportsmen" />} />
+                {/*<Route path="*" element={<Navigate replace to="/main/sportsmen" />} />*/}
+                <Route path="*" element={<Navigate replace to="/main/rounds" />} />
             </Route>
         </Routes>
     );
