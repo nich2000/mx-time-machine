@@ -1,5 +1,6 @@
 const { SerialPortConnector } = require('./hardware/SerialPortConnector');
 const { WlanConnector } = require('./hardware/WlanConnector');
+const { MXBaseServer } = require('./hardware/MXBaseServer');
 const { parseMessage } = require('./hardware/vs/parseMessage');
 const { DateTime } = require('luxon');
 
@@ -15,6 +16,8 @@ class Connector {
                 this.connector = new WlanConnector();
             } else if (type === 'SERIAL_PORT') {
                 this.connector = new SerialPortConnector();
+            } else if (type === 'MX_BASE') {
+                this.connector = new MXBaseServer();
             }
         }
         if (this.connector.connect(this.receive, ...params)) {

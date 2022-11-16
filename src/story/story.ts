@@ -8,6 +8,7 @@ import { ILap } from '@/types/ILap';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { ISerialPortStatus } from '@/types/ISerialPortStatus';
 import { IWlanStatus } from '@/types/IWlanStatus';
+import { IMXBaseStatus } from '@/types/IMXBaseStatus';
 import { IReport } from '@/types/IReport';
 import { IBroadCast } from '@/types/IBroadCast';
 
@@ -24,6 +25,7 @@ export class Story {
     public raceStatus: TypeRaceStatus | undefined = undefined;
     public serialPortStatus: ISerialPortStatus | undefined = undefined;
     public wlanStatus: IWlanStatus | undefined = undefined;
+    public mxBaseStatus: IMXBaseStatus | undefined = undefined;
     public connected: boolean = false;
     public startTime: number | undefined = undefined;
     public groupInRace: IGroup | undefined = undefined;
@@ -79,6 +81,10 @@ export class Story {
 
     public setWlanStatus = (newWlanStatus: IWlanStatus): void => {
         this.wlanStatus = newWlanStatus;
+    };
+
+    public setMXBaseStatus = (newMXBaseStatus: IMXBaseStatus): void => {
+        this.mxBaseStatus = newMXBaseStatus;
     };
 
     public setConnected = (newConnected: boolean): void => {

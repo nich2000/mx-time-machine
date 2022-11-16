@@ -12,6 +12,7 @@ import { loadRoundsAction } from '@/actions/actionRoundRequest';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { ISerialPortStatus } from '@/types/ISerialPortStatus';
 import { IWlanStatus } from '@/types/IWlanStatus';
+import { IMXBaseStatus } from '@/types/IMXBaseStatus';
 import { IReport } from '@/types/IReport';
 import { loadReportsAction } from '@/actions/actionReportRequest';
 import { IBroadCast } from '@/types/IBroadCast';
@@ -78,6 +79,12 @@ window.api.ipcRenderer.on('status-wlan', (e: any, wlanStatus: IWlanStatus) => {
     console.log(wlanStatus);
     story.setWlanStatus(wlanStatus);
     story.setConnected(wlanStatus.isOpen);
+});
+
+window.api.ipcRenderer.on('status-mx', (e: any, mxStatus: IMXBaseStatus) => {
+    // console.log('status-mx');
+    console.log(mxStatus);
+    story.setMXBaseStatus(mxStatus);
 });
 
 window.api.ipcRenderer.on('status-connect', (e: any, wlanStatus: IWlanStatus, serialPortStatus: ISerialPortStatus) => {

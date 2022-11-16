@@ -1,0 +1,22 @@
+front Connect.tsx Нажатие на кнопку
+    const handleClose = useCallback(() => {
+        if (window.confirm('Are you sure you want to disconnect?')) {
+            window.api.ipcRenderer.send('disconnect-serial-ports-request');
+            window.api.ipcRenderer.send('disconnect-wlan-request');
+        }
+    }, []);
+
+back connectMessages.js я так понимаю приём нажатия на кнопку
+ipcMain.on('disconnect-serial-ports-request', async (e) => {
+    if (connector && connector.isConnect) {
+        connector.disconnect();
+    }
+    отправка статуса в фронт
+    sendToAllMessage('status-serial-port', { isOpen: false });
+});
+
+front actionResponse.ts получение статуса
+window.api.ipcRenderer.on('status-serial-port', (e: any, serialPortStatus: ISerialPortStatus) => {
+    story.setSerialPortStatus(serialPortStatus);
+    story.setConnected(serialPortStatus.isOpen);
+});

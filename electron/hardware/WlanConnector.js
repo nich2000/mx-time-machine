@@ -1,4 +1,5 @@
 const dgram = require('dgram');
+
 class WlanConnector {
     address = '192.168.197.255';
     portSend = 8889;

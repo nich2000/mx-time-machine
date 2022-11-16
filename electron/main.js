@@ -5,6 +5,7 @@ const stayAwake = require('stay-awake');
 const { init } = require('./init');
 const { mainMenu } = require('./menu/mainMenu');
 require('./ipcMessages');
+require('./hardware/MXBaseServer');
 
 function createWindow() {
     stayAwake.prevent();

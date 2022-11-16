@@ -58,36 +58,40 @@ export const Connect: FC = observer(() => {
             {/*        WLAN Connect*/}
             {/*    </Button>*/}
             {/*)}*/}
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>
-                <TextField
-                    select
-                    value={story?.serialPortStatus?.isOpen ? story?.serialPortStatus?.path : portPath}
-                    onChange={handleChangePort}
-                    label="Serial port"
-                    size="small"
-                    disabled={story?.serialPortStatus?.isOpen || story?.wlanStatus?.isOpen}
-                >
-                    {listPorts.map((port) => (
-                        <MenuItem key={port} value={port}>
-                            {port}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </FormControl>
-            {story?.serialPortStatus?.isOpen ? (
-                <Button size="small" variant="outlined" onClick={handleClose}>
-                    Disconnect
-                </Button>
-            ) : (
-                <Button
-                    size="small"
-                    variant="outlined"
-                    disabled={!portPath || story?.wlanStatus?.isOpen}
-                    onClick={handleOpen}
-                >
-                    Connect
-                </Button>
-            )}
+
+            <input type="text" value={story?.mxBaseStatus?.rssi} />
+
+            {/*<FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>*/}
+            {/*    <TextField*/}
+            {/*        select*/}
+            {/*        value={story?.serialPortStatus?.isOpen ? story?.serialPortStatus?.path : portPath}*/}
+            {/*        onChange={handleChangePort}*/}
+            {/*        label="Serial port"*/}
+            {/*        size="small"*/}
+            {/*        disabled={story?.serialPortStatus?.isOpen || story?.wlanStatus?.isOpen}*/}
+            {/*    >*/}
+            {/*        {listPorts.map((port) => (*/}
+            {/*            <MenuItem key={port} value={port}>*/}
+            {/*                {port}*/}
+            {/*            </MenuItem>*/}
+            {/*        ))}*/}
+            {/*    </TextField>*/}
+            {/*</FormControl>*/}
+
+            {/*{story?.serialPortStatus?.isOpen ? (*/}
+            {/*    <Button size="small" variant="outlined" onClick={handleClose}>*/}
+            {/*        Disconnect*/}
+            {/*    </Button>*/}
+            {/*) : (*/}
+            {/*    <Button*/}
+            {/*        size="small"*/}
+            {/*        variant="outlined"*/}
+            {/*        disabled={!portPath || story?.wlanStatus?.isOpen}*/}
+            {/*        onClick={handleOpen}*/}
+            {/*    >*/}
+            {/*        Connect*/}
+            {/*    </Button>*/}
+            {/*)}*/}
         </div>
     );
 });
