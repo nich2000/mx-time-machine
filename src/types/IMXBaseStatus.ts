@@ -1,4 +1,11 @@
 export interface IMXBaseStatus {
-    isOpen: boolean;
+    cmd: string;
+    base: number;
+    device: number;
+    status: number;
+    battery: number;
+    time: string
+    lat: number;
+    lon: number;
     rssi: number;
 }

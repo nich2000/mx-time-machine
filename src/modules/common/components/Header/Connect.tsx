@@ -8,6 +8,7 @@ import styles from './styles.module.scss';
 
 export const Connect: FC = observer(() => {
     const [portPath, setPortPath] = useState<string>('');
+
     const [listPorts, setListPorts] = useState<Array<string>>([]);
 
     const handleChangePort = useCallback((event) => {
@@ -59,7 +60,8 @@ export const Connect: FC = observer(() => {
             {/*    </Button>*/}
             {/*)}*/}
 
-            <input type="text" value={story?.mxBaseStatus?.rssi} />
+            <span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.device}</span>
+            <span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.rssi}</span>
 
             {/*<FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>*/}
             {/*    <TextField*/}

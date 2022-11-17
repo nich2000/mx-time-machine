@@ -20,10 +20,10 @@ function handleConnection(conn) {
     // {"cmd":"ping","base":101,"device":1,"status":255,"battery":0,"time":0,"lat":0,"lon":0,"rssi":47}
     function onConnData(d) {
         let data = new Buffer.from(d).toString()
-        console.log(data)
+        // console.log(data)
         let object = JSON.parse(data)
-        console.log(object.rssi)
-        sendToAllMessage('status-mx', {isOpen: false, rssi: object.rssi})
+        // console.log(object)
+        sendToAllMessage('status-mx', object)
     }
 
     function onConnClose() {

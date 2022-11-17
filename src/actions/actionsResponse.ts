@@ -83,7 +83,7 @@ window.api.ipcRenderer.on('status-wlan', (e: any, wlanStatus: IWlanStatus) => {
 
 window.api.ipcRenderer.on('status-mx', (e: any, mxStatus: IMXBaseStatus) => {
     // console.log('status-mx');
-    console.log(mxStatus);
+    // console.log(mxStatus);
     story.setMXBaseStatus(mxStatus);
 });
 
