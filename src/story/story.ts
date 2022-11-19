@@ -26,6 +26,7 @@ export class Story {
     public serialPortStatus: ISerialPortStatus | undefined = undefined;
     public wlanStatus: IWlanStatus | undefined = undefined;
     public mxBaseStatus: IMXBaseStatus | undefined = undefined;
+    public mxDevices: Map<number, IMXBaseStatus> | undefined;
     public connected: boolean = false;
     public startTime: number | undefined = undefined;
     public groupInRace: IGroup | undefined = undefined;
@@ -85,6 +86,13 @@ export class Story {
 
     public setMXBaseStatus = (newMXBaseStatus: IMXBaseStatus): void => {
         this.mxBaseStatus = newMXBaseStatus;
+    };
+
+    public setMXDevice = (newMXDevice: IMXBaseStatus): void => {
+        if (this.mxDevices === undefined) {
+            this.mxDevices = new Map<number, IMXBaseStatus>();
+        }
+        this.mxDevices.set(newMXDevice.device, newMXDevice);
     };
 
     public setConnected = (newConnected: boolean): void => {

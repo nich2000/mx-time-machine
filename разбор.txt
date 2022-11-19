@@ -20,3 +20,7 @@ window.api.ipcRenderer.on('status-serial-port', (e: any, serialPortStatus: ISeri
     story.setSerialPortStatus(serialPortStatus);
     story.setConnected(serialPortStatus.isOpen);
 });
+
+
+
+App -> Router -> RoundsContainer
