@@ -4,16 +4,34 @@ import { IGroup, IMembersGroup } from '@/types/IGroup';
 import styles from '@/modules/rounds/components/ListGroups/styles.module.scss';
 import { IconButton, List, ListItem, ListItemText, ListSubheader, MenuItem, Paper, Menu } from '@mui/material';
 import cn from 'classnames';
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import GpsNotFixedIcon from '@mui/icons-material/GpsNotFixed';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import SdCardIcon from '@mui/icons-material/SdCard';
+import BatteryAlert from '@mui/icons-material/BatteryAlert';
+import Battery20 from '@mui/icons-material/Battery20';
+import Battery60 from '@mui/icons-material/Battery60';
+import BatteryFull from '@mui/icons-material/BatteryFull';
+import SignalCellular0Bar from '@mui/icons-material/SignalCellular0Bar';
+import SignalCellular1Bar from '@mui/icons-material/SignalCellular1Bar';
+import SignalCellular2Bar from '@mui/icons-material/SignalCellular2Bar';
+import SignalCellular3Bar from '@mui/icons-material/SignalCellular3Bar';
+import SignalCellular4Bar from '@mui/icons-material/SignalCellular4Bar';
+import BedtimeIcon from '@mui/icons-material/Bedtime';
+import StreamIcon from '@mui/icons-material/Stream';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { sportsmanName } from '@/utils/sportsmanName';
-import { ColorAndChannel } from '@/modules/rounds/components/ColorAndChannel/ColorAndChannel';
+// import { ColorAndChannel } from '@/modules/rounds/components/ColorAndChannel/ColorAndChannel';
 import { ICompetition } from '@/types/ICompetition';
 import { DialogFormMembersGroup } from '@/modules/rounds/components/DialogFormMembersGroup/DialogFormMembersGroup';
 import { Color } from '@/types/Color';
 import { Channel } from '@/types/VTXChannel';
 import { story } from '@/story/story';
 import { observer } from 'mobx-react';
+import { red } from '@mui/material/colors';
 
 interface IProps {
     group: IGroup;
@@ -148,6 +166,86 @@ export const TableGroup: FC<IProps> = observer(
             setInnerGroup(_.cloneDeep(group));
         }, [group]);
 
+        function checkStatus(param: number, status?: number) {
+            const _status: number = status !== undefined ? status : 0;
+
+            switch (param) {
+                // 0 GPS status          ok/not ok
+                case 0: {
+                    if ((_status & (1 << 0)) != 0) {
+                        return <GpsFixedIcon color="action" />;
+                    } else {
+                        return <GpsNotFixedIcon color="action" />;
+                    }
+                    // break;
+                }
+                // 1 Gyro1 status        ok/not ok
+                case 1: {
+                    if ((_status & (1 << 1)) != 0) {
+                        return <CheckIcon color="action" />;
+                    } else {
+                        return <ClearIcon color="action" />;
+                    }
+                    // break;
+                }
+                // 2 Gyro2 status        ok/not ok
+                case 2: {
+                    if ((_status & (1 << 2)) != 0) {
+                        return <CheckIcon color="action" />;
+                    } else {
+                        return <ClearIcon color="action" />;
+                    }
+                    // break;
+                }
+                // 3 Flash status        ok/not ok
+                case 3: {
+                    if ((_status & (1 << 3)) != 0) {
+                        return <SdCardIcon color="action" />;
+                    } else {
+                        return <SdCardIcon sx={{ color: red[500] }} />;
+                    }
+                    // break;
+                }
+                // 4 Power status1       full 100%  medium 75%
+                // 5 Power status2       low 50%    critical 25%
+                case 4: {
+                    if ((_status & (1 << 4)) != 0) {
+                        if ((_status & (1 << 5)) != 0) {
+                            return <BatteryFull color="action" />;
+                        } else {
+                            return <Battery60 color="action" />;
+                        }
+                    } else {
+                        if ((_status & (1 << 5)) != 0) {
+                            return <Battery20 color="action" />;
+                        } else {
+                            return <BatteryAlert color="action" />;
+                        }
+                    }
+                    // break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+
+        function checkRSSI(rssi?: number) {
+            const _rssi: number = rssi !== undefined ? rssi : 255;
+
+            if (_rssi < 70) {
+                return <SignalCellular4Bar color="action" />;
+            } else if (_rssi < 100) {
+                return <SignalCellular3Bar color="action" />;
+            } else if (_rssi < 130) {
+                return <SignalCellular2Bar color="action" />;
+            } else if (_rssi < 160) {
+                return <SignalCellular1Bar color="action" />;
+            } else {
+                return <SignalCellular0Bar color="action" />;
+            }
+        }
+
         return (
             <Paper key={innerGroup._id} elevation={isSelected(innerGroup) ? 5 : 1} className={styles.paper}>
                 <List
@@ -163,6 +261,18 @@ export const TableGroup: FC<IProps> = observer(
                         >
                             {innerGroup.name}
                             <div className={styles.actionsGroup}>
+                                {/*Config*/}
+                                <IconButton onClick={onEdit(innerGroup._id)}>
+                                    <SettingsSuggestIcon />
+                                </IconButton>
+                                {/*Sleep*/}
+                                <IconButton onClick={onEdit(innerGroup._id)}>
+                                    <BedtimeIcon />
+                                </IconButton>
+                                {/*Event*/}
+                                <IconButton onClick={onEdit(innerGroup._id)}>
+                                    <StreamIcon />
+                                </IconButton>
                                 <IconButton onClick={onEdit(innerGroup._id)}>
                                     <EditIcon />
                                 </IconButton>
@@ -188,11 +298,17 @@ export const TableGroup: FC<IProps> = observer(
                             &nbsp;-&nbsp;
                             <ListItemText primary={item.team?.name || sportsmanName(item?.sportsman!)} />
                             &nbsp;
-                            <span>{story?.mxDevices?.get(item.startNumber)?.status}</span>
-                            &nbsp;
-                            <span>{story?.mxDevices?.get(item.startNumber)?.rssi}</span>
-                            &nbsp;
-                            <span>{story?.mxDevices?.get(item.startNumber)?.battery}</span>
+                            {checkStatus(0, story?.mxDevices?.get(item.startNumber)?.status)}
+                            {checkStatus(1, story?.mxDevices?.get(item.startNumber)?.status)}
+                            {checkStatus(2, story?.mxDevices?.get(item.startNumber)?.status)}
+                            {checkStatus(3, story?.mxDevices?.get(item.startNumber)?.status)}
+                            {checkStatus(4, story?.mxDevices?.get(item.startNumber)?.status)}
+                            {/*<span>{story?.mxDevices?.get(item.startNumber)?.status}</span>*/}
+                            {/*&nbsp;*/}
+                            {checkRSSI(story?.mxDevices?.get(item.startNumber)?.rssi)}
+                            {/*<span>{story?.mxDevices?.get(item.startNumber)?.rssi}</span>*/}
+                            {/*&nbsp;*/}
+                            {/*<span>{story?.mxDevices?.get(item.startNumber)?.battery}</span>*/}
                             {/*{item.channel !== undefined && item.color !== undefined && (*/}
                             {/*    <ColorAndChannel channel={item.channel} color={item.color} />*/}
                             {/*)}*/}

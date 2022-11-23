@@ -59,10 +59,11 @@ export const Connect: FC = observer(() => {
             {/*        WLAN Connect*/}
             {/*    </Button>*/}
             {/*)}*/}
-
+            <span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.cmd}</span>
+            &nbsp;
             <span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.device}</span>
+            &nbsp;
             <span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.rssi}</span>
-
             {/*<FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>*/}
             {/*    <TextField*/}
             {/*        select*/}
@@ -79,7 +80,6 @@ export const Connect: FC = observer(() => {
             {/*        ))}*/}
             {/*    </TextField>*/}
             {/*</FormControl>*/}
-
             {/*{story?.serialPortStatus?.isOpen ? (*/}
             {/*    <Button size="small" variant="outlined" onClick={handleClose}>*/}
             {/*        Disconnect*/}
