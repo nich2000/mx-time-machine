@@ -18,13 +18,17 @@ interface IProps {
         id: string,
         group: Omit<IGroup, '_id' | 'roundId' | 'close' | 'sort' | 'timeStart' | 'startMillisecond'>
     ) => void;
+    onMXAction: (id: string, action: string) => void;
 }
 
 export const ListGroups: FC<IProps> = observer(
-    ({ groups, selectedGroup, groupInRace, competition, onEdit, onSelect, onDelete, onUpdate }: IProps) => {
+    ({ groups, selectedGroup, groupInRace, competition, onEdit, onSelect, onDelete, onUpdate, onMXAction }: IProps) => {
         const handleEdit = useCallback((id: string) => () => onEdit(id), [onEdit]);
         const handleSelect = useCallback((id: string) => () => onSelect(id), [onSelect]);
         const handleDelete = useCallback((id: string) => () => onDelete(id), [onDelete]);
+
+        // const handleMXAction = useCallback((id: string, action: string) => () => onMXAction(id, action), [onMXAction]);
+        const handleMXAction = useCallback((id: string, action: string) => onMXAction(id, action), [onMXAction]);
 
         if ((groups || []).length === 0) {
             return <div className={styles.empty}>No groups</div>;
@@ -42,6 +46,7 @@ export const ListGroups: FC<IProps> = observer(
                         onSelect={handleSelect}
                         onEdit={handleEdit}
                         onDelete={handleDelete}
+                        onMXAction={handleMXAction}
                         onUpdate={onUpdate}
                     />
                 ))}

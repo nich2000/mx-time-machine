@@ -142,6 +142,7 @@ export const RoundsContainer: FC = observer(() => {
         },
         [groups, handleCloseDialog, selectedRound]
     );
+
     const handleEditGroup = useCallback(
         (
             _id: string,
@@ -176,6 +177,14 @@ export const RoundsContainer: FC = observer(() => {
             ) {
                 groupDeleteAction(_id);
             }
+        },
+        [selectedRound]
+    );
+
+    const handleMXAction = useCallback(
+        (_id: string, action: string) => {
+            // window.confirm(action);
+            console.log(_id, action);
         },
         [selectedRound]
     );
@@ -278,6 +287,7 @@ export const RoundsContainer: FC = observer(() => {
                             onDelete={handleDeleteGroup}
                             onEdit={handleOpenEditGroup}
                             onUpdate={handleEditGroup}
+                            onMXAction={handleMXAction}
                             competition={story.competition!}
                         />
                     </Grid>

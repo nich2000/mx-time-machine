@@ -32,6 +32,14 @@ import { Channel } from '@/types/VTXChannel';
 import { story } from '@/story/story';
 import { observer } from 'mobx-react';
 import { red } from '@mui/material/colors';
+import ReactHintFactory from 'react-hint';
+import 'react-hint/css/index.css';
+import Button1 from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 interface IProps {
     group: IGroup;
@@ -42,10 +50,23 @@ interface IProps {
     onEdit: (id: string) => () => void;
     onDelete: (id: string) => () => void;
     onUpdate: (id: string, group: IGroup) => void;
+    // onMXAction: (id: string, action: string) => () => void;
+    onMXAction: (id: string, action: string) => void;
 }
 
 export const TableGroup: FC<IProps> = observer(
-    ({ group, selectedGroup, competition, isGroupInRace, onSelect, onEdit, onDelete, onUpdate }: IProps) => {
+    ({
+        group,
+        selectedGroup,
+        competition,
+        isGroupInRace,
+        onSelect,
+        onEdit,
+        onDelete,
+        onUpdate,
+        onMXAction
+    }: IProps) => {
+        const ReactHint = ReactHintFactory(React);
         const draggedItem = useRef<string | undefined>(undefined);
         const [innerGroup, setInnerGroup] = useState(_.cloneDeep(group));
         const [contextMenu, setContextMenu] = React.useState<
@@ -246,6 +267,50 @@ export const TableGroup: FC<IProps> = observer(
             }
         }
 
+        function MXActionButton(id: string, action: string, Component: any) {
+            const [open, setOpen] = React.useState(false);
+
+            const handleClickOpen = () => {
+                setOpen(true);
+            };
+
+            const handleDisagree = () => {
+                setOpen(false);
+            };
+
+            const handleAgree = () => {
+                setOpen(false);
+
+                onMXAction(id, action);
+            };
+
+            return (
+                <a>
+                    <IconButton data-rh={action} onClick={handleClickOpen}>
+                        <Component />
+                    </IconButton>
+
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{'Send command to device group?'}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">{action}</DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button1 onClick={handleDisagree}>Disagree</Button1>
+                            <Button1 onClick={handleAgree} autoFocus>
+                                Agree
+                            </Button1>
+                        </DialogActions>
+                    </Dialog>
+                </a>
+            );
+        }
+
         return (
             <Paper key={innerGroup._id} elevation={isSelected(innerGroup) ? 5 : 1} className={styles.paper}>
                 <List
@@ -260,23 +325,20 @@ export const TableGroup: FC<IProps> = observer(
                             className={cn(styles.headerGroup, { [styles.selected]: isSelected(innerGroup) })}
                         >
                             {innerGroup.name}
+                            <ReactHint autoPosition events />
                             <div className={styles.actionsGroup}>
                                 {/*Config*/}
-                                <IconButton onClick={onEdit(innerGroup._id)}>
-                                    <SettingsSuggestIcon />
-                                </IconButton>
+                                {MXActionButton(innerGroup._id, 'Config', SettingsSuggestIcon)}
                                 {/*Sleep*/}
-                                <IconButton onClick={onEdit(innerGroup._id)}>
-                                    <BedtimeIcon />
-                                </IconButton>
+                                {MXActionButton(innerGroup._id, 'Sleep', BedtimeIcon)}
                                 {/*Event*/}
-                                <IconButton onClick={onEdit(innerGroup._id)}>
-                                    <StreamIcon />
-                                </IconButton>
-                                <IconButton onClick={onEdit(innerGroup._id)}>
+                                {MXActionButton(innerGroup._id, 'Event', StreamIcon)}
+                                {/*Edit*/}
+                                <IconButton data-rh="Edit" onClick={onEdit(innerGroup._id)}>
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton onClick={onDelete(innerGroup._id)}>
+                                {/*Delete*/}
+                                <IconButton data-rh="Delete" onClick={onDelete(innerGroup._id)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </div>
