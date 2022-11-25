@@ -2,6 +2,7 @@ const { ipcMain } = require('electron');
 const { connector } = require('../Connector');
 const Serialport = require('serialport');
 const { sendToAllMessage } = require('./sendMessage');
+const { connections } = require('../hardware/MXBaseServer');
 
 ipcMain.on('list-serial-ports-request', async (e) => {
     const list = (await Serialport.list()).map((item) => item.path);
@@ -44,5 +45,41 @@ ipcMain.on('status-connect-request', async (e) => {
         );
     } else {
         sendToAllMessage('status-connect', { isOpen: false });
+    }
+});
+
+ipcMain.on('MXAction', async (e, id, action) => {
+    // console.log(id, action)
+
+    if(connections.length > 0) {
+        // console.log('send')
+
+        let msg = "";
+        switch (action) {
+            case "Config" : {
+                msg = '{"cmd":"config","object":"base","value":[]}';
+                break;
+            }
+            case "Sleep" : {
+                msg = '{"cmd":"mode","object":"","value":"paddock"}';
+                break;
+            }
+            case "Event" : {
+                msg = '{"cmd":"mode","object":"","value":"track"}';
+                break;
+            }
+            default : {
+                console.log("unknown action")
+                return;
+            }
+        }
+
+        try {
+            let conn = connections[0];
+            conn.write(msg);
+            conn.pipe(conn);
+        } catch (error) {
+            console.log(error);
+        }
     }
 });

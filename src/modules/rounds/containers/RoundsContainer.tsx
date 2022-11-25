@@ -183,7 +183,8 @@ export const RoundsContainer: FC = observer(() => {
 
     const handleMXAction = useCallback(
         (_id: string, action: string) => {
-            // window.confirm(action);
+            window.api.ipcRenderer.send('MXAction', _id, action);
+
             console.log(_id, action);
         },
         [selectedRound]

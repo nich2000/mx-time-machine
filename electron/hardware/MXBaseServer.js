@@ -2,6 +2,8 @@ let net = require('net');
 
 const { sendToAllMessage } = require('../ipcMessages/sendMessage');
 
+let connections = [];
+
 let server = net.createServer();
 server.on('connection', handleConnection);
 
@@ -10,6 +12,9 @@ server.listen(30000, function() {
 });
 
 function handleConnection(conn) {
+    console.log(conn)
+    connections.push(conn)
+
     let remoteAddress = conn.remoteAddress + ':' + conn.remotePort;
     console.log('new client connection from %s', remoteAddress);
 
@@ -24,10 +29,13 @@ function handleConnection(conn) {
         let object = JSON.parse(data)
         // console.log(object)
         sendToAllMessage('status-mx', object)
+        // conn.send(data)
     }
 
     function onConnClose() {
         console.log('connection from %s closed', remoteAddress);
+
+        connections.pop()
     }
 
     function onConnError(err) {
@@ -55,3 +63,5 @@ class MXBaseServer {
 
     }
 }
+
+module.exports = { connections };
