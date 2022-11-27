@@ -25,11 +25,27 @@ function handleConnection(conn) {
     // {"cmd":"ping","base":101,"device":1,"status":255,"battery":0,"time":0,"lat":0,"lon":0,"rssi":47}
     function onConnData(d) {
         let data = new Buffer.from(d).toString()
-        // console.log(data)
-        let object = JSON.parse(data)
-        // console.log(object)
-        sendToAllMessage('status-mx', object)
-        // conn.send(data)
+        if (data === '0') {
+            return;
+        }
+        console.log('onConnData: ', data);
+
+        let dataList = data.replaceAll('}{', '}**|**|**{').split('**|**|**')
+        console.log('onConnData, packet count: ', dataList.length);
+
+        for (let i = 0; i < dataList.length; i++) {
+            try {
+                console.log('onConnData, packet: ', dataList[i]);
+
+                let object = JSON.parse(dataList[i]);
+                // console.log(object);
+
+                sendToAllMessage('status-mx', object);
+            } catch (error) {
+                console.error(error);
+                console.log(dataList[i]);
+            }
+        }
     }
 
     function onConnClose() {

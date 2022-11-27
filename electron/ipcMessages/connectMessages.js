@@ -49,10 +49,10 @@ ipcMain.on('status-connect-request', async (e) => {
 });
 
 ipcMain.on('MXAction', async (e, id, action) => {
-    // console.log(id, action)
+    console.log(id, action)
 
     if(connections.length > 0) {
-        // console.log('send')
+        console.log('send')
 
         let msg = "";
         switch (action) {
@@ -61,11 +61,11 @@ ipcMain.on('MXAction', async (e, id, action) => {
                 break;
             }
             case "Sleep" : {
-                msg = '{"cmd":"mode","object":"","value":"paddock"}';
+                msg = '{"cmd":"mode","object":0,"value":0}';
                 break;
             }
             case "Event" : {
-                msg = '{"cmd":"mode","object":"","value":"track"}';
+                msg = '{"cmd":"mode","object":0,"value":1}';
                 break;
             }
             default : {
