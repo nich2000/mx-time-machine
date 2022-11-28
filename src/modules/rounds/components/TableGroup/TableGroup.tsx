@@ -331,8 +331,8 @@ export const TableGroup: FC<IProps> = observer(
                                 {MXActionButton(innerGroup._id, 'Config', SettingsSuggestIcon)}
                                 {/*Sleep*/}
                                 {MXActionButton(innerGroup._id, 'Sleep', BedtimeIcon)}
-                                {/*Event*/}
-                                {MXActionButton(innerGroup._id, 'Event', StreamIcon)}
+                                {/*Race*/}
+                                {MXActionButton(innerGroup._id, 'Race', StreamIcon)}
                                 {/*Edit*/}
                                 <IconButton data-rh="Edit" onClick={onEdit(innerGroup._id)}>
                                     <EditIcon />

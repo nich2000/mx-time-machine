@@ -57,15 +57,15 @@ ipcMain.on('MXAction', async (e, id, action) => {
         let msg = "";
         switch (action) {
             case "Config" : {
-                msg = '{"cmd":"config","object":"base","value":[]}';
+                msg = '{"cmd":"config","object":"device","value":[]}';
                 break;
             }
             case "Sleep" : {
-                msg = '{"cmd":"mode","object":0,"value":0}';
+                msg = '{"cmd":"mode","object":"","value":"sleep"}';
                 break;
             }
-            case "Event" : {
-                msg = '{"cmd":"mode","object":0,"value":1}';
+            case "Race" : {
+                msg = '{"cmd":"mode","object":"","value":"race"}';
                 break;
             }
             default : {
@@ -77,7 +77,7 @@ ipcMain.on('MXAction', async (e, id, action) => {
         try {
             let conn = connections[0];
             conn.write(msg);
-            conn.pipe(conn);
+            // conn.pipe(conn);
         } catch (error) {
             console.log(error);
         }
