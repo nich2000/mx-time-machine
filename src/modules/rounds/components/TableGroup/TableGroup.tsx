@@ -23,6 +23,7 @@ import BedtimeIcon from '@mui/icons-material/Bedtime';
 import StreamIcon from '@mui/icons-material/Stream';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import { sportsmanName } from '@/utils/sportsmanName';
 // import { ColorAndChannel } from '@/modules/rounds/components/ColorAndChannel/ColorAndChannel';
 import { ICompetition } from '@/types/ICompetition';
@@ -327,6 +328,8 @@ export const TableGroup: FC<IProps> = observer(
                             {innerGroup.name}
                             <ReactHint autoPosition events />
                             <div className={styles.actionsGroup}>
+                                {/*List*/}
+                                {MXActionButton(innerGroup._id, 'List', FormatListNumberedIcon)}
                                 {/*Config*/}
                                 {MXActionButton(innerGroup._id, 'Config', SettingsSuggestIcon)}
                                 {/*Sleep*/}

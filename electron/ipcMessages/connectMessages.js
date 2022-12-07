@@ -56,6 +56,10 @@ ipcMain.on('MXAction', async (e, id, action) => {
 
         let msg = "";
         switch (action) {
+            case "List" : {
+                msg = '{"cmd":"list","device":[1,2,3,4]}';
+                break;
+            }
             case "Config" : {
                 msg = '{"cmd":"config","object":"device","value":[]}';
                 break;
