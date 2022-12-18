@@ -41,6 +41,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { ISportsman } from '@/types/ISportsman';
 
 interface IProps {
     group: IGroup;
@@ -194,7 +195,7 @@ export const TableGroup: FC<IProps> = observer(
             switch (param) {
                 // 0 GPS status          ok/not ok
                 case 0: {
-                    if ((_status & (1 << 0)) != 0) {
+                    if ((_status & (1 << 0)) !== 0) {
                         return <GpsFixedIcon color="action" />;
                     } else {
                         return <GpsNotFixedIcon color="action" />;
@@ -203,7 +204,7 @@ export const TableGroup: FC<IProps> = observer(
                 }
                 // 1 Gyro1 status        ok/not ok
                 case 1: {
-                    if ((_status & (1 << 1)) != 0) {
+                    if ((_status & (1 << 1)) !== 0) {
                         return <CheckIcon color="action" />;
                     } else {
                         return <ClearIcon color="action" />;
@@ -212,7 +213,7 @@ export const TableGroup: FC<IProps> = observer(
                 }
                 // 2 Gyro2 status        ok/not ok
                 case 2: {
-                    if ((_status & (1 << 2)) != 0) {
+                    if ((_status & (1 << 2)) !== 0) {
                         return <CheckIcon color="action" />;
                     } else {
                         return <ClearIcon color="action" />;
@@ -221,7 +222,7 @@ export const TableGroup: FC<IProps> = observer(
                 }
                 // 3 Flash status        ok/not ok
                 case 3: {
-                    if ((_status & (1 << 3)) != 0) {
+                    if ((_status & (1 << 3)) !== 0) {
                         return <SdCardIcon color="action" />;
                     } else {
                         return <SdCardIcon sx={{ color: red[500] }} />;
@@ -231,14 +232,14 @@ export const TableGroup: FC<IProps> = observer(
                 // 4 Power status1       full 100%  medium 75%
                 // 5 Power status2       low 50%    critical 25%
                 case 4: {
-                    if ((_status & (1 << 4)) != 0) {
-                        if ((_status & (1 << 5)) != 0) {
+                    if ((_status & (1 << 4)) !== 0) {
+                        if ((_status & (1 << 5)) !== 0) {
                             return <BatteryFull color="action" />;
                         } else {
                             return <Battery60 color="action" />;
                         }
                     } else {
-                        if ((_status & (1 << 5)) != 0) {
+                        if ((_status & (1 << 5)) !== 0) {
                             return <Battery20 color="action" />;
                         } else {
                             return <BatteryAlert color="action" />;
@@ -286,7 +287,7 @@ export const TableGroup: FC<IProps> = observer(
             };
 
             return (
-                <a>
+                <b>
                     <IconButton data-rh={action} onClick={handleClickOpen}>
                         <Component />
                     </IconButton>
@@ -308,8 +309,21 @@ export const TableGroup: FC<IProps> = observer(
                             </Button1>
                         </DialogActions>
                     </Dialog>
-                </a>
+                </b>
             );
+        }
+
+        function transponder(sportsman: ISportsman | undefined) {
+            return sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
+        }
+
+        function deviceS(sportsman: ISportsman | undefined) {
+            const index: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
+            return story?.mxDevices?.get(index);
+        }
+
+        function device(index: number) {
+            return story?.mxDevices?.get(index);
         }
 
         return (
@@ -359,19 +373,21 @@ export const TableGroup: FC<IProps> = observer(
                             onDragEnd={onDragItemEnd}
                             onContextMenu={handleContextMenu(item)}
                         >
-                            {item.startNumber}
-                            &nbsp;-&nbsp;
+                            <ListItemText primary={item.startNumber} />
+                            {/*&nbsp;-&nbsp;*/}
                             <ListItemText primary={item.team?.name || sportsmanName(item?.sportsman!)} />
-                            &nbsp;
-                            {checkStatus(0, story?.mxDevices?.get(item.startNumber)?.status)}
-                            {checkStatus(1, story?.mxDevices?.get(item.startNumber)?.status)}
-                            {checkStatus(2, story?.mxDevices?.get(item.startNumber)?.status)}
-                            {checkStatus(3, story?.mxDevices?.get(item.startNumber)?.status)}
-                            {checkStatus(4, story?.mxDevices?.get(item.startNumber)?.status)}
+                            {/*&nbsp;*/}
+                            <ListItemText primary={transponder(item.sportsman)} />
+                            {/*&nbsp;*/}
+                            {checkStatus(0, device(item.startNumber)?.status)}
+                            {checkStatus(1, device(item.startNumber)?.status)}
+                            {checkStatus(2, device(item.startNumber)?.status)}
+                            {checkStatus(3, device(item.startNumber)?.status)}
+                            {checkStatus(4, device(item.startNumber)?.status)}
                             {/*<span>{story?.mxDevices?.get(item.startNumber)?.status}</span>*/}
                             {/*&nbsp;*/}
-                            {checkRSSI(story?.mxDevices?.get(item.startNumber)?.rssi)}
-                            {/*<span>{story?.mxDevices?.get(item.startNumber)?.rssi}</span>*/}
+                            {checkRSSI(deviceS(item.sportsman)?.rssi)}
+                            <span>{deviceS(item.sportsman)?.rssi}</span>
                             {/*&nbsp;*/}
                             {/*<span>{story?.mxDevices?.get(item.startNumber)?.battery}</span>*/}
                             {/*{item.channel !== undefined && item.color !== undefined && (*/}

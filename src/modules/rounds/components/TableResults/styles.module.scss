@@ -1,0 +1,50 @@
+.root {
+  max-height: calc(100% - 80px);
+  @media print {
+    max-height: inherit;
+  }
+  overflow-y: auto;
+  th:not(:first-child), td:not(:first-child) {
+    border-left: 1px solid rgba(224, 224, 224, 1);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.searched {
+  background-color: aquamarine !important;
+}
+
+.searchedTeamSportsmen {
+  font-weight: bold;
+  color: aquamarine;
+}
+.pitStop {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: rgb(25, 118, 210);
+  font-style: italic;
+  svg {
+    margin-right: 8px;
+  }
+}
+
+.actionPos {
+  padding: 0;
+}
+.lapWithPhoto {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.photo {
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 14px !important;
+}
