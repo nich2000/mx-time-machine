@@ -18,7 +18,7 @@ interface IProps {
         id: string,
         group: Omit<IGroup, '_id' | 'roundId' | 'close' | 'sort' | 'timeStart' | 'startMillisecond'>
     ) => void;
-    onMXAction: (id: string, action: string) => void;
+    onMXAction: (id: string, action: string, devices: any) => void;
 }
 
 export const ListGroups: FC<IProps> = observer(
@@ -26,9 +26,7 @@ export const ListGroups: FC<IProps> = observer(
         const handleEdit = useCallback((id: string) => () => onEdit(id), [onEdit]);
         const handleSelect = useCallback((id: string) => () => onSelect(id), [onSelect]);
         const handleDelete = useCallback((id: string) => () => onDelete(id), [onDelete]);
-
-        // const handleMXAction = useCallback((id: string, action: string) => () => onMXAction(id, action), [onMXAction]);
-        const handleMXAction = useCallback((id: string, action: string) => onMXAction(id, action), [onMXAction]);
+        const handleMXAction = useCallback((id: string, action: string, devices: any) => onMXAction(id, action, devices), [onMXAction]);
 
         if ((groups || []).length === 0) {
             return <div className={styles.empty}>No groups</div>;

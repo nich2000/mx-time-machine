@@ -59,9 +59,8 @@ export const Connect: FC = observer(() => {
             {/*        WLAN Connect*/}
             {/*    </Button>*/}
             {/*)}*/}
-            <span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.device}</span>
-            &nbsp;
-            <span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.cmd}</span>
+            <span style={{ color: 'black', width: '200px' }}>Status: {story?.mxBase?.status}</span>
+            <span style={{ color: 'black', width: '200px' }}>IP: {story?.mxBase?.ip}</span>
             {/*&nbsp;*/}
             {/*<span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.rssi}</span>*/}
             {/*<FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>*/}

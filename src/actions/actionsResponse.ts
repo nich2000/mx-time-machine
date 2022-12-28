@@ -12,7 +12,8 @@ import { loadRoundsAction } from '@/actions/actionRoundRequest';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { ISerialPortStatus } from '@/types/ISerialPortStatus';
 import { IWlanStatus } from '@/types/IWlanStatus';
-import { IMXBaseStatus } from '@/types/IMXBaseStatus';
+import { IMXBase } from '@/types/IMXBase';
+import { IMXDevice } from '@/types/IMXDevice';
 import { IReport } from '@/types/IReport';
 import { loadReportsAction } from '@/actions/actionReportRequest';
 import { IBroadCast } from '@/types/IBroadCast';
@@ -81,10 +82,12 @@ window.api.ipcRenderer.on('status-wlan', (e: any, wlanStatus: IWlanStatus) => {
     story.setConnected(wlanStatus.isOpen);
 });
 
-window.api.ipcRenderer.on('status-mx', (e: any, mxStatus: IMXBaseStatus) => {
-    // console.log(mxStatus);
-    story.setMXBaseStatus(mxStatus);
-    story.setMXDevice(mxStatus);
+window.api.ipcRenderer.on('mx-base', (e: any, mxBase: IMXBase) => {
+    story.setMXBase(mxBase);
+});
+
+window.api.ipcRenderer.on('mx-ping', (e: any, mxDevice: IMXDevice) => {
+    story.setMXDevice(mxDevice);
 });
 
 window.api.ipcRenderer.on('status-connect', (e: any, wlanStatus: IWlanStatus, serialPortStatus: ISerialPortStatus) => {

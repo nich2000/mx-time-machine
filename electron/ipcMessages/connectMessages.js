@@ -48,28 +48,44 @@ ipcMain.on('status-connect-request', async (e) => {
     }
 });
 
-ipcMain.on('MXAction', async (e, id, action) => {
-    console.log(id, action)
+ipcMain.on('MXAction', async (e, id, action, devices) => {
+    // console.log(id, action, devices)
 
     if(connections.length > 0) {
-        console.log('send')
-
-        let msg = "";
+        let cmd = {};
         switch (action) {
-            case "List" : {
-                msg = '{"cmd":"list","device":[1,2,3,4]}';
+            case "list" : {
+                cmd = {
+                  cmd: "list",
+                  device: devices
+                };
                 break;
             }
-            case "Config" : {
-                msg = '{"cmd":"config","object":"device","value":[]}';
+            case "config" : {
+                cmd = {
+                    cmd: "config",
+                    object: "device",
+                    value: [],
+                    device: devices
+                };
                 break;
             }
-            case "Sleep" : {
-                msg = '{"cmd":"mode","object":"","value":"sleep"}';
+            case "sleep" : {
+                cmd = {
+                    cmd: "mode",
+                    object: "",
+                    value: "sleep",
+                    device: devices
+                };
                 break;
             }
-            case "Race" : {
-                msg = '{"cmd":"mode","object":"","value":"race"}';
+            case "race" : {
+                cmd = {
+                    cmd: "mode",
+                    object: "",
+                    value: "race",
+                    device: devices
+                };
                 break;
             }
             default : {
@@ -80,8 +96,11 @@ ipcMain.on('MXAction', async (e, id, action) => {
 
         try {
             let conn = connections[0];
+
+            let msg = JSON.stringify(cmd);
+            console.log('send', msg);
+
             conn.write(msg);
-            // conn.pipe(conn);
         } catch (error) {
             console.log(error);
         }

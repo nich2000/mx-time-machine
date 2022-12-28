@@ -183,8 +183,8 @@ export const RoundsContainer: FC = observer(() => {
     );
 
     const handleMXAction = useCallback(
-        (_id: string, action: string) => {
-            window.api.ipcRenderer.send('MXAction', _id, action);
+        (_id: string, action: string, devices: any) => {
+            window.api.ipcRenderer.send('MXAction', _id, action, devices);
 
             console.log(_id, action);
         },
@@ -328,13 +328,13 @@ export const RoundsContainer: FC = observer(() => {
                                         {raceReadyToStart ? 'START' : 'STOP'}
                                     </Button>
                                 </div>
-                                <TableLaps
-                                    round={selectedRound}
-                                    group={selectedGroup}
-                                    raceStatus={story.raceStatus}
-                                    groupLaps={story.laps}
-                                    onChangePosition={handleOpenChangePositions}
-                                />
+                                {/*<TableLaps*/}
+                                {/*    round={selectedRound}*/}
+                                {/*    group={selectedGroup}*/}
+                                {/*    raceStatus={story.raceStatus}*/}
+                                {/*    groupLaps={story.laps}*/}
+                                {/*    onChangePosition={handleOpenChangePositions}*/}
+                                {/*/>*/}
                                 <TableResults
                                     round={selectedRound}
                                     group={selectedGroup}

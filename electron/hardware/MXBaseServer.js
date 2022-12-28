@@ -7,16 +7,31 @@ let connections = [];
 let server = net.createServer();
 server.on('connection', handleConnection);
 
+// let mxBase = {
+//     id: 101,
+//     ip: server.address(),
+//     connected: false
+// }
+// sendToAllMessage('mx-base', mxBase);
+
 server.listen(30000, function() {
-    console.log('server listening to %j', server.address());
+    console.log('server listening to: %j', server.address());
 });
 
 function handleConnection(conn) {
-    console.log(conn)
+    // console.log(conn)
     connections.push(conn)
 
     let remoteAddress = conn.remoteAddress + ':' + conn.remotePort;
-    console.log('new client connection from %s', remoteAddress);
+    console.log('new connection from: %s', remoteAddress);
+
+    let mxBase = {
+        id: 101,
+        ip: conn.remoteAddress,
+        connected: true,
+        status: 'base connected'
+    }
+    sendToAllMessage('mx-base', mxBase);
 
     conn.on('data', onConnData);
     conn.once('close', onConnClose);
@@ -40,7 +55,7 @@ function handleConnection(conn) {
                 let object = JSON.parse(dataList[i]);
                 // console.log(object);
 
-                sendToAllMessage('status-mx', object);
+                sendToAllMessage('mx-ping', object);
             } catch (error) {
                 console.error(error);
                 console.log(dataList[i]);
@@ -49,13 +64,31 @@ function handleConnection(conn) {
     }
 
     function onConnClose() {
-        console.log('connection from %s closed', remoteAddress);
+        console.log('connection from: %s, closed', remoteAddress);
 
-        connections.pop()
+        let mxBase = {
+            id: 101,
+            ip: conn.ip,
+            connected: false,
+            status: 'base disconnected'
+        }
+        sendToAllMessage('mx-base', mxBase);
+
+        connections.pop();
     }
 
     function onConnError(err) {
-        console.log('Connection %s error: %s', remoteAddress, err.message);
+        console.log('connection from: %s, error: %s', remoteAddress, err.message);
+
+        let mxBase = {
+            id: 101,
+            ip: conn.ip,
+            connected: false,
+            status: 'base disconnected'
+        }
+        sendToAllMessage('mx-base', mxBase);
+
+        connections.pop();
     }
 }
 

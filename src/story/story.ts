@@ -8,7 +8,8 @@ import { ILap } from '@/types/ILap';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { ISerialPortStatus } from '@/types/ISerialPortStatus';
 import { IWlanStatus } from '@/types/IWlanStatus';
-import { IMXBaseStatus } from '@/types/IMXBaseStatus';
+import { IMXDevice } from '@/types/IMXDevice';
+import { IMXBase } from '@/types/IMXBase';
 import { IReport } from '@/types/IReport';
 import { IBroadCast } from '@/types/IBroadCast';
 
@@ -25,8 +26,8 @@ export class Story {
     public raceStatus: TypeRaceStatus | undefined = undefined;
     public serialPortStatus: ISerialPortStatus | undefined = undefined;
     public wlanStatus: IWlanStatus | undefined = undefined;
-    public mxBaseStatus: IMXBaseStatus | undefined = undefined;
-    public mxDevices: Map<number, IMXBaseStatus> | undefined;
+    public mxBase: IMXBase | undefined = undefined;
+    public mxDevices: Map<number, IMXDevice> | undefined;
     public connected: boolean = false;
     public startTime: number | undefined = undefined;
     public groupInRace: IGroup | undefined = undefined;
@@ -84,13 +85,13 @@ export class Story {
         this.wlanStatus = newWlanStatus;
     };
 
-    public setMXBaseStatus = (newMXBaseStatus: IMXBaseStatus): void => {
-        this.mxBaseStatus = newMXBaseStatus;
+    public setMXBase = (newMXBase: IMXBase): void => {
+        this.mxBase = newMXBase;
     };
 
-    public setMXDevice = (newMXDevice: IMXBaseStatus): void => {
+    public setMXDevice = (newMXDevice: IMXDevice): void => {
         if (this.mxDevices === undefined) {
-            this.mxDevices = new Map<number, IMXBaseStatus>();
+            this.mxDevices = new Map<number, IMXDevice>();
         }
         this.mxDevices.set(newMXDevice.device, newMXDevice);
     };

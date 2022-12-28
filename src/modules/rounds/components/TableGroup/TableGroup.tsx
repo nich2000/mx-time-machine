@@ -52,8 +52,7 @@ interface IProps {
     onEdit: (id: string) => () => void;
     onDelete: (id: string) => () => void;
     onUpdate: (id: string, group: IGroup) => void;
-    // onMXAction: (id: string, action: string) => () => void;
-    onMXAction: (id: string, action: string) => void;
+    onMXAction: (id: string, action: string, devices: any) => void;
 }
 
 export const TableGroup: FC<IProps> = observer(
@@ -202,7 +201,7 @@ export const TableGroup: FC<IProps> = observer(
                     }
                     // break;
                 }
-                // 1 Gyro1 status        ok/not ok
+                // 1 Gyro status         ok/not ok
                 case 1: {
                     if ((_status & (1 << 1)) !== 0) {
                         return <CheckIcon color="action" />;
@@ -211,7 +210,7 @@ export const TableGroup: FC<IProps> = observer(
                     }
                     // break;
                 }
-                // 2 Gyro2 status        ok/not ok
+                // 2 Accel status        ok/not ok
                 case 2: {
                     if ((_status & (1 << 2)) !== 0) {
                         return <CheckIcon color="action" />;
@@ -283,7 +282,19 @@ export const TableGroup: FC<IProps> = observer(
             const handleAgree = () => {
                 setOpen(false);
 
-                onMXAction(id, action);
+                let devices = [];
+                for (let i = 0; i < group.sportsmen.length; i++) {
+                    if (group.sportsmen[i] !== undefined) {
+                        if (group.sportsmen[i].sportsman !== undefined) {
+                            if (group.sportsmen[i].sportsman?.transponders[0] !== undefined) {
+                                let id = group.sportsmen[i].sportsman?.transponders[0];
+                                devices.push(id);
+                            }
+                        }
+                    }
+                }
+
+                onMXAction(id, action, devices);
             };
 
             return (
@@ -318,13 +329,16 @@ export const TableGroup: FC<IProps> = observer(
         }
 
         function deviceS(sportsman: ISportsman | undefined) {
-            const index: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
-            return story?.mxDevices?.get(index);
+            const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
+            console.log(_device);
+            const device = story?.mxDevices?.get(+_device);
+            console.log(device);
+            return device;
         }
 
-        function device(index: number) {
-            return story?.mxDevices?.get(index);
-        }
+        // function device(index: number) {
+        //     return story?.mxDevices?.get(index);
+        // }
 
         return (
             <Paper key={innerGroup._id} elevation={isSelected(innerGroup) ? 5 : 1} className={styles.paper}>
@@ -343,13 +357,13 @@ export const TableGroup: FC<IProps> = observer(
                             <ReactHint autoPosition events />
                             <div className={styles.actionsGroup}>
                                 {/*List*/}
-                                {MXActionButton(innerGroup._id, 'List', FormatListNumberedIcon)}
+                                {MXActionButton(innerGroup._id, 'list', FormatListNumberedIcon)}
                                 {/*Config*/}
-                                {MXActionButton(innerGroup._id, 'Config', SettingsSuggestIcon)}
+                                {MXActionButton(innerGroup._id, 'config', SettingsSuggestIcon)}
                                 {/*Sleep*/}
-                                {MXActionButton(innerGroup._id, 'Sleep', BedtimeIcon)}
+                                {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon)}
                                 {/*Race*/}
-                                {MXActionButton(innerGroup._id, 'Race', StreamIcon)}
+                                {MXActionButton(innerGroup._id, 'race', StreamIcon)}
                                 {/*Edit*/}
                                 <IconButton data-rh="Edit" onClick={onEdit(innerGroup._id)}>
                                     <EditIcon />
@@ -379,11 +393,11 @@ export const TableGroup: FC<IProps> = observer(
                             {/*&nbsp;*/}
                             <ListItemText primary={transponder(item.sportsman)} />
                             {/*&nbsp;*/}
-                            {checkStatus(0, device(item.startNumber)?.status)}
-                            {checkStatus(1, device(item.startNumber)?.status)}
-                            {checkStatus(2, device(item.startNumber)?.status)}
-                            {checkStatus(3, device(item.startNumber)?.status)}
-                            {checkStatus(4, device(item.startNumber)?.status)}
+                            {checkStatus(0, deviceS(item.sportsman)?.status)}
+                            {checkStatus(1, deviceS(item.sportsman)?.status)}
+                            {checkStatus(2, deviceS(item.sportsman)?.status)}
+                            {checkStatus(3, deviceS(item.sportsman)?.status)}
+                            {checkStatus(4, deviceS(item.sportsman)?.status)}
                             {/*<span>{story?.mxDevices?.get(item.startNumber)?.status}</span>*/}
                             {/*&nbsp;*/}
                             {checkRSSI(deviceS(item.sportsman)?.rssi)}

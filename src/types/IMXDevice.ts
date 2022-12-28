@@ -1,4 +1,4 @@
-export interface IMXBaseStatus {
+export interface IMXDevice {
     cmd: string;
     base: number;
     device: number;

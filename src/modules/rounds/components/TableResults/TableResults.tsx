@@ -60,7 +60,7 @@ export const TableResults: FC<IProps> = observer(
                             <TableCell>Laps</TableCell>
                             <TableCell>Av. speed</TableCell>
                             <TableCell>Max speed</TableCell>
-                            <TableCell>Av. time</TableCell>
+                            <TableCell>Total time</TableCell>
                             <TableCell>Best time</TableCell>
                         </TableRow>
                     </TableHead>
