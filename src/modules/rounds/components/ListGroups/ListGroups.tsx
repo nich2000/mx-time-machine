@@ -26,7 +26,10 @@ export const ListGroups: FC<IProps> = observer(
         const handleEdit = useCallback((id: string) => () => onEdit(id), [onEdit]);
         const handleSelect = useCallback((id: string) => () => onSelect(id), [onSelect]);
         const handleDelete = useCallback((id: string) => () => onDelete(id), [onDelete]);
-        const handleMXAction = useCallback((id: string, action: string, devices: any) => onMXAction(id, action, devices), [onMXAction]);
+        const handleMXAction = useCallback(
+            (id: string, action: string, devices: any) => onMXAction(id, action, devices),
+            [onMXAction]
+        );
 
         if ((groups || []).length === 0) {
             return <div className={styles.empty}>No groups</div>;
