@@ -297,33 +297,33 @@ export const RoundsContainer: FC = observer(() => {
                         {selectedGroup && (
                             <div className={styles.race}>
                                 <div className={styles.actionRace}>
-                                    <Button
-                                        variant="contained"
-                                        className={styles.startSearch}
-                                        onClick={handleStartSearch}
-                                        disabled={!raceReadyToStart || !story.connected}
-                                    >
-                                        SEARCH
-                                    </Button>
+                                    {/*<Button*/}
+                                    {/*    variant="contained"*/}
+                                    {/*    className={styles.startSearch}*/}
+                                    {/*    onClick={handleStartSearch}*/}
+                                    {/*    disabled={!raceReadyToStart || !story.connected}*/}
+                                    {/*>*/}
+                                    {/*    SEARCH*/}
+                                    {/*</Button>*/}
                                     <StopWatch
                                         round={selectedRound}
                                         raceStatus={story.raceStatus}
                                         startTime={story.startTime}
                                     />
-                                    <Button
-                                        variant="contained"
-                                        className={styles.invite}
-                                        onClick={handleInvitationRace}
-                                        disabled={!raceReadyToStart || !story.connected}
-                                    >
-                                        INVITE
-                                    </Button>
+                                    {/*<Button*/}
+                                    {/*    variant="contained"*/}
+                                    {/*    className={styles.invite}*/}
+                                    {/*    onClick={handleInvitationRace}*/}
+                                    {/*    disabled={!raceReadyToStart || !story.connected}*/}
+                                    {/*>*/}
+                                    {/*    INVITE*/}
+                                    {/*</Button>*/}
                                     <Button
                                         variant="contained"
                                         color={raceReadyToStart ? 'success' : 'error'}
                                         className={styles.startStop}
                                         onClick={handleStartRace}
-                                        disabled={!story.connected}
+                                        // disabled={!story.connected}
                                     >
                                         {raceReadyToStart ? 'START' : 'STOP'}
                                     </Button>

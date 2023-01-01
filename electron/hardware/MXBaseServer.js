@@ -38,24 +38,34 @@ function handleConnection(conn) {
     conn.on('error', onConnError);
 
     // {"cmd":"ping","base":101,"device":1,"status":255,"battery":0,"time":0,"lat":0,"lon":0,"rssi":47}
+    // {"cmd":"lap","base":101,"device":1,"time":"2022.01.01 20:00:00.000","sectors":321,"status":123}
     function onConnData(d) {
         let data = new Buffer.from(d).toString()
         if (data === '0') {
             return;
         }
-        console.log('onConnData: ', data);
+        // console.log('onConnData: ', data);
 
         let dataList = data.replaceAll('}{', '}**|**|**{').split('**|**|**')
-        console.log('onConnData, packet count: ', dataList.length);
+        // console.log('onConnData, packet count: ', dataList.length);
 
         for (let i = 0; i < dataList.length; i++) {
             try {
-                console.log('onConnData, packet: ', dataList[i]);
-
+                // console.log('onConnData, packet: ', dataList[i]);
                 let object = JSON.parse(dataList[i]);
-                // console.log(object);
+                console.log(object);
 
-                sendToAllMessage('mx-ping', object);
+                // Делаю так, возможно придётся делать дополнительные действия на команду
+                switch (object.cmd) {
+                    case "ping": {
+                        sendToAllMessage('mx-ping', object);
+                        break;
+                    }
+                    case "lap": {
+                        sendToAllMessage('mx-lap', object);
+                        break;
+                    }
+                }
             } catch (error) {
                 console.error(error);
                 console.log(dataList[i]);
@@ -92,6 +102,7 @@ function handleConnection(conn) {
     }
 }
 
+// TODO Пока костыляю (см. выше). Но нужно будет делать по правильному.
 class MXBaseServer {
     port = 30000;
     server;
