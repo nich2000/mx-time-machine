@@ -55,7 +55,6 @@ function handleConnection(conn) {
                 let object = JSON.parse(dataList[i]);
                 console.log(object);
 
-                // Делаю так, возможно придётся делать дополнительные действия на команду
                 switch (object.cmd) {
                     case "ping": {
                         sendToAllMessage('mx-ping', object);

@@ -2,10 +2,22 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { IGroup, IMembersGroup } from '@/types/IGroup';
 import styles from '@/modules/rounds/components/ListGroups/styles.module.scss';
-import { IconButton, List, ListItem, ListItemText, ListSubheader, MenuItem, Paper, Menu } from '@mui/material';
+import {
+    IconButton,
+    List,
+    ListItem,
+    ListItemText,
+    ListSubheader,
+    MenuItem,
+    Paper,
+    Menu,
+    Typography
+} from '@mui/material';
 import cn from 'classnames';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Error from '@mui/icons-material/Error';
 import GpsNotFixedIcon from '@mui/icons-material/GpsNotFixed';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -33,6 +45,7 @@ import { Channel } from '@/types/VTXChannel';
 import { story } from '@/story/story';
 import { observer } from 'mobx-react';
 import { red } from '@mui/material/colors';
+import { green } from '@mui/material/colors';
 import ReactHintFactory from 'react-hint';
 import 'react-hint/css/index.css';
 import Button1 from '@mui/material/Button';
@@ -192,6 +205,15 @@ export const TableGroup: FC<IProps> = observer(
             const _status: number = status !== undefined ? status : 0;
 
             switch (param) {
+                // -1 check all statuses for error
+                case -1: {
+                    if ((_status & (7 << 0)) !== 0) {
+                        return <CheckCircle sx={{ color: green[500] }} />;
+                    } else {
+                        return <Error sx={{ color: red[500] }} />;
+                    }
+                    // break;
+                }
                 // 0 GPS status          ok/not ok
                 case 0: {
                     if ((_status & (1 << 0)) !== 0) {
@@ -241,7 +263,7 @@ export const TableGroup: FC<IProps> = observer(
                         if ((_status & (1 << 5)) !== 0) {
                             return <Battery20 color="action" />;
                         } else {
-                            return <BatteryAlert color="action" />;
+                            return <BatteryAlert sx={{ color: red[500] }} />;
                         }
                     }
                     // break;
@@ -256,15 +278,40 @@ export const TableGroup: FC<IProps> = observer(
             const _rssi: number = rssi !== undefined ? rssi : 255;
 
             if (_rssi < 70) {
-                return <SignalCellular4Bar color="action" />;
+                return (
+                    <span>
+                        <SignalCellular4Bar color="action" />
+                        {_rssi}
+                    </span>
+                );
             } else if (_rssi < 100) {
-                return <SignalCellular3Bar color="action" />;
+                return (
+                    <span>
+                        <SignalCellular3Bar color="action" />
+                        {_rssi}
+                    </span>
+                );
             } else if (_rssi < 130) {
-                return <SignalCellular2Bar color="action" />;
+                return (
+                    <span>
+                        <SignalCellular2Bar color="action" />
+                        {_rssi}
+                    </span>
+                );
             } else if (_rssi < 160) {
-                return <SignalCellular1Bar color="action" />;
+                return (
+                    <span>
+                        <SignalCellular1Bar color="action" />
+                        {_rssi}
+                    </span>
+                );
             } else {
-                return <SignalCellular0Bar color="action" />;
+                return (
+                    <span>
+                        <SignalCellular0Bar sx={{ color: red[500] }} />
+                        {_rssi}
+                    </span>
+                );
             }
         }
 
@@ -387,23 +434,23 @@ export const TableGroup: FC<IProps> = observer(
                             onDragEnd={onDragItemEnd}
                             onContextMenu={handleContextMenu(item)}
                         >
-                            <ListItemText primary={item.startNumber} />
-                            {/*&nbsp;-&nbsp;*/}
-                            <ListItemText primary={item.team?.name || sportsmanName(item?.sportsman!)} />
-                            {/*&nbsp;*/}
+                            {/* max-width - не работает */}
+                            <ListItemText primary={<Typography max-width={'10px'}>{item.startNumber}</Typography>} />
+                            <ListItemText
+                                primary={
+                                    <Typography textAlign={'left'}>
+                                        {item.team?.name || sportsmanName(item?.sportsman!)}
+                                    </Typography>
+                                }
+                            />
                             <ListItemText primary={transponder(item.sportsman)} />
-                            {/*&nbsp;*/}
-                            {checkStatus(0, deviceS(item.sportsman)?.status)}
-                            {checkStatus(1, deviceS(item.sportsman)?.status)}
-                            {checkStatus(2, deviceS(item.sportsman)?.status)}
-                            {checkStatus(3, deviceS(item.sportsman)?.status)}
+                            {checkStatus(-1, deviceS(item.sportsman)?.status)}
+                            {/*{checkStatus(0, deviceS(item.sportsman)?.status)}*/}
+                            {/*{checkStatus(1, deviceS(item.sportsman)?.status)}*/}
+                            {/*{checkStatus(2, deviceS(item.sportsman)?.status)}*/}
+                            {/*{checkStatus(3, deviceS(item.sportsman)?.status)}*/}
                             {checkStatus(4, deviceS(item.sportsman)?.status)}
-                            {/*<span>{story?.mxDevices?.get(item.startNumber)?.status}</span>*/}
-                            {/*&nbsp;*/}
                             {checkRSSI(deviceS(item.sportsman)?.rssi)}
-                            <span>{deviceS(item.sportsman)?.rssi}</span>
-                            {/*&nbsp;*/}
-                            {/*<span>{story?.mxDevices?.get(item.startNumber)?.battery}</span>*/}
                             {/*{item.channel !== undefined && item.color !== undefined && (*/}
                             {/*    <ColorAndChannel channel={item.channel} color={item.color} />*/}
                             {/*)}*/}

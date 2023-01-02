@@ -3,6 +3,7 @@ export interface IMXDevice {
     base: number;
     device: number;
     status: number;
+    version: number;
     battery: number;
     time: string
     lat: number;

@@ -270,7 +270,7 @@ export const RoundsContainer: FC = observer(() => {
             {(rounds || []).length === 0 && <div className={styles.empty}>No groups</div>}
             {selectedRound && (
                 <Grid container spacing={2} className={styles.container}>
-                    <Grid item xs={4} className={styles.groupsContainer}>
+                    <Grid item xs={6} className={styles.groupsContainer}>
                         <div className={styles.actionGroups}>
                             <Tooltip title="Copy group list">
                                 <IconButton onClick={handleCopyListGroups}>
@@ -293,7 +293,7 @@ export const RoundsContainer: FC = observer(() => {
                             competition={story.competition!}
                         />
                     </Grid>
-                    <Grid item xs={8} className={styles.containerRace}>
+                    <Grid item xs={6} className={styles.containerRace}>
                         {selectedGroup && (
                             <div className={styles.race}>
                                 <div className={styles.actionRace}>

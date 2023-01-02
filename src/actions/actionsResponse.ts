@@ -14,6 +14,7 @@ import { ISerialPortStatus } from '@/types/ISerialPortStatus';
 import { IWlanStatus } from '@/types/IWlanStatus';
 import { IMXBase } from '@/types/IMXBase';
 import { IMXDevice } from '@/types/IMXDevice';
+import { IMXLap } from '@/types/IMXLap';
 import { IReport } from '@/types/IReport';
 import { loadReportsAction } from '@/actions/actionReportRequest';
 import { IBroadCast } from '@/types/IBroadCast';
@@ -88,6 +89,11 @@ window.api.ipcRenderer.on('mx-base', (e: any, mxBase: IMXBase) => {
 
 window.api.ipcRenderer.on('mx-ping', (e: any, mxDevice: IMXDevice) => {
     story.setMXDevice(mxDevice);
+});
+
+window.api.ipcRenderer.on('mx-lap', (e: any, mxLap: IMXLap) => {
+    console.log(mxLap);
+    // story.setMXDevice(mxDevice);
 });
 
 window.api.ipcRenderer.on('status-connect', (e: any, wlanStatus: IWlanStatus, serialPortStatus: ISerialPortStatus) => {

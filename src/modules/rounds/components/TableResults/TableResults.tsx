@@ -58,10 +58,10 @@ export const TableResults: FC<IProps> = observer(
                         <TableRow>
                             <TableCell>Pilot</TableCell>
                             <TableCell>Laps</TableCell>
-                            <TableCell>Av. speed</TableCell>
+                            {/*<TableCell>Av. speed</TableCell>*/}
                             <TableCell>Max speed</TableCell>
+                            <TableCell>Best lap</TableCell>
                             <TableCell>Total time</TableCell>
-                            <TableCell>Best time</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -69,7 +69,7 @@ export const TableResults: FC<IProps> = observer(
                             <TableRow>
                                 <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
                                 <TableCell></TableCell>
-                                <TableCell></TableCell>
+                                {/*<TableCell></TableCell>*/}
                                 <TableCell></TableCell>
                                 <TableCell></TableCell>
                                 <TableCell></TableCell>
