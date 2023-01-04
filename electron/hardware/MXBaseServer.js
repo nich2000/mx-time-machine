@@ -7,13 +7,6 @@ let connections = [];
 let server = net.createServer();
 server.on('connection', handleConnection);
 
-// let mxBase = {
-//     id: 101,
-//     ip: server.address(),
-//     connected: false
-// }
-// sendToAllMessage('mx-base', mxBase);
-
 server.listen(30000, function() {
     console.log('server listening to: %j', server.address());
 });

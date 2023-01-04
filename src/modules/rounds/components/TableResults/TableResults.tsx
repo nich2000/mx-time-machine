@@ -51,6 +51,30 @@ export const TableResults: FC<IProps> = observer(
 
         const membersGroup = useMemo(() => [...group.sportsmen, ...group.teams], [group.sportsmen, group.teams]);
 
+        function resultS(sportsman: ISportsman | undefined) {
+            const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
+            console.log(_device);
+            const result = story?.mxResults?.get(+_device);
+            console.log(result);
+            return result;
+        }
+
+        function speedF(speed: number | undefined) {
+            let _speed = speed == undefined ? 0.0 : speed;
+
+            _speed /= 100;
+
+            return _speed;
+        }
+
+        function timeF(time: number | undefined) {
+            let _time = time == undefined ? 0.0 : time;
+
+            _time /= 1000;
+
+            return _time;
+        }
+
         return (
             <TableContainer component={Paper} variant="outlined" className={styles.root} ref={refTableContainer}>
                 <Table size="small" stickyHeader>
@@ -58,7 +82,6 @@ export const TableResults: FC<IProps> = observer(
                         <TableRow>
                             <TableCell>Pilot</TableCell>
                             <TableCell>Laps</TableCell>
-                            {/*<TableCell>Av. speed</TableCell>*/}
                             <TableCell>Max speed</TableCell>
                             <TableCell>Best lap</TableCell>
                             <TableCell>Total time</TableCell>
@@ -68,11 +91,10 @@ export const TableResults: FC<IProps> = observer(
                         {membersGroup.map((item) => (
                             <TableRow>
                                 <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
-                                <TableCell></TableCell>
-                                {/*<TableCell></TableCell>*/}
-                                <TableCell></TableCell>
-                                <TableCell></TableCell>
-                                <TableCell></TableCell>
+                                <TableCell>{resultS(item?.sportsman)?.laps}</TableCell>
+                                <TableCell>{speedF(resultS(item?.sportsman)?.best_speed)}</TableCell>
+                                <TableCell>{timeF(resultS(item?.sportsman)?.best_time)}</TableCell>
+                                <TableCell>{timeF(resultS(item?.sportsman)?.total_time)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

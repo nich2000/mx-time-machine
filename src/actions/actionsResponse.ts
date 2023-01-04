@@ -93,7 +93,7 @@ window.api.ipcRenderer.on('mx-ping', (e: any, mxDevice: IMXDevice) => {
 
 window.api.ipcRenderer.on('mx-lap', (e: any, mxLap: IMXLap) => {
     console.log(mxLap);
-    // story.setMXDevice(mxDevice);
+    story.setMXLap(mxLap);
 });
 
 window.api.ipcRenderer.on('status-connect', (e: any, wlanStatus: IWlanStatus, serialPortStatus: ISerialPortStatus) => {

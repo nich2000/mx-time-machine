@@ -7,6 +7,8 @@ export const invitationRaceAction = (group: IGroup): void => {
 
 export const startRaceAction = (group: IGroup): void => {
     window.api.ipcRenderer.send('race-start-request', group);
+
+    window.api.ipcRenderer.send('MXAction', '', 'start', []);
 };
 
 export const startSearchAction = (group: IGroup): void => {
@@ -15,6 +17,8 @@ export const startSearchAction = (group: IGroup): void => {
 
 export const stopRaceAction = (): void => {
     window.api.ipcRenderer.send('race-stop-request');
+
+    window.api.ipcRenderer.send('MXAction', '', 'stop', []);
 };
 
 export const getStartTimeAction = (): Promise<number> => {

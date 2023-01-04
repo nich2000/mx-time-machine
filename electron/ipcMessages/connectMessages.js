@@ -88,6 +88,24 @@ ipcMain.on('MXAction', async (e, id, action, devices) => {
                 };
                 break;
             }
+            case "start" : {
+                cmd = {
+                    cmd: "mode",
+                    object: "",
+                    value: "start",
+                    device: devices
+                };
+                break;
+            }
+            case "stop" : {
+                cmd = {
+                    cmd: "mode",
+                    object: "",
+                    value: "stop",
+                    device: devices
+                };
+                break;
+            }
             default : {
                 console.log("unknown action")
                 return;

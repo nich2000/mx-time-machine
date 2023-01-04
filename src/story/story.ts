@@ -10,6 +10,7 @@ import { ISerialPortStatus } from '@/types/ISerialPortStatus';
 import { IWlanStatus } from '@/types/IWlanStatus';
 import { IMXDevice } from '@/types/IMXDevice';
 import { IMXBase } from '@/types/IMXBase';
+import { IMXLap } from '@/types/IMXLap';
 import { IReport } from '@/types/IReport';
 import { IBroadCast } from '@/types/IBroadCast';
 
@@ -28,6 +29,7 @@ export class Story {
     public wlanStatus: IWlanStatus | undefined = undefined;
     public mxBase: IMXBase | undefined = undefined;
     public mxDevices: Map<number, IMXDevice> | undefined;
+    public mxResults: Map<number, IMXLap> | undefined;
     public connected: boolean = false;
     public startTime: number | undefined = undefined;
     public groupInRace: IGroup | undefined = undefined;
@@ -94,6 +96,30 @@ export class Story {
             this.mxDevices = new Map<number, IMXDevice>();
         }
         this.mxDevices.set(newMXDevice.device, newMXDevice);
+    };
+
+    public setMXLap = (newMXLap: IMXLap): void => {
+        if (this.mxResults === undefined) {
+            this.mxResults = new Map<number, IMXLap>();
+        }
+        let lap = this.mxResults.get(newMXLap.device);
+        if (lap !== undefined) {
+            lap.laps += 1;
+            lap.total_time += newMXLap.lap_time;
+        } else {
+            lap = { ...newMXLap };
+            lap.laps = 1;
+            lap.best_speed = lap.max_speed;
+            lap.best_time = lap.lap_time;
+            lap.total_time = newMXLap.lap_time;
+        }
+        if (lap.max_speed > lap.best_speed) {
+            lap.best_speed = lap.max_speed;
+        }
+        if (lap.lap_time < lap.best_time) {
+            lap.best_time = lap.lap_time;
+        }
+        this.mxResults.set(lap.device, { ...lap });
     };
 
     public setConnected = (newConnected: boolean): void => {
