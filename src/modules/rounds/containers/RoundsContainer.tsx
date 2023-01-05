@@ -185,8 +185,6 @@ export const RoundsContainer: FC = observer(() => {
     const handleMXAction = useCallback(
         (_id: string, action: string, devices: any) => {
             window.api.ipcRenderer.send('MXAction', _id, action, devices);
-
-            console.log(_id, action);
         },
         [selectedRound]
     );
@@ -273,13 +271,33 @@ export const RoundsContainer: FC = observer(() => {
                     <Grid item xs={6} className={styles.groupsContainer}>
                         <div className={styles.actionGroups}>
                             <Tooltip title="Copy group list">
-                                <IconButton onClick={handleCopyListGroups}>
-                                    <ContentCopyIcon />
-                                </IconButton>
+                                <Button color="primary" startIcon={<ContentCopyIcon />} onClick={handleCopyListGroups}>
+                                    Copy
+                                </Button>
                             </Tooltip>
-                            <Button color="primary" startIcon={<AddIcon />} onClick={handleOpenAddGroup}>
-                                Add group
-                            </Button>
+                            {/*<Tooltip title="Send device list to base">*/}
+                            {/*    <Button*/}
+                            {/*        color="primary"*/}
+                            {/*        startIcon={<FormatListNumberedIcon />}*/}
+                            {/*        onClick={handleOpenAddGroup}*/}
+                            {/*    >*/}
+                            {/*        Send list*/}
+                            {/*    </Button>*/}
+                            {/*</Tooltip>*/}
+                            {/*<Tooltip title="Send devices config to base">*/}
+                            {/*    <Button*/}
+                            {/*        color="primary"*/}
+                            {/*        startIcon={<SettingsSuggestIcon />}*/}
+                            {/*        onClick={handleOpenAddGroup}*/}
+                            {/*    >*/}
+                            {/*        Send config*/}
+                            {/*    </Button>*/}
+                            {/*</Tooltip>*/}
+                            <Tooltip title="Add group">
+                                <Button color="primary" startIcon={<AddIcon />} onClick={handleOpenAddGroup}>
+                                    Add group
+                                </Button>
+                            </Tooltip>
                         </div>
                         <ListGroups
                             groups={groups}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
 
-import { ReactComponent as Logo } from '../../../../media/logo.svg';
+import { ReactComponent as Logo } from '../../../../media/logo_mx.svg';
 import { ReactComponent as Users } from '../../../../media/users.svg';
 import { ReactComponent as Stopwatch } from '../../../../media/stopwatch.svg';
 import { ReactComponent as Report } from '../../../../media/report.svg';

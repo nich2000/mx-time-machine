@@ -1,13 +1,21 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { IRound } from '@/types/IRound';
-import { Tabs, Tab, Button, Box } from '@mui/material';
+import { Tabs, Tab, Button, Box, Tooltip } from '@mui/material';
+import Button1 from '@mui/material/Button';
 import { observer } from 'mobx-react';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { roundUpdateAction } from '@/actions/actionRoundRequest';
-
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import styles from './styles.module.scss';
+import { story } from '@/story/story';
 
 interface IProps {
     rounds: IRound[];
@@ -58,6 +66,68 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
         setInnerRounds(rounds);
     }, [rounds]);
 
+    function MXActionButton(action: string, label: string, Component: any) {
+        const [open, setOpen] = React.useState(false);
+
+        const handleClickOpen = () => {
+            setOpen(true);
+        };
+
+        const handleDisagree = () => {
+            setOpen(false);
+        };
+
+        const handleAgree = () => {
+            setOpen(false);
+
+            let devices: (number | undefined)[] = [];
+            for (let j = 0; j < story.groups.length; j++) {
+                const g = story.groups[j];
+                for (let i = 0; i < g.sportsmen.length; i++) {
+                    if (g.sportsmen[i] !== undefined) {
+                        if (g.sportsmen[i].sportsman !== undefined) {
+                            if (g.sportsmen[i].sportsman?.transponders[0] !== undefined) {
+                                let id = g.sportsmen[i].sportsman?.transponders[0];
+                                if (!devices.includes(id)) {
+                                    devices.push(id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            window.api.ipcRenderer.send('MXAction', '', action, devices);
+        };
+
+        function handleClose() {
+            setOpen(false);
+        }
+
+        return (
+            <div style={{ display: 'flex' }}>
+                <Button color="primary" startIcon={<Component />} onClick={handleClickOpen}>
+                    {label}
+                </Button>
+
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{`Send command "${action}" to device group?`}</DialogTitle>
+                    <DialogActions>
+                        <Button1 onClick={handleDisagree}>NO</Button1>
+                        <Button1 onClick={handleAgree} autoFocus>
+                            YES
+                        </Button1>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+
     return (
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <div className={styles.root}>
@@ -77,6 +147,16 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
                     ))}
                 </Tabs>
                 <div className={styles.actions}>
+                    {/*{!!selectedId && (*/}
+                    <Tooltip title="Send device list to base">
+                        {MXActionButton('list', 'Send list', FormatListNumberedIcon)}
+                    </Tooltip>
+                    {/*)}*/}
+                    {/*{!!selectedId && (*/}
+                    <Tooltip title="Send devices config to base">
+                        {MXActionButton('config', 'Send config', SettingsSuggestIcon)}
+                    </Tooltip>
+                    {/*)}*/}
                     {!!selectedId && (
                         <Button color="primary" startIcon={<EditIcon />} onClick={handleEditRound}>
                             Edit round

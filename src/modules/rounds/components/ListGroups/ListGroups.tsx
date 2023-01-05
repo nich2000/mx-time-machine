@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import { IGroup } from '@/types/IGroup';
 import { TableGroup } from '@/modules/rounds/components/TableGroup/TableGroup';
 import { ICompetition } from '@/types/ICompetition';
-
 import styles from './styles.module.scss';
 
 interface IProps {

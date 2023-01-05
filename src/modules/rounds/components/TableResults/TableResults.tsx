@@ -53,9 +53,9 @@ export const TableResults: FC<IProps> = observer(
 
         function resultS(sportsman: ISportsman | undefined) {
             const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
-            console.log(_device);
+            // console.log(_device);
             const result = story?.mxResults?.get(+_device);
-            console.log(result);
+            // console.log(result);
             return result;
         }
 
@@ -64,15 +64,51 @@ export const TableResults: FC<IProps> = observer(
 
             _speed /= 100;
 
-            return _speed;
+            return _speed.toFixed(2);
         }
 
         function timeF(time: number | undefined) {
             let _time = time == undefined ? 0.0 : time;
 
-            _time /= 1000;
+            if (_time < 0.001) {
+                return '00:00:00.000';
+            } else {
+                let _h = Math.trunc(_time / 1000 / 60 / 60);
+                let h = '00';
+                if (_h < 10) {
+                    h = '0' + _h;
+                } else {
+                    h = '' + _h;
+                }
 
-            return _time;
+                let _m = Math.trunc((_time - _h * 60 * 60 * 1000) / 60 / 1000);
+                let m = '00';
+                if (_m < 10) {
+                    m = '0' + _m;
+                } else {
+                    m = '' + _m;
+                }
+
+                let _s = Math.trunc((_time - _h * 60 * 60 * 1000 - _m * 60 * 1000) / 1000);
+                let s = '00';
+                if (_s < 10) {
+                    s = '0' + _s;
+                } else {
+                    s = '' + _s;
+                }
+
+                let _ms = _time % 1000;
+                let ms = '000';
+                if (_ms < 10) {
+                    ms = '00' + _ms;
+                } else if (_ms < 100) {
+                    ms = '0' + _ms;
+                } else {
+                    ms = '' + _ms;
+                }
+
+                return `${h}:${m}:${s}.${ms}`;
+            }
         }
 
         return (

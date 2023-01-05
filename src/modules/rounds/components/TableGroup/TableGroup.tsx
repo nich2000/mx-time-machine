@@ -14,7 +14,8 @@ import {
     Typography
 } from '@mui/material';
 import cn from 'classnames';
-import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+// import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+import { Tooltip } from '@mui/material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import Error from '@mui/icons-material/Error';
@@ -35,7 +36,7 @@ import BedtimeIcon from '@mui/icons-material/Bedtime';
 import StreamIcon from '@mui/icons-material/Stream';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+// import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import { sportsmanName } from '@/utils/sportsmanName';
 // import { ColorAndChannel } from '@/modules/rounds/components/ColorAndChannel/ColorAndChannel';
 import { ICompetition } from '@/types/ICompetition';
@@ -51,8 +52,8 @@ import 'react-hint/css/index.css';
 import Button1 from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { ISportsman } from '@/types/ISportsman';
 
@@ -344,6 +345,10 @@ export const TableGroup: FC<IProps> = observer(
                 onMXAction(id, action, devices);
             };
 
+            function handleClose() {
+                setOpen(false);
+            }
+
             return (
                 <b>
                     <IconButton data-rh={action} onClick={handleClickOpen}>
@@ -356,14 +361,11 @@ export const TableGroup: FC<IProps> = observer(
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
                     >
-                        <DialogTitle id="alert-dialog-title">{'Send command to device group?'}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">{action}</DialogContentText>
-                        </DialogContent>
+                        <DialogTitle id="alert-dialog-title">{`Send command "${action}" to device group?`}</DialogTitle>
                         <DialogActions>
-                            <Button1 onClick={handleDisagree}>Disagree</Button1>
+                            <Button1 onClick={handleDisagree}>NO</Button1>
                             <Button1 onClick={handleAgree} autoFocus>
-                                Agree
+                                YES
                             </Button1>
                         </DialogActions>
                     </Dialog>
@@ -377,9 +379,9 @@ export const TableGroup: FC<IProps> = observer(
 
         function deviceS(sportsman: ISportsman | undefined) {
             const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
-            console.log(_device);
+            // console.log(_device);
             const device = story?.mxDevices?.get(+_device);
-            console.log(device);
+            // console.log(device);
             return device;
         }
 
@@ -401,24 +403,24 @@ export const TableGroup: FC<IProps> = observer(
                             className={cn(styles.headerGroup, { [styles.selected]: isSelected(innerGroup) })}
                         >
                             {innerGroup.name}
-                            <ReactHint autoPosition events />
+                            {/*<ReactHint autoPosition events />*/}
                             <div className={styles.actionsGroup}>
-                                {/*List*/}
-                                {MXActionButton(innerGroup._id, 'list', FormatListNumberedIcon)}
-                                {/*Config*/}
-                                {MXActionButton(innerGroup._id, 'config', SettingsSuggestIcon)}
-                                {/*Sleep*/}
-                                {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon)}
-                                {/*Race*/}
-                                {MXActionButton(innerGroup._id, 'race', StreamIcon)}
-                                {/*Edit*/}
-                                <IconButton data-rh="Edit" onClick={onEdit(innerGroup._id)}>
-                                    <EditIcon />
-                                </IconButton>
-                                {/*Delete*/}
-                                <IconButton data-rh="Delete" onClick={onDelete(innerGroup._id)}>
-                                    <DeleteIcon />
-                                </IconButton>
+                                <Tooltip title="Send device sleep to base">
+                                    {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon)}
+                                </Tooltip>
+                                <Tooltip title="Send device ready to base">
+                                    {MXActionButton(innerGroup._id, 'ready', StreamIcon)}
+                                </Tooltip>
+                                <Tooltip title="Edit group">
+                                    <IconButton data-rh="edit" onClick={onEdit(innerGroup._id)}>
+                                        <EditIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Delete group">
+                                    <IconButton data-rh="delete" onClick={onDelete(innerGroup._id)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Tooltip>
                             </div>
                         </ListSubheader>
                     }

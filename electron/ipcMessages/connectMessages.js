@@ -66,7 +66,7 @@ ipcMain.on('MXAction', async (e, id, action, devices) => {
                     cmd: "config",
                     object: "device",
                     value: [],
-                    device: devices
+                    device: []
                 };
                 break;
             }
@@ -79,11 +79,11 @@ ipcMain.on('MXAction', async (e, id, action, devices) => {
                 };
                 break;
             }
-            case "race" : {
+            case "ready" : {
                 cmd = {
                     cmd: "mode",
                     object: "",
-                    value: "race",
+                    value: "ready",
                     device: devices
                 };
                 break;
