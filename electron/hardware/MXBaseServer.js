@@ -46,7 +46,7 @@ function handleConnection(conn) {
             try {
                 // console.log('onConnData, packet: ', dataList[i]);
                 let object = JSON.parse(dataList[i]);
-                console.log(object);
+                // console.log(object);
 
                 switch (object.cmd) {
                     case "ping": {

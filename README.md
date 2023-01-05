@@ -1,6 +1,6 @@
-# VS Time machine
+# MX Time machine
 
-Project for a timekeeping system VS Time machine
+Project for a timekeeping system MX Time machine
 
 ### `npm install --save cross-env`
 ### `npm install --save-dev cross-env`

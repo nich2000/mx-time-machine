@@ -2,7 +2,9 @@
   "name": "vs-time-machine",
   "version": "0.1.2",
   "private": true,
-  "productName": "VS Time Machine",
+  "productName": "MX Time Machine",
+  "author": "Maloii | NIch",
+  "description": "MX Time Machine",
   "dependencies": {
     "@craco/craco": "~5.6.0",
     "@electron/remote": "~2.0.8",
@@ -82,7 +84,7 @@
   },
   "build": {
     "extends": null,
-    "productName": "VS Time Machine",
+    "productName": "MX Time Machine",
     "appId": "com.vstimemachine",
     "files": [
       "dist/**/*",

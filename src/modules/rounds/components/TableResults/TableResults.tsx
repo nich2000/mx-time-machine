@@ -70,7 +70,7 @@ export const TableResults: FC<IProps> = observer(
         function timeF(time: number | undefined) {
             let _time = time == undefined ? 0.0 : time;
 
-            if (_time < 0.001) {
+            if (_time < 0.001 || _time >= 1000000000) {
                 return '00:00:00.000';
             } else {
                 let _h = Math.trunc(_time / 1000 / 60 / 60);
@@ -119,6 +119,7 @@ export const TableResults: FC<IProps> = observer(
                             <TableCell>Pilot</TableCell>
                             <TableCell>Laps</TableCell>
                             <TableCell>Max speed</TableCell>
+                            <TableCell>Last lap</TableCell>
                             <TableCell>Best lap</TableCell>
                             <TableCell>Total time</TableCell>
                         </TableRow>
@@ -129,6 +130,7 @@ export const TableResults: FC<IProps> = observer(
                                 <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
                                 <TableCell>{resultS(item?.sportsman)?.laps}</TableCell>
                                 <TableCell>{speedF(resultS(item?.sportsman)?.best_speed)}</TableCell>
+                                <TableCell>{timeF(resultS(item?.sportsman)?.lap_time)}</TableCell>
                                 <TableCell>{timeF(resultS(item?.sportsman)?.best_time)}</TableCell>
                                 <TableCell>{timeF(resultS(item?.sportsman)?.total_time)}</TableCell>
                             </TableRow>

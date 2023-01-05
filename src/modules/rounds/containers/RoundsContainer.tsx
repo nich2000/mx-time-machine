@@ -174,7 +174,7 @@ export const RoundsContainer: FC = observer(() => {
             if (
                 story.competition &&
                 selectedRound &&
-                window.confirm('Are you sure you want to delete the group? All  laps will be deleted with him!')
+                window.confirm('Are you sure you want to delete the group? All laps will be deleted with him!')
             ) {
                 groupDeleteAction(_id);
             }

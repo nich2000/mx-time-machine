@@ -105,21 +105,21 @@ export class Story {
         let lap = this.mxResults.get(newMXLap.device);
         if (lap !== undefined) {
             lap.laps += 1;
+            if (newMXLap.lap_time < lap.best_time) {
+                lap.best_time = newMXLap.lap_time;
+            }
+            if (newMXLap.max_speed > lap.best_speed) {
+                lap.best_speed = newMXLap.max_speed;
+            }
             lap.total_time += newMXLap.lap_time;
         } else {
-            lap = { ...newMXLap };
+            lap = newMXLap;
             lap.laps = 1;
-            lap.best_speed = lap.max_speed;
-            lap.best_time = lap.lap_time;
+            lap.best_time = newMXLap.lap_time;
+            lap.best_speed = newMXLap.max_speed;
             lap.total_time = newMXLap.lap_time;
         }
-        if (lap.max_speed > lap.best_speed) {
-            lap.best_speed = lap.max_speed;
-        }
-        if (lap.lap_time < lap.best_time) {
-            lap.best_time = lap.lap_time;
-        }
-        this.mxResults.set(lap.device, { ...lap });
+        this.mxResults.set(lap.device, lap);
     };
 
     public setConnected = (newConnected: boolean): void => {

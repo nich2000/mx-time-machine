@@ -1,5 +1,7 @@
 import { IGroup } from '@/types/IGroup';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
+import { story } from '@/story/story';
+// import { IMXLap } from '@/types/IMXLap';
 
 export const invitationRaceAction = (group: IGroup): void => {
     window.api.ipcRenderer.send('race-invitation-request', group);
@@ -7,6 +9,10 @@ export const invitationRaceAction = (group: IGroup): void => {
 
 export const startRaceAction = (group: IGroup): void => {
     window.api.ipcRenderer.send('race-start-request', group);
+
+    story.mxResults?.forEach(function (value, key) {
+        story.mxResults?.delete(key);
+    });
 
     window.api.ipcRenderer.send('MXAction', '', 'start', []);
 };
@@ -19,6 +25,8 @@ export const stopRaceAction = (): void => {
     window.api.ipcRenderer.send('race-stop-request');
 
     window.api.ipcRenderer.send('MXAction', '', 'stop', []);
+
+    window.api.ipcRenderer.send('MXResult', JSON.stringify(story.mxResults));
 };
 
 export const getStartTimeAction = (): Promise<number> => {

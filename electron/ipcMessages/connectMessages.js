@@ -49,6 +49,7 @@ ipcMain.on('status-connect-request', async (e) => {
 });
 
 ipcMain.on('MXAction', async (e, id, action, devices) => {
+    // console.log('MXAction');
     // console.log(id, action, devices)
 
     if(connections.length > 0) {
@@ -122,5 +123,58 @@ ipcMain.on('MXAction', async (e, id, action, devices) => {
         } catch (error) {
             console.log(error);
         }
+    }
+});
+
+function randomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+ipcMain.on('MXResult', async (e, results) => {
+    // console.log('MXResult');
+    // console.log(results);
+
+    let object = JSON.parse(results);
+    // console.log(object);
+
+    let data = 'Pilot;Device;Laps;BestSpeed;BestTime;TotalTime\n';
+    for (let i = 0; i < object.length; i++) {
+        // console.log(object[i]);
+        // console.log(object[i][0]);
+        // console.log(object[i][1]);
+
+        let lap = object[i][1];
+        data += 'pilot' + ';';
+        data += 'device' + ';';
+        data += lap.laps + ';';
+        data += lap.best_time + ';';
+        data += lap.best_speed + ';';
+        data += lap.total_time + '\n';
+    }
+
+    let date_ob = new Date();
+    let date = ("0" + date_ob.getDate()).slice(-2);
+    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+    let year = date_ob.getFullYear();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    let seconds = date_ob.getSeconds();
+    let timestamp = year + "" + month + "" + date + "_" + hours + "" + minutes + "" + seconds;
+    let filePath = './reports/';
+    let fileName = filePath + 'MXReport_' + timestamp + '_' + randomInt(100, 999) + '.csv';
+
+    const fs = require('fs');
+    fs.mkdirSync(filePath);
+    try {
+        fs.writeFileSync(
+            fileName,
+            data,
+            'utf-8'
+        );
+    }
+    catch(e) {
+        console.log(e);
     }
 });

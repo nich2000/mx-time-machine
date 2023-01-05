@@ -84,15 +84,17 @@ window.api.ipcRenderer.on('status-wlan', (e: any, wlanStatus: IWlanStatus) => {
 });
 
 window.api.ipcRenderer.on('mx-base', (e: any, mxBase: IMXBase) => {
+    // console.log(mxBase);
     story.setMXBase(mxBase);
 });
 
 window.api.ipcRenderer.on('mx-ping', (e: any, mxDevice: IMXDevice) => {
+    // console.log(mxDevice);
     story.setMXDevice(mxDevice);
 });
 
 window.api.ipcRenderer.on('mx-lap', (e: any, mxLap: IMXLap) => {
-    console.log(mxLap);
+    // console.log(mxLap);
     story.setMXLap(mxLap);
 });
 
