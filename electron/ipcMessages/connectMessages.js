@@ -74,8 +74,8 @@ ipcMain.on('MXAction', async (e, id, action, devices) => {
             case "sleep" : {
                 cmd = {
                     cmd: "mode",
-                    object: "",
-                    value: "sleep",
+                    object: "sleep",
+                    value: "",
                     device: devices
                 };
                 break;
@@ -83,26 +83,26 @@ ipcMain.on('MXAction', async (e, id, action, devices) => {
             case "ready" : {
                 cmd = {
                     cmd: "mode",
-                    object: "",
-                    value: "ready",
+                    object: "ready",
+                    value: "",
                     device: devices
                 };
                 break;
             }
             case "start" : {
                 cmd = {
-                    cmd: "mode",
-                    object: "",
-                    value: "start",
+                    cmd: "event",
+                    object: "start",
+                    value: "",
                     device: devices
                 };
                 break;
             }
             case "stop" : {
                 cmd = {
-                    cmd: "mode",
-                    object: "",
-                    value: "stop",
+                    cmd: "event",
+                    object: "stop",
+                    value: "",
                     device: devices
                 };
                 break;
