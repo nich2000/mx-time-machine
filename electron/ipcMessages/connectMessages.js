@@ -166,7 +166,9 @@ ipcMain.on('MXResult', async (e, results) => {
     let fileName = filePath + 'MXReport_' + timestamp + '_' + randomInt(100, 999) + '.csv';
 
     const fs = require('fs');
-    fs.mkdirSync(filePath);
+    if (!fs.existsSync(filePath)) {
+        fs.mkdirSync(filePath);
+    }
     try {
         fs.writeFileSync(
             fileName,

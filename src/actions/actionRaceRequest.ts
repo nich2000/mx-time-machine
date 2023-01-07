@@ -14,6 +14,8 @@ export const startRaceAction = (group: IGroup): void => {
         story.mxResults?.delete(key);
     });
 
+    // TODO При первом нажатии на старт список пустой. Потом всё ок.
+
     let devices: (number | undefined)[] = [];
     const g = story.groupInRace;
     if (g !== undefined) {
