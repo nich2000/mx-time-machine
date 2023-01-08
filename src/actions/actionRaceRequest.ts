@@ -8,14 +8,6 @@ export const invitationRaceAction = (group: IGroup): void => {
 };
 
 export const startRaceAction = (group: IGroup): void => {
-    window.api.ipcRenderer.send('race-start-request', group);
-
-    story.mxResults?.forEach(function (value, key) {
-        story.mxResults?.delete(key);
-    });
-
-    // TODO При первом нажатии на старт список пустой. Потом всё ок.
-
     let devices: (number | undefined)[] = [];
     const g = story.groupInRace;
     if (g !== undefined) {
@@ -32,6 +24,17 @@ export const startRaceAction = (group: IGroup): void => {
             }
         }
     }
+
+    // TODO При первом нажатии на старт список пустой. Потом всё ок.
+    if (devices.length == 0) {
+        return;
+    }
+
+    story.mxResults?.forEach(function (value, key) {
+        story.mxResults?.delete(key);
+    });
+
+    window.api.ipcRenderer.send('race-start-request', group);
 
     window.api.ipcRenderer.send('MXAction', '', 'start', devices);
 };
@@ -59,7 +62,6 @@ export const stopRaceAction = (): void => {
             }
         }
     }
-
     window.api.ipcRenderer.send('MXAction', '', 'stop', devices);
 
     window.api.ipcRenderer.send('MXResult', JSON.stringify(story.mxResults));

@@ -44,8 +44,8 @@ class Race {
     invitation = async (group) => {
         this.selectedGroup = group;
         sendToAllMessage('group-in-race', this.selectedGroup);
-        const text = `На старт приглашается ${group.name}. ${getAllNameMembersInGroup(group).join(', ')}`;
-        speech(text);
+        // const text = `На старт приглашается ${group.name}. ${getAllNameMembersInGroup(group).join(', ')}`;
+        // speech(text);
     };
 
     sayTimeLeft = (maxTimeRace) => {
@@ -233,7 +233,7 @@ class Race {
                         if (this.lastTimeLap[membersGroup._id] - this.startTime >= maxTimeRace) typeLap = 'HIDDEN';
                     }
                 }
-                //Проверка при фиксированном колличестве кругов. Если все круги пролетел то следующие помечаются как HIDDEN
+                //Проверка при фиксированном количестве кругов. Если все круги пролетел то следующие помечаются как HIDDEN
                 if (
                     round.typeRace === 'FIXED_COUNT_LAPS' &&
                     typeLap !== 'HIDDEN' &&

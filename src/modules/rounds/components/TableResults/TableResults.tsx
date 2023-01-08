@@ -67,7 +67,7 @@ export const TableResults: FC<IProps> = observer(
             return _speed.toFixed(2);
         }
 
-        function timeF(time: number | undefined) {
+        function millisToTime(time: number | undefined) {
             let _time = time == undefined ? 0.0 : time;
 
             if (_time < 0.001 || _time >= 1000000000) {
@@ -111,6 +111,49 @@ export const TableResults: FC<IProps> = observer(
             }
         }
 
+        // 12413030 -> 12:41:30.300
+        function gpsToTime(time: number | undefined) {
+            let _time = time == undefined ? 0.0 : time;
+
+            if (_time < 0.001 || _time >= 1000000000) {
+                return '00:00:00.000';
+            } else {
+                let _h = Math.trunc(_time / 1000000);
+                let h = '00';
+                if (_h < 10) {
+                    h = '0' + _h;
+                } else {
+                    h = '' + _h;
+                }
+
+                let _m = Math.trunc((_time - _h * 1000000) / 10000);
+                let m = '00';
+                if (_m < 10) {
+                    m = '0' + _m;
+                } else {
+                    m = '' + _m;
+                }
+
+                let _s = Math.trunc((_time - _h * 1000000 - _m * 10000) / 100);
+                let s = '00';
+                if (_s < 10) {
+                    s = '0' + _s;
+                } else {
+                    s = '' + _s;
+                }
+
+                let _ms = _time % 100;
+                let ms = '000';
+                if (_ms < 10) {
+                    ms = '0' + _ms + '0';
+                } else {
+                    ms = '' + _ms + '0';
+                }
+
+                return `${h}:${m}:${s}.${ms}`;
+            }
+        }
+
         return (
             <TableContainer component={Paper} variant="outlined" className={styles.root} ref={refTableContainer}>
                 <Table size="small" stickyHeader>
@@ -130,9 +173,9 @@ export const TableResults: FC<IProps> = observer(
                                 <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
                                 <TableCell>{resultS(item?.sportsman)?.laps}</TableCell>
                                 <TableCell>{speedF(resultS(item?.sportsman)?.best_speed)}</TableCell>
-                                <TableCell>{timeF(resultS(item?.sportsman)?.lap_time)}</TableCell>
-                                <TableCell>{timeF(resultS(item?.sportsman)?.best_time)}</TableCell>
-                                <TableCell>{timeF(resultS(item?.sportsman)?.total_time)}</TableCell>
+                                <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
+                                <TableCell>{millisToTime(resultS(item?.sportsman)?.best_time)}</TableCell>
+                                <TableCell>{gpsToTime(resultS(item?.sportsman)?.time)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

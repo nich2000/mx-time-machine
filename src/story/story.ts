@@ -104,6 +104,14 @@ export class Story {
         }
         let lap = this.mxResults.get(newMXLap.device);
         if (lap !== undefined) {
+            lap.cmd = newMXLap.cmd;
+            lap.base = newMXLap.base;
+            lap.device = newMXLap.device;
+            lap.time = newMXLap.time;
+            lap.lap_time = newMXLap.lap_time;
+            lap.max_speed = newMXLap.max_speed
+            lap.sectors = newMXLap.sectors;
+            lap.status = newMXLap.status;
             lap.laps += 1;
             if (newMXLap.lap_time < lap.best_time) {
                 lap.best_time = newMXLap.lap_time;
@@ -113,7 +121,7 @@ export class Story {
             }
             lap.total_time += newMXLap.lap_time;
         } else {
-            lap = newMXLap;
+            lap = { ...newMXLap };
             lap.laps = 1;
             lap.best_time = newMXLap.lap_time;
             lap.best_speed = newMXLap.max_speed;

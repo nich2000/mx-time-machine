@@ -4,7 +4,7 @@ export interface IMXLap {
     cmd: string;
     base: number;
     device: number;
-    time: string;
+    time: number;
     lap_time: number;
     max_speed: number;
     sectors: number;

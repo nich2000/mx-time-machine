@@ -63,14 +63,14 @@ export const StopWatch: FC<IProps> = observer(({ round, startTime, raceStatus }:
                 <legend>Time race</legend>
                 <span ref={refTimeRace}>00:00:000</span>
             </fieldset>
-            {round &&
-                [TypeRace.FIXED_TIME, TypeRace.FIXED_TIME_AND_ONE_LAP_AFTER].includes(round?.typeRace) &&
-                Number(round?.maxTimeRace) > 0 && (
-                    <fieldset className={styles.timer}>
-                        <legend>Time left</legend>
-                        <span ref={refTimeLeft}>00:00:000</span>
-                    </fieldset>
-                )}
+            {/*{round &&*/}
+            {/*    [TypeRace.FIXED_TIME, TypeRace.FIXED_TIME_AND_ONE_LAP_AFTER].includes(round?.typeRace) &&*/}
+            {/*    Number(round?.maxTimeRace) > 0 && (*/}
+            {/*        <fieldset className={styles.timer}>*/}
+            {/*            <legend>Time left</legend>*/}
+            {/*            <span ref={refTimeLeft}>00:00:000</span>*/}
+            {/*        </fieldset>*/}
+            {/*    )}*/}
         </div>
     );
 });

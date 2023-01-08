@@ -328,14 +328,14 @@ export const RoundsContainer: FC = observer(() => {
                                         raceStatus={story.raceStatus}
                                         startTime={story.startTime}
                                     />
-                                    {/*<Button*/}
-                                    {/*    variant="contained"*/}
-                                    {/*    className={styles.invite}*/}
-                                    {/*    onClick={handleInvitationRace}*/}
-                                    {/*    disabled={!raceReadyToStart || !story.connected}*/}
-                                    {/*>*/}
-                                    {/*    INVITE*/}
-                                    {/*</Button>*/}
+                                    <Button
+                                        variant="contained"
+                                        className={styles.invite}
+                                        onClick={handleInvitationRace}
+                                        // disabled={!raceReadyToStart || !story.connected}
+                                    >
+                                        INVITE
+                                    </Button>
                                     <Button
                                         variant="contained"
                                         color={raceReadyToStart ? 'success' : 'error'}

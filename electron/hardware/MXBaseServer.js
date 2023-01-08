@@ -50,10 +50,12 @@ function handleConnection(conn) {
 
                 switch (object.cmd) {
                     case "ping": {
+                        // console.log(object);
                         sendToAllMessage('mx-ping', object);
                         break;
                     }
                     case "lap": {
+                        console.log(object);
                         sendToAllMessage('mx-lap', object);
                         break;
                     }
