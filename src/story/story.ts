@@ -21,6 +21,12 @@ function gps_to_millis(gps: number) {
     let _s = Math.trunc((_time - _h * 1000000 - _m * 10000) / 100);
     let _ms = (_time % 100) * 10;
 
+    // Учитываем часовой пояс
+    _h += 3;
+    if (_h > 24) {
+        _h -= 24;
+    }
+
     console.log('g', _h, _m, _s, _ms);
 
     return (_h * 3600 + _m * 60 + _s) * 1000 + _ms;
