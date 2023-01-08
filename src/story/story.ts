@@ -14,6 +14,30 @@ import { IMXLap } from '@/types/IMXLap';
 import { IReport } from '@/types/IReport';
 import { IBroadCast } from '@/types/IBroadCast';
 
+function gps_to_millis(gps: number) {
+    let _time = gps;
+    let _h = Math.trunc(_time / 1000000);
+    let _m = Math.trunc((_time - _h * 1000000) / 10000);
+    let _s = Math.trunc((_time - _h * 1000000 - _m * 10000) / 100);
+    let _ms = (_time % 100) * 10;
+
+    console.log('g', _h, _m, _s, _ms);
+
+    return (_h * 3600 + _m * 60 + _s) * 1000 + _ms;
+}
+
+function unix_to_millis(unix: number) {
+    const _time = new Date(unix);
+    let _h = _time.getHours();
+    let _m = _time.getMinutes();
+    let _s = _time.getSeconds();
+    let _ms = Math.trunc((unix % 1000000) / 1000);
+
+    console.log('u', _h, _m, _s, _ms);
+
+    return (_h * 3600 + _m * 60 + _s) * 1000 + _ms;
+}
+
 export class Story {
     public competitions: Array<ICompetition> = [];
     public sportsmen: Array<ISportsman> = [];
@@ -99,6 +123,9 @@ export class Story {
     };
 
     public setMXLap = (newMXLap: IMXLap): void => {
+        // console.log(this.raceStatus);
+        // console.log(this.startTime);
+
         if (this.mxResults === undefined) {
             this.mxResults = new Map<number, IMXLap>();
         }
@@ -108,25 +135,39 @@ export class Story {
             lap.base = newMXLap.base;
             lap.device = newMXLap.device;
             lap.time = newMXLap.time;
-            lap.lap_time = newMXLap.lap_time;
-            lap.max_speed = newMXLap.max_speed
-            lap.sectors = newMXLap.sectors;
             lap.status = newMXLap.status;
+            lap.lap_time = newMXLap.lap_time;
+            lap.max_speed = newMXLap.max_speed;
+            lap.sectors = newMXLap.sectors;
+
+            lap.lap_time = gps_to_millis(lap.time) - gps_to_millis(lap.last_time);
+            lap.last_time = lap.time; // ms
+
             lap.laps += 1;
-            if (newMXLap.lap_time < lap.best_time) {
-                lap.best_time = newMXLap.lap_time;
+            if (lap.lap_time < lap.best_time) {
+                lap.best_time = lap.lap_time; // ms
             }
-            if (newMXLap.max_speed > lap.best_speed) {
-                lap.best_speed = newMXLap.max_speed;
+            if (lap.max_speed > lap.best_speed) {
+                lap.best_speed = lap.max_speed; // ms
             }
-            lap.total_time += newMXLap.lap_time;
+            lap.total_time += lap.lap_time; // ms
         } else {
             lap = { ...newMXLap };
+
+            if (this.startTime != undefined) {
+                lap.lap_time = gps_to_millis(lap.time) - unix_to_millis(this.startTime);
+            } else {
+                lap.lap_time = 0;
+            }
+            lap.last_time = lap.time; // ms
+
             lap.laps = 1;
-            lap.best_time = newMXLap.lap_time;
-            lap.best_speed = newMXLap.max_speed;
-            lap.total_time = newMXLap.lap_time;
+            lap.best_time = lap.lap_time; // ms
+            lap.best_speed = lap.max_speed;
+            lap.total_time = lap.lap_time; // ms
         }
+
+        // console.log(lap);
         this.mxResults.set(lap.device, lap);
     };
 
