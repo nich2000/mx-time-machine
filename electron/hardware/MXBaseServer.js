@@ -7,7 +7,7 @@ let connections = [];
 let server = net.createServer();
 server.on('connection', handleConnection);
 
-server.listen(30000, function() {
+server.listen(30303, function() {
     console.log('server listening to: %j', server.address());
 });
 
