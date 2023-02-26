@@ -164,7 +164,7 @@ export const TableResults: FC<IProps> = observer(
                             <TableCell>Max speed</TableCell>
                             <TableCell>Last lap</TableCell>
                             <TableCell>Best lap</TableCell>
-                            <TableCell>Total time</TableCell>
+                            {/*<TableCell>Total time</TableCell>*/}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -175,7 +175,7 @@ export const TableResults: FC<IProps> = observer(
                                 <TableCell>{speedF(resultS(item?.sportsman)?.best_speed)}</TableCell>
                                 <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
                                 <TableCell>{millisToTime(resultS(item?.sportsman)?.best_time)}</TableCell>
-                                <TableCell>{millisToTime(resultS(item?.sportsman)?.total_time)}</TableCell>
+                                {/*<TableCell>{millisToTime(resultS(item?.sportsman)?.total_time)}</TableCell>*/}
                             </TableRow>
                         ))}
                     </TableBody>

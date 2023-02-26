@@ -405,12 +405,12 @@ export const TableGroup: FC<IProps> = observer(
                             {innerGroup.name}
                             {/*<ReactHint autoPosition events />*/}
                             <div className={styles.actionsGroup}>
-                                <Tooltip title="Send device sleep to base">
-                                    {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon)}
-                                </Tooltip>
-                                <Tooltip title="Send device ready to base">
-                                    {MXActionButton(innerGroup._id, 'ready', StreamIcon)}
-                                </Tooltip>
+                                {/*<Tooltip title="Send device sleep to base">*/}
+                                {/*    {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon)}*/}
+                                {/*</Tooltip>*/}
+                                {/*<Tooltip title="Send device ready to base">*/}
+                                {/*    {MXActionButton(innerGroup._id, 'ready', StreamIcon)}*/}
+                                {/*</Tooltip>*/}
                                 <Tooltip title="Edit group">
                                     <IconButton data-rh="edit" onClick={onEdit(innerGroup._id)}>
                                         <EditIcon />

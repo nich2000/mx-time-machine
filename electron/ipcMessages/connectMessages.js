@@ -3,6 +3,7 @@ const { connector } = require('../Connector');
 const Serialport = require('serialport');
 const { sendToAllMessage } = require('./sendMessage');
 const { connections } = require('../hardware/MXBaseServer');
+const buffer = require("buffer");
 
 ipcMain.on('list-serial-ports-request', async (e) => {
     const list = (await Serialport.list()).map((item) => item.path);
@@ -50,7 +51,7 @@ ipcMain.on('status-connect-request', async (e) => {
 
 ipcMain.on('MXAction', async (e, id, action, devices) => {
     // console.log('MXAction');
-    // console.log(id, action, devices)
+    console.log(id, action, devices)
 
     if(connections.length > 0) {
         let cmd = {};
@@ -63,12 +64,33 @@ ipcMain.on('MXAction', async (e, id, action, devices) => {
                 break;
             }
             case "config" : {
+                const configName = './config.json'
+                const fs = require('fs');
+                if(!fs.existsSync(configName)) {
+                    console.log('Config not exists, create default config.');
+                    try {
+                        fs.writeFileSync(
+                            configName,
+                            '{"StartLat":5537362, "StartLon":2531864, "StartCourse":0, "StartRadius":30}',
+                            'utf-8'
+                        );
+                    }
+                    catch(e) {
+                        console.log(e);
+                    }
+                }
+                let buffer = fs.readFileSync(configName, 'utf8');
+                let data = JSON.parse(buffer.toString());
+                // console.log(data);
                 cmd = {
                     cmd: "config",
-                    object: "device",
-                    value: [],
-                    device: []
+                    object: "base",
+                    StartLat: data.StartLat,
+                    StartLon: data.StartLon,
+                    StartCourse: data.StartCourse,
+                    StartRadius: data.StartRadius,
                 };
+                // console.log(cmd);
                 break;
             }
             case "sleep" : {

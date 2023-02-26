@@ -97,7 +97,9 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
                 }
             }
 
-            window.api.ipcRenderer.send('MXAction', '', action, devices);
+            // window.api.ipcRenderer.send('MXAction', '', action, devices);
+            window.api.ipcRenderer.send('MXAction', '', 'config', devices);
+            window.api.ipcRenderer.send('MXAction', '', 'list', devices);
         };
 
         function handleClose() {
@@ -106,7 +108,12 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
 
         return (
             <div style={{ display: 'flex' }}>
-                <Button color="primary" startIcon={<Component />} onClick={handleClickOpen}>
+                <Button
+                    color="primary"
+                    startIcon={<Component />}
+                    onClick={handleClickOpen}
+                    disabled={!story?.mxBase?.connected}
+                >
                     {label}
                 </Button>
 
@@ -116,7 +123,8 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{`Send command "${action}" to device group?`}</DialogTitle>
+                    {/*<DialogTitle id="alert-dialog-title">{`Send command "${action}" to device group?`}</DialogTitle>*/}
+                    <DialogTitle id="alert-dialog-title">{`Send config to devices?`}</DialogTitle>
                     <DialogActions>
                         <Button1 onClick={handleDisagree}>NO</Button1>
                         <Button1 onClick={handleAgree} autoFocus>
@@ -148,13 +156,13 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
                 </Tabs>
                 <div className={styles.actions}>
                     {/*{!!selectedId && (*/}
-                    <Tooltip title="Send device list to base">
-                        {MXActionButton('list', 'Send list', FormatListNumberedIcon)}
-                    </Tooltip>
+                    {/*<Tooltip title="Send device list to base">*/}
+                    {/*    {MXActionButton('list', 'Send list', FormatListNumberedIcon)}*/}
+                    {/*</Tooltip>*/}
                     {/*)}*/}
                     {/*{!!selectedId && (*/}
-                    <Tooltip title="Send devices config to base">
-                        {MXActionButton('config', 'Send config', SettingsSuggestIcon)}
+                    <Tooltip title="Send config to base">
+                        {MXActionButton('config', 'Config base', SettingsSuggestIcon)}
                     </Tooltip>
                     {/*)}*/}
                     {!!selectedId && (

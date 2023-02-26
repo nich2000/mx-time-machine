@@ -5,6 +5,7 @@ import { useInterval } from '@/hooks/useInterval';
 import { story } from '@/story/story';
 
 import styles from './styles.module.scss';
+import { replace } from 'lodash';
 
 export const Connect: FC = observer(() => {
     const [portPath, setPortPath] = useState<string>('');
@@ -43,6 +44,10 @@ export const Connect: FC = observer(() => {
         });
     }, []);
 
+    function ip(ip: string | undefined) {
+        return replace(ip as string, '::ffff:', '');
+    }
+
     return (
         <div className={styles.selectSerialPort}>
             {/*{story?.wlanStatus?.isOpen ? (*/}
@@ -60,7 +65,7 @@ export const Connect: FC = observer(() => {
             {/*    </Button>*/}
             {/*)}*/}
             <span style={{ color: 'black', width: '200px' }}>Status: {story?.mxBase?.status}</span>
-            <span style={{ color: 'black', width: '200px' }}>IP: {story?.mxBase?.ip}</span>
+            <span style={{ color: 'black', width: '200px' }}>IP: {ip(story?.mxBase?.ip)}</span>
             {/*&nbsp;*/}
             {/*<span style={{ color: 'black', width: '50px' }}>{story?.mxBaseStatus?.rssi}</span>*/}
             {/*<FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>*/}
