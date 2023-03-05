@@ -4,6 +4,27 @@ const { sendToAllMessage } = require('../ipcMessages/sendMessage');
 
 let connections = [];
 
+const os = require("os");
+const filePath = os.homedir() + "/MX/"
+const fs = require('fs');
+if (!fs.existsSync(filePath)) {
+    fs.mkdirSync(filePath);
+}
+const configName = filePath + 'config.json'
+if(!fs.existsSync(configName)) {
+    console.log('Config not exists, create default config.');
+    try {
+        fs.writeFileSync(
+            configName,
+            '{"StartLat":5537362, "StartLon":2531864, "StartCourse":0, "StartRadius":30}',
+            'utf-8'
+        );
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
+
 let server = net.createServer();
 server.on('connection', handleConnection);
 
