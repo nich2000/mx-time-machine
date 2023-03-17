@@ -11,6 +11,11 @@ export interface ICompetition {
     playFail?: boolean;
     gates: IGate[];
 
+    latitude: number;
+    longitude: number;
+    radius: number;
+    course: number;
+
     color1: Color;
     color2: Color;
     color3: Color;

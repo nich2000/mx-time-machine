@@ -184,7 +184,7 @@ export const RoundsContainer: FC = observer(() => {
 
     const handleMXAction = useCallback(
         (_id: string, action: string, devices: any) => {
-            window.api.ipcRenderer.send('MXAction', _id, action, devices);
+            window.api.ipcRenderer.send('MXAction', _id, action, devices, 0, 0, 0, 0);
         },
         [selectedRound]
     );

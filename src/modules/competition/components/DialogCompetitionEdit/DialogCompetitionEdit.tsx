@@ -48,6 +48,11 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
     const [playFail, setPlayFail] = useState(competition?.playFail || false);
     const [logo, setLogo] = useState(competition?.logo || window.api.DEFAULT_COMPETITION_LOGO);
 
+    const [latitude, setLatitude] = useState<number>(competition?.latitude || 0);
+    const [longitude, setLongitude] = useState<number>(competition?.longitude || 0);
+    const [radius, setRadius] = useState<number>(competition?.radius || 0);
+    const [course, setCourse] = useState<number>(competition?.course || 0);
+
     const [color1, setColor1] = useState<Color>(competition?.color1 || Color.BLUE);
     const [color2, setColor2] = useState<Color>(competition?.color2 || Color.RED);
     const [color3, setColor3] = useState<Color>(competition?.color3 || Color.GREEN);
@@ -89,6 +94,22 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
 
     const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
+    }, []);
+
+    const handleChangeLatitude = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setLatitude(Number(event.target.value));
+    }, []);
+
+    const handleChangeLongitude = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setLongitude(Number(event.target.value));
+    }, []);
+
+    const handleChangeRadius = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setRadius(Number(event.target.value));
+    }, []);
+
+    const handleChangeCourse = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setCourse(Number(event.target.value));
     }, []);
 
     const handleChangeSelected = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,10 +191,15 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
 
     const handleSave = useCallback(() => {
         if (name) {
+            // console.log(latitude, longitude, radius, course);
             const newValue = {
                 name,
                 logo,
                 gates: _.cloneDeep(gates),
+                latitude,
+                longitude,
+                radius,
+                course,
                 selected,
                 skipFirstGate,
                 playFail,
@@ -194,6 +220,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                 channel7,
                 channel8
             };
+            // console.log(newValue);
             if (competition) {
                 competitionUpdateAction(competition._id, newValue);
             } else {
@@ -222,6 +249,10 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
         competition,
         logo,
         name,
+        latitude,
+        longitude,
+        radius,
+        course,
         onClose,
         selected,
         skipFirstGate,
@@ -248,9 +279,10 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs variant="scrollable" scrollButtons="auto" value={tabSelected} onChange={handleChangeTab}>
                             <Tab label="Data" value="Data" id="Data" />
-                            <Tab label="Gates" value="Gates" id="Gates" />
-                            <Tab label="Channels" value="Channels" id="Channels" />
-                            <Tab label="Colors" value="Colors" id="Colors" />
+                            <Tab label="Track" value="Track" id="Track" />
+                            {/*<Tab label="Gates" value="Gates" id="Gates" />*/}
+                            {/*<Tab label="Channels" value="Channels" id="Channels" />*/}
+                            {/*<Tab label="Colors" value="Colors" id="Colors" />*/}
                         </Tabs>
                     </Box>
                     <div hidden={tabSelected !== 'Data'} className={styles.tabPanel}>
@@ -293,13 +325,61 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                                 control={<Switch checked={selected} onChange={handleChangeSelected} />}
                                 label="Select this competition"
                             />
-                            <FormControlLabel
-                                control={<Switch checked={skipFirstGate} onChange={handleChangeSkipFirstGate} />}
-                                label="Skip the first gate"
+                            {/*<FormControlLabel*/}
+                            {/*    control={<Switch checked={skipFirstGate} onChange={handleChangeSkipFirstGate} />}*/}
+                            {/*    label="Skip the first gate"*/}
+                            {/*/>*/}
+                            {/*<FormControlLabel*/}
+                            {/*    control={<Switch checked={playFail} onChange={handleChangePlayFail} />}*/}
+                            {/*    label="Play a violation sound"*/}
+                            {/*/>*/}
+                        </Box>
+                    </div>
+                    <div hidden={tabSelected !== 'Track'} className={styles.tabPanel}>
+                        <Box component="form" sx={{ '& > :not(style)': { m: 1 } }} noValidate autoComplete="off">
+                            <TextField
+                                id="outlined-basic"
+                                label="Start latitude"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="5537362"
+                                value={latitude}
+                                error={!latitude}
+                                onChange={handleChangeLatitude}
                             />
-                            <FormControlLabel
-                                control={<Switch checked={playFail} onChange={handleChangePlayFail} />}
-                                label="Play a violation sound"
+                            <TextField
+                                id="outlined-basic"
+                                label="Start longitude"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="2531864"
+                                value={longitude}
+                                error={!longitude}
+                                onChange={handleChangeLongitude}
+                            />
+                            <TextField
+                                id="outlined-basic"
+                                label="Start radius"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="10"
+                                value={radius}
+                                error={radius < 1 || radius > 100}
+                                onChange={handleChangeRadius}
+                            />
+                            <TextField
+                                id="outlined-basic"
+                                label="Start course"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="0"
+                                value={course}
+                                error={course < 0 || course > 360}
+                                onChange={handleChangeCourse}
                             />
                         </Box>
                     </div>

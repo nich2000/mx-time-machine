@@ -97,9 +97,27 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
                 }
             }
 
-            // window.api.ipcRenderer.send('MXAction', '', action, devices);
-            window.api.ipcRenderer.send('MXAction', '', 'config', devices);
-            window.api.ipcRenderer.send('MXAction', '', 'list', devices);
+            // window.api.ipcRenderer.send('MXAction', '', action, devices, 0, 0, 0, 0);
+            window.api.ipcRenderer.send(
+                'MXAction',
+                '',
+                'config',
+                devices,
+                story.competition?.latitude,
+                story.competition?.longitude,
+                story.competition?.radius,
+                story.competition?.course
+            );
+            window.api.ipcRenderer.send(
+                'MXAction',
+                '',
+                'list',
+                devices,
+                story.competition?.latitude,
+                story.competition?.longitude,
+                story.competition?.radius,
+                story.competition?.course
+            );
         };
 
         function handleClose() {

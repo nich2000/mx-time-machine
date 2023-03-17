@@ -36,7 +36,7 @@ export const startRaceAction = (group: IGroup): void => {
 
     window.api.ipcRenderer.send('race-start-request', group);
 
-    window.api.ipcRenderer.send('MXAction', '', 'start', devices);
+    window.api.ipcRenderer.send('MXAction', '', 'start', devices, 0, 0, 0, 0);
 };
 
 export const startSearchAction = (group: IGroup): void => {
@@ -62,7 +62,7 @@ export const stopRaceAction = (): void => {
             }
         }
     }
-    window.api.ipcRenderer.send('MXAction', '', 'stop', devices);
+    window.api.ipcRenderer.send('MXAction', '', 'stop', devices, 0, 0, 0, 0);
 
     window.api.ipcRenderer.send('MXResult', JSON.stringify(story.mxResults));
 };

@@ -49,16 +49,16 @@ ipcMain.on('status-connect-request', async (e) => {
     }
 });
 
-ipcMain.on('MXAction', async (e, id, action, devices) => {
+ipcMain.on('MXAction', async (e, id, action, devices, latitude, longitude, radius, course) => {
     // console.log('MXAction');
-    console.log(id, action, devices)
+    console.log(id, action, devices, latitude, longitude, radius, course);
 
-    const os = require("os");
-    const filePath = os.homedir() + "/MX/"
-    const fs = require('fs');
-    if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath);
-    }
+    // const os = require("os");
+    // const filePath = os.homedir() + "/MX/"
+    // const fs = require('fs');
+    // if (!fs.existsSync(filePath)) {
+    //     fs.mkdirSync(filePath);
+    // }
     // console.log(filePath)
 
     if(connections.length > 0) {
@@ -72,32 +72,33 @@ ipcMain.on('MXAction', async (e, id, action, devices) => {
                 break;
             }
             case "config" : {
-                const configName = filePath + 'config.json'
-                if(!fs.existsSync(configName)) {
-                    console.log('Config not exists, create default config.');
-                    try {
-                        fs.writeFileSync(
-                            configName,
-                            '{"StartLat":5537362, "StartLon":2531864, "StartCourse":0, "StartRadius":30}',
-                            'utf-8'
-                        );
-                    }
-                    catch(e) {
-                        console.log(e);
-                    }
-                }
-                let buffer = fs.readFileSync(configName, 'utf8');
-                let data = JSON.parse(buffer.toString());
+                // const configName = filePath + 'config.json'
+                // if(!fs.existsSync(configName)) {
+                //     console.log('Config not exists, create default config.');
+                //     try {
+                //         fs.writeFileSync(
+                //             configName,
+                //             '{"StartLat":5537362, "StartLon":2531864, "StartCourse":0, "StartRadius":30}',
+                //             'utf-8'
+                //         );
+                //     }
+                //     catch(e) {
+                //         console.log(e);
+                //     }
+                // }
+                // let buffer = fs.readFileSync(configName, 'utf8');
+                // let data = JSON.parse(buffer.toString());
                 // console.log(data);
+
                 cmd = {
                     cmd: "config",
                     object: "base",
-                    StartLat: data.StartLat,
-                    StartLon: data.StartLon,
-                    StartCourse: data.StartCourse,
-                    StartRadius: data.StartRadius,
+                    StartLat: latitude,
+                    StartLon: longitude,
+                    StartCourse: radius,
+                    StartRadius: course,
                 };
-                // console.log(cmd);
+                console.log(cmd);
                 break;
             }
             case "sleep" : {
@@ -163,12 +164,12 @@ function randomInt(min, max) {
 
 ipcMain.on('MXResult', async (e, results) => {
     // console.log('MXResult');
-    // console.log(results);
+    console.log(results);
 
     let object = JSON.parse(results);
     // console.log(object);
 
-    let data = 'Pilot;Device;Laps;BestSpeed;BestTime;TotalTime\n';
+    let data = 'Pilot;Device;Laps;MaxSpeed;LastLap;BestLap\n';
     for (let i = 0; i < object.length; i++) {
         // console.log(object[i]);
         // console.log(object[i][0]);
@@ -178,9 +179,9 @@ ipcMain.on('MXResult', async (e, results) => {
         data += 'pilot' + ';';
         data += 'device' + ';';
         data += lap.laps + ';';
-        data += lap.best_time + ';';
         data += lap.best_speed + ';';
-        data += lap.total_time + '\n';
+        data += lap.last_time + ';';
+        data += lap.best_time + '\n';
     }
 
     const os = require("os");
@@ -200,6 +201,7 @@ ipcMain.on('MXResult', async (e, results) => {
     let seconds = date_ob.getSeconds();
     let timestamp = year + "" + month + "" + date + "_" + hours + "" + minutes + "" + seconds;
     let fileName = filePath + 'MXReport_' + timestamp + '_' + randomInt(100, 999) + '.csv';
+    console.log(fileName)
 
     try {
         fs.writeFileSync(
