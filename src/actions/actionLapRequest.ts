@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { ILap } from '@/types/ILap';
 import { IRound } from '@/types/IRound';
+import { IMXLap } from '@/types/IMXLap';
+import { IMXResult } from '@/types/IMXResult';
 
 export const loadLapsForGroupAction = (_id: string): void => {
     window.api.ipcRenderer.send('load-laps-for-group-request', _id);
@@ -27,4 +29,12 @@ export const lapInsertAction = (lap: Omit<ILap, '_id'>): void => {
 
 export const lapDeleteAction = (_id: string): void => {
     window.api.ipcRenderer.send('lap-delete-request', _id);
+};
+
+export const mxResultSetAction = (_id: number, result: IMXResult): void => {
+    window.api.ipcRenderer.send('mx-result-set-request', _id, result);
+};
+
+export const mxLapInsertAction = (lap: IMXLap): void => {
+    window.api.ipcRenderer.send('mx-lap-insert-request', lap);
 };

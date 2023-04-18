@@ -4,7 +4,9 @@ const {
     lapsFindByRoundIds,
     lapUpdate,
     lapDelete,
-    lapInsert
+    lapInsert,
+    mxResultUpdate,
+    mxLapInsert
 } = require('../repository/lapRepository');
 const { ipcMain } = require('electron');
 const { sendToAllMessage } = require('./sendMessage');
@@ -35,4 +37,14 @@ ipcMain.on('lap-update-request', async (e, _id, lap) => {
 ipcMain.on('lap-delete-request', async (e, _id) => {
     const count = await lapDelete(_id);
     sendToAllMessage('lap-delete-response', count);
+});
+
+ipcMain.on('mx-result-set-request', async (e, _id, result) => {
+    const newResult = await mxResultUpdate(_id, result);
+    sendToAllMessage('mx-result-set-response', newResult);
+});
+
+ipcMain.on('mx-lap-insert-request', async (e, lap) => {
+    const newLap = await mxLapInsert(lap);
+    sendToAllMessage('mx-lap-insert-response', newLap);
 });

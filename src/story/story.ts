@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { makeAutoObservable } from 'mobx';
 import { ICompetition } from '@/types/ICompetition';
 import { IRound } from '@/types/IRound';
@@ -13,6 +14,9 @@ import { IMXBase } from '@/types/IMXBase';
 import { IMXLap } from '@/types/IMXLap';
 import { IReport } from '@/types/IReport';
 import { IBroadCast } from '@/types/IBroadCast';
+import { mxLapInsertAction } from '@/actions/actionLapRequest';
+import { mxResultSetAction } from '@/actions/actionLapRequest';
+import { IMXResult } from '@/types/IMXResult';
 
 function gps_to_millis(gps: number) {
     let _time = gps;
@@ -160,7 +164,7 @@ export class Story {
         } else {
             lap = { ...newMXLap };
 
-            if (this.startTime != undefined) {
+            if (this.startTime !== undefined) {
                 lap.lap_time = gps_to_millis(lap.time) - unix_to_millis(this.startTime);
             } else {
                 lap.lap_time = 0;
@@ -175,6 +179,23 @@ export class Story {
 
         // console.log(lap);
         this.mxResults.set(lap.device, lap);
+
+        let cloneLap = { ...lap };
+        // const cloneLap = Object.assign({}, lap)
+        // const cloneLap = JSON.parse(JSON.stringify(lap));
+        // const cloneLap = _.cloneDeep(lap)
+        mxLapInsertAction(cloneLap);
+
+        let result: IMXResult = {
+            date: 123,
+            device: lap.device,
+            sportsman: '',
+            laps: lap.laps,
+            best_speed: lap.best_speed,
+            lap_time: lap.lap_time,
+            best_time: lap.best_speed
+        };
+        mxResultSetAction(lap.device, result);
     };
 
     public setConnected = (newConnected: boolean): void => {

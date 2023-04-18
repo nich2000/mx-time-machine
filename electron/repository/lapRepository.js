@@ -80,6 +80,35 @@ const lapDeleteByGroupId = (groupId) => {
     return db.lap.remove({ groupId }, { multi: true });
 };
 
+const mxResultUpdate = async (device, result) => {
+    let count;
+
+    let _result = await db.mx_result.find({ device });
+    if (_result.length === 0) {
+        await db.mx_result.insert(result);
+        count = 1;
+    } else {
+        count = await db.mx_result.update(
+            { device },
+            {
+                $set: {
+                    ...result
+                }
+            }
+        );
+    }
+
+    return count;
+};
+
+const mxResults = async () => {
+    return db.mx_result.find({});
+};
+
+const mxLapInsert = (lap) => {
+    return db.mx_lap.insert(lap);
+};
+
 module.exports = {
     lapsFindByGroupId,
     lapsFindByRoundId,
@@ -88,5 +117,8 @@ module.exports = {
     lapInsert,
     lapUpdate,
     lapDelete,
-    lapDeleteByGroupId
+    lapDeleteByGroupId,
+    mxResultUpdate,
+    mxLapInsert,
+    mxResults
 };

@@ -1,5 +1,5 @@
-// TODO убрать эти костыли!
 export interface IMXLap {
+    date: number;
     // Пакет
     cmd: string;
     base: number;

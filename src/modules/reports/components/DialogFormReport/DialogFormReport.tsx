@@ -32,8 +32,23 @@ interface IProps {
 }
 
 export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, onDelete, report, rounds }: IProps) => {
-    const [name, setName] = useState(report?.name || '');
-    const [type, setType] = useState(report?.type || TypeReport.BEST_LAP);
+    let _date = Date.now();
+    let date = new Date(_date);
+    let dateStr =
+        date.getFullYear() +
+        '' +
+        date.getMonth() +
+        '' +
+        date.getDate() +
+        '' +
+        '_' +
+        date.getHours() +
+        '' +
+        date.getMinutes() +
+        '' +
+        date.getHours();
+    const [name, setName] = useState(report?.name || dateStr);
+    const [type, setType] = useState(report?.type || TypeReport.MX_LAPS);
     const [typeRound, setTypeRound] = useState(report?.typeRound || TypeRoundReport.PRACTICE);
     const [notCountedRounds, setNotCountedRounds] = useState(report?.notCountedRounds || 1);
     const [onlySportsmen, setOnlySportsmen] = useState(report?.onlySportsmen || false);
@@ -124,74 +139,77 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
                     <FormControl fullWidth>
                         <InputLabel id="type-label">Type</InputLabel>
                         <Select<TypeReport> labelId="type-label" value={type} label="Type" onChange={handleChangeType}>
-                            {Object.keys(TypeReport).map((key) => (
-                                <MenuItem key={key} value={key}>
-                                    {key}
-                                </MenuItem>
-                            ))}
+                            {/*{Object.keys(TypeReport).map((key) => (*/}
+                            {/*    <MenuItem key={key} value={key}>*/}
+                            {/*        {key}*/}
+                            {/*    </MenuItem>*/}
+                            {/*))}*/}
+                            <MenuItem key={'MX_LAPS'} value={'MX_LAPS'}>
+                                {'MX_LAPS'}
+                            </MenuItem>
                         </Select>
                     </FormControl>
-                    {[TypeReport.BEST_LAP, TypeReport.BEST_PIT_STOP, TypeReport.COUNT_LAPS].includes(type) && (
-                        <FormControl fullWidth>
-                            <InputLabel id="type-round-label">Type round</InputLabel>
-                            <Select<TypeRoundReport>
-                                labelId="type-round-label"
-                                value={typeRound}
-                                label="Type round"
-                                onChange={handleChangeTypeRound}
-                            >
-                                {Object.keys(TypeRoundReport).map((key) => (
-                                    <MenuItem key={key} value={key}>
-                                        {key}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    )}
-                    {[TypeReport.ROUND_GROUPS, TypeReport.ROUND_GROUPS_LAPS].includes(type) && (
-                        <FormControl fullWidth>
-                            <InputLabel id="round-label">Round</InputLabel>
-                            <Select labelId="round-label" value={roundId} label="Round" onChange={handleChangeRoundId}>
-                                {(rounds || []).map((round) => (
-                                    <MenuItem key={round._id} value={round._id}>
-                                        {round.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    )}
 
-                    {type === TypeReport.BEST_LAP && (
-                        <FormControlLabel
-                            control={<Switch checked={onlySportsmen} onChange={handleChangeOnlySportsmen} />}
-                            label="Only sportsmen"
-                        />
-                    )}
-                    <FormControlLabel
-                        control={<Switch checked={simplified} onChange={handleChangeSimplified} />}
-                        label="Simplified"
-                    />
-                    <FormControlLabel
-                        control={<Switch checked={broadCastStyle} onChange={handleChangeBroadCastStyle} />}
-                        label="Broadсast style"
-                    />
-                    {type === TypeReport.COUNT_LAPS && (
-                        <TextField
-                            fullWidth
-                            label="Number of failed rounds not counted"
-                            type="number"
-                            value={notCountedRounds}
-                            onChange={handleChangeNotCountedRounds}
-                        />
-                    )}
-                    <TextField
-                        fullWidth
-                        label="Top positions in the report"
-                        type="number"
-                        value={count}
-                        onChange={handleChangeCount}
-                        helperText="0 = no limit"
-                    />
+                    {/*{[TypeReport.BEST_LAP, TypeReport.BEST_PIT_STOP, TypeReport.COUNT_LAPS].includes(type) && (*/}
+                    {/*    <FormControl fullWidth>*/}
+                    {/*        <InputLabel id="type-round-label">Type round</InputLabel>*/}
+                    {/*        <Select<TypeRoundReport>*/}
+                    {/*            labelId="type-round-label"*/}
+                    {/*            value={typeRound}*/}
+                    {/*            label="Type round"*/}
+                    {/*            onChange={handleChangeTypeRound}*/}
+                    {/*        >*/}
+                    {/*            {Object.keys(TypeRoundReport).map((key) => (*/}
+                    {/*                <MenuItem key={key} value={key}>*/}
+                    {/*                    {key}*/}
+                    {/*                </MenuItem>*/}
+                    {/*            ))}*/}
+                    {/*        </Select>*/}
+                    {/*    </FormControl>*/}
+                    {/*)}*/}
+                    {/*{[TypeReport.ROUND_GROUPS, TypeReport.ROUND_GROUPS_LAPS].includes(type) && (*/}
+                    {/*    <FormControl fullWidth>*/}
+                    {/*        <InputLabel id="round-label">Round</InputLabel>*/}
+                    {/*        <Select labelId="round-label" value={roundId} label="Round" onChange={handleChangeRoundId}>*/}
+                    {/*            {(rounds || []).map((round) => (*/}
+                    {/*                <MenuItem key={round._id} value={round._id}>*/}
+                    {/*                    {round.name}*/}
+                    {/*                </MenuItem>*/}
+                    {/*            ))}*/}
+                    {/*        </Select>*/}
+                    {/*    </FormControl>*/}
+                    {/*)}*/}
+                    {/*{type === TypeReport.BEST_LAP && (*/}
+                    {/*    <FormControlLabel*/}
+                    {/*        control={<Switch checked={onlySportsmen} onChange={handleChangeOnlySportsmen} />}*/}
+                    {/*        label="Only sportsmen"*/}
+                    {/*    />*/}
+                    {/*)}*/}
+                    {/*<FormControlLabel*/}
+                    {/*    control={<Switch checked={simplified} onChange={handleChangeSimplified} />}*/}
+                    {/*    label="Simplified"*/}
+                    {/*/>*/}
+                    {/*<FormControlLabel*/}
+                    {/*    control={<Switch checked={broadCastStyle} onChange={handleChangeBroadCastStyle} />}*/}
+                    {/*    label="Broadсast style"*/}
+                    {/*/>*/}
+                    {/*{type === TypeReport.COUNT_LAPS && (*/}
+                    {/*    <TextField*/}
+                    {/*        fullWidth*/}
+                    {/*        label="Number of failed rounds not counted"*/}
+                    {/*        type="number"*/}
+                    {/*        value={notCountedRounds}*/}
+                    {/*        onChange={handleChangeNotCountedRounds}*/}
+                    {/*    />*/}
+                    {/*)}*/}
+                    {/*<TextField*/}
+                    {/*    fullWidth*/}
+                    {/*    label="Top positions in the report"*/}
+                    {/*    type="number"*/}
+                    {/*    value={count}*/}
+                    {/*    onChange={handleChangeCount}*/}
+                    {/*    helperText="0 = no limit"*/}
+                    {/*/>*/}
                 </Box>
             </DialogContent>
             <DialogActions>

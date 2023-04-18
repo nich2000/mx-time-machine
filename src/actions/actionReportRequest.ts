@@ -19,3 +19,7 @@ export const reportUpdateAction = (_id: string, report: Omit<IReport, '_id' | 'c
 export const reportDeleteAction = (_id: string): void => {
     window.api.ipcRenderer.send('report-delete-request', _id);
 };
+
+export const loadMXResultsAction = (): void => {
+    window.api.ipcRenderer.send('load-mx-results-request');
+};

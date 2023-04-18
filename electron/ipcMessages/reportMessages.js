@@ -1,4 +1,5 @@
 const { reportFindByCompetitionId, reportInsert, reportUpdate, reportDelete } = require('../repository/reportRepository');
+const { mxResults } = require('../repository/lapRepository');
 const { ipcMain } = require('electron');
 const { sendToAllMessage } = require('./sendMessage');
 
@@ -24,4 +25,9 @@ ipcMain.on('report-update-request', async (e, _id, report) => {
 ipcMain.on('report-delete-request', async (e, _id) => {
     const count = await reportDelete(_id);
     sendToAllMessage('report-delete-response', count);
+});
+
+ipcMain.on('load-mx-results-request', async (e) => {
+    const newResult = await mxResults();
+    sendToAllMessage('load-mx-results-response', newResult);
 });
