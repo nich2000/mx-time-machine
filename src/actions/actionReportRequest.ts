@@ -1,4 +1,5 @@
 import { IReport } from '@/types/IReport';
+import { IMXResult } from '@/types/IMXResult';
 
 export const loadReportsAction = (competitionId: string): void => {
     window.api.ipcRenderer.send('load-reports-request', competitionId);
@@ -20,6 +21,6 @@ export const reportDeleteAction = (_id: string): void => {
     window.api.ipcRenderer.send('report-delete-request', _id);
 };
 
-export const loadMXResultsAction = (): void => {
-    window.api.ipcRenderer.send('load-mx-results-request');
+export const loadMXResultsAction = (): Promise<Array<IMXResult>> => {
+    return window.api.ipcRenderer.invoke('load-mx-results-request');
 };

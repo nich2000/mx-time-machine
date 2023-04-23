@@ -34,6 +34,7 @@ import { matrixLapsWithPitStop } from '@/utils/matrixLapsWithPitStop';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { TypeRace } from '@/types/TypeRace';
 import { IMXResult } from '@/types/IMXResult';
+import { loadMXResultsAction } from '@/actions/actionReportRequest';
 
 // import styles from './styles.module.scss';
 
@@ -156,7 +157,9 @@ export const ReportMXLaps: FC<IProps> = observer(() => {
 
     const [rows, setRows] = useState<Array<IMXResult>>([]);
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        loadMXResultsAction().then(setRows);
+    }, []);
 
     return (
         <TableContainer component={Paper} variant="outlined" ref={refTableContainer}>

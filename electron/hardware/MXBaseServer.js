@@ -51,8 +51,8 @@ function handleConnection(conn) {
     conn.once('close', onConnClose);
     conn.on('error', onConnError);
 
-    // {"cmd":"ping","base":101,"device":1,"status":255,"battery":0,"time":0,"lat":0,"lon":0,"rssi":47}
-    // {"cmd":"lap","base":101,"device":1,"time":"2022.01.01 20:00:00.000","sectors":321,"status":123}
+    // {"cmd":"ping","base":101,"device":14860101,"status":193,"battery":157,"time":09463567,"lat":1,"lon":2,"rssi":46}
+    // {"cmd":"lap","base":101,"device":14860104,"time":09463717,"lap_time":21673,"max_speed":13904,"sectors":321,"status":77}
     function onConnData(d) {
         let data = new Buffer.from(d).toString()
         if (data === '0') {
@@ -71,12 +71,14 @@ function handleConnection(conn) {
 
                 switch (object.cmd) {
                     case "ping": {
-                        // console.log(object);
+                        object.pingTime = Date.now()
+
+                        console.log(object);
                         sendToAllMessage('mx-ping', object);
                         break;
                     }
                     case "lap": {
-                        console.log(object);
+                        // console.log(object);
                         sendToAllMessage('mx-lap', object);
                         break;
                     }

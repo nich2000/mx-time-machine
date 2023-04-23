@@ -25,7 +25,12 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SdCardIcon from '@mui/icons-material/SdCard';
 import BatteryAlert from '@mui/icons-material/BatteryAlert';
 import Battery20 from '@mui/icons-material/Battery20';
+import BatteryCharging20 from '@mui/icons-material/BatteryCharging20';
 import Battery60 from '@mui/icons-material/Battery60';
+import BatteryCharging60 from '@mui/icons-material/BatteryCharging60';
+import Battery80 from '@mui/icons-material/Battery80';
+import BatteryCharging80 from '@mui/icons-material/BatteryCharging80';
+import BatteryChargingFull from '@mui/icons-material/BatteryChargingFull';
 import BatteryFull from '@mui/icons-material/BatteryFull';
 import SignalCellular0Bar from '@mui/icons-material/SignalCellular0Bar';
 import SignalCellular1Bar from '@mui/icons-material/SignalCellular1Bar';
@@ -45,8 +50,7 @@ import { Color } from '@/types/Color';
 import { Channel } from '@/types/VTXChannel';
 import { story } from '@/story/story';
 import { observer } from 'mobx-react';
-import { red } from '@mui/material/colors';
-import { green } from '@mui/material/colors';
+import { green, orange, red } from '@mui/material/colors';
 import ReactHintFactory from 'react-hint';
 import 'react-hint/css/index.css';
 import Button1 from '@mui/material/Button';
@@ -56,6 +60,8 @@ import DialogActions from '@mui/material/DialogActions';
 // import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { ISportsman } from '@/types/ISportsman';
+import { IMXDevice } from '@/types/IMXDevice';
+import { Cancel } from '@mui/icons-material';
 
 interface IProps {
     group: IGroup;
@@ -202,16 +208,44 @@ export const TableGroup: FC<IProps> = observer(
             setInnerGroup(_.cloneDeep(group));
         }, [group]);
 
-        function checkStatus(param: number, status?: number) {
+        function checkStatus(param: number, sportsman: ISportsman | undefined, status?: number) {
             const _status: number = status !== undefined ? status : 0;
 
             switch (param) {
                 // -1 check all statuses for error
                 case -1: {
-                    if ((_status & (7 << 0)) !== 0) {
-                        return <CheckCircle sx={{ color: green[500] }} />;
+                    const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
+                    const device = story?.mxDevices?.get(+_device);
+
+                    if (device !== undefined) {
+                        const sec = innerGroup.sportsmen.length / 2 + 2;
+                        const startDate = device.pingTime;
+                        const endDate = Date.now();
+                        const seconds = (endDate - startDate) / 1000;
+
+                        if (seconds > sec * 2) {
+                            // if ((_status & (7 << 0)) !== 0) {
+                            //     return <CheckCircle sx={{ color: red[500] }} />;
+                            // } else {
+                            //     return <Error sx={{ color: red[500] }} />;
+                            // }
+                            return <Cancel sx={{ color: red[500] }} />;
+                        } else if (seconds > sec) {
+                            if ((_status & (7 << 0)) !== 0) {
+                                return <CheckCircle sx={{ color: orange[500] }} />;
+                            } else {
+                                return <Error sx={{ color: orange[500] }} />;
+                            }
+                        } else {
+                            if ((_status & (7 << 0)) !== 0) {
+                                return <CheckCircle sx={{ color: green[500] }} />;
+                            } else {
+                                return <Error sx={{ color: green[500] }} />;
+                            }
+                        }
                     } else {
-                        return <Error sx={{ color: red[500] }} />;
+                        // return <Error sx={{ color: red[500] }} />;
+                        return <Cancel sx={{ color: red[500] }} />;
                     }
                     // break;
                 }
@@ -272,6 +306,36 @@ export const TableGroup: FC<IProps> = observer(
                 default: {
                     break;
                 }
+            }
+        }
+
+        function checkBattery(battery?: number) {
+            let _battery: number = battery !== undefined ? battery : 0;
+
+            const isCharging = _battery >= 128;
+
+            if (isCharging) {
+                _battery = _battery - 128;
+            }
+
+            // 0
+            // 32
+            // 64
+            // 96
+            if (_battery > 96) {
+                if (isCharging) return <BatteryChargingFull color="action" />;
+                else return <BatteryFull color="action" />;
+            } else if (_battery > 64) {
+                if (isCharging) return <BatteryCharging80 color="action" />;
+                else return <Battery80 color="action" />;
+            } else if (_battery > 32) {
+                if (isCharging) return <BatteryCharging60 color="action" />;
+                else return <Battery60 color="action" />;
+            } else if (_battery > 0) {
+                if (isCharging) return <BatteryCharging20 sx={{ color: red[500] }} />;
+                else return <Battery20 sx={{ color: red[500] }} />;
+            } else {
+                return <BatteryAlert sx={{ color: red[500] }} />;
             }
         }
 
@@ -385,6 +449,26 @@ export const TableGroup: FC<IProps> = observer(
             return device;
         }
 
+        // function deviceColor(sportsman: ISportsman | undefined) {
+        //     const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
+        //     const device = story?.mxDevices?.get(+_device);
+        //
+        //     if (device !== undefined) {
+        //         const sec = innerGroup.sportsmen.length / 2 + 2;
+        //         const startDate = device.pingTime;
+        //         const endDate = Date.now();
+        //         const seconds = (endDate - startDate) / 1000;
+        //         if (seconds > sec * 2) {
+        //             return 'red';
+        //         } else if (seconds > sec) {
+        //             return 'orange';
+        //         } else {
+        //             return 'green';
+        //         }
+        //     }
+        //     return 'black';
+        // }
+
         // function device(index: number) {
         //     return story?.mxDevices?.get(index);
         // }
@@ -431,6 +515,7 @@ export const TableGroup: FC<IProps> = observer(
                             divider
                             draggable="true"
                             selected={isSelected(innerGroup)}
+                            // containerStyle={{backgroundColor: '#3d3c3a'}}
                             onDragStart={onDragItemStart(item._id)}
                             onDragOver={onDragItemOver(item._id)}
                             onDragEnd={onDragItemEnd}
@@ -446,12 +531,13 @@ export const TableGroup: FC<IProps> = observer(
                                 }
                             />
                             <ListItemText primary={transponder(item.sportsman)} />
-                            {checkStatus(-1, deviceS(item.sportsman)?.status)}
+                            {checkStatus(-1, item.sportsman, deviceS(item.sportsman)?.status)}
                             {/*{checkStatus(0, deviceS(item.sportsman)?.status)}*/}
                             {/*{checkStatus(1, deviceS(item.sportsman)?.status)}*/}
                             {/*{checkStatus(2, deviceS(item.sportsman)?.status)}*/}
                             {/*{checkStatus(3, deviceS(item.sportsman)?.status)}*/}
-                            {checkStatus(4, deviceS(item.sportsman)?.status)}
+                            {/*{checkStatus(4, item.sportsman, deviceS(item.sportsman)?.status)}*/}
+                            {checkBattery(deviceS(item.sportsman)?.battery)}
                             {checkRSSI(deviceS(item.sportsman)?.rssi)}
                             {/*{item.channel !== undefined && item.color !== undefined && (*/}
                             {/*    <ColorAndChannel channel={item.channel} color={item.color} />*/}

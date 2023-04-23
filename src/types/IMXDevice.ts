@@ -1,4 +1,5 @@
 export interface IMXDevice {
+    pingTime: number;
     cmd: string;
     base: number;
     device: number;

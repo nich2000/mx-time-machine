@@ -12,14 +12,15 @@ import { loadRoundsAction } from '@/actions/actionRoundRequest';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { ISerialPortStatus } from '@/types/ISerialPortStatus';
 import { IWlanStatus } from '@/types/IWlanStatus';
-import { IMXBase } from '@/types/IMXBase';
-import { IMXDevice } from '@/types/IMXDevice';
-import { IMXLap } from '@/types/IMXLap';
 import { IReport } from '@/types/IReport';
 import { loadReportsAction } from '@/actions/actionReportRequest';
 import { IBroadCast } from '@/types/IBroadCast';
 import { getGroupInRaceAction, getRaceStatusAction } from '@/actions/actionRaceRequest';
 import { loadBroadCastsAction } from '@/actions/actionBroadcastRequest';
+import { IMXBase } from '@/types/IMXBase';
+import { IMXDevice } from '@/types/IMXDevice';
+import { IMXLap } from '@/types/IMXLap';
+import { IMXResult } from '@/types/IMXResult';
 
 window.api.ipcRenderer.on('load-competitions-response', (e: any, competitions: ICompetition[]) => {
     story.setCompetitions(competitions);
@@ -83,6 +84,20 @@ window.api.ipcRenderer.on('status-wlan', (e: any, wlanStatus: IWlanStatus) => {
     story.setConnected(wlanStatus.isOpen);
 });
 
+window.api.ipcRenderer.on('status-connect', (e: any, wlanStatus: IWlanStatus, serialPortStatus: ISerialPortStatus) => {
+    story.setWlanStatus(wlanStatus);
+    story.setSerialPortStatus(serialPortStatus);
+    story.setConnected(wlanStatus?.isOpen || serialPortStatus?.isOpen);
+});
+
+window.api.ipcRenderer.on('group-in-race', (e: any, group: IGroup) => {
+    story.setGroupInRace(group);
+});
+
+window.api.ipcRenderer.on('connector-message', (e: any, res: string) => {
+    story.setConnectorMessage(res);
+});
+
 window.api.ipcRenderer.on('mx-base', (e: any, mxBase: IMXBase) => {
     // console.log(mxBase);
     story.setMXBase(mxBase);
@@ -96,18 +111,4 @@ window.api.ipcRenderer.on('mx-ping', (e: any, mxDevice: IMXDevice) => {
 window.api.ipcRenderer.on('mx-lap', (e: any, mxLap: IMXLap) => {
     // console.log(mxLap);
     story.setMXLap(mxLap);
-});
-
-window.api.ipcRenderer.on('status-connect', (e: any, wlanStatus: IWlanStatus, serialPortStatus: ISerialPortStatus) => {
-    story.setWlanStatus(wlanStatus);
-    story.setSerialPortStatus(serialPortStatus);
-    story.setConnected(wlanStatus?.isOpen || serialPortStatus?.isOpen);
-});
-
-window.api.ipcRenderer.on('group-in-race', (e: any, group: IGroup) => {
-    story.setGroupInRace(group);
-});
-
-window.api.ipcRenderer.on('connector-message', (e: any, res: string) => {
-    story.setConnectorMessage(res);
 });
