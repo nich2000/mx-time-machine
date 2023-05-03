@@ -95,8 +95,8 @@ ipcMain.on('MXAction', async (e, id, action, devices, latitude, longitude, radiu
                     object: "base",
                     StartLat: latitude,
                     StartLon: longitude,
-                    StartCourse: radius,
-                    StartRadius: course,
+                    StartRadius: radius,
+                    StartCourse: course,
                 };
                 console.log(cmd);
                 break;

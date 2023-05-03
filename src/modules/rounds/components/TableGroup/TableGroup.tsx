@@ -204,9 +204,55 @@ export const TableGroup: FC<IProps> = observer(
             onUpdate(innerGroup._id, innerGroup);
         }, [innerGroup, onUpdate]);
 
+        const [dateTime, setDateTime] = useState('');
         useEffect(() => {
             setInnerGroup(_.cloneDeep(group));
-        }, [group]);
+
+            const interval = setInterval(() => {
+                let _currentDate = new Date();
+                let _dateTime =
+                    'Last Sync: ' +
+                    _currentDate.getDate() +
+                    '.' +
+                    (_currentDate.getMonth() + 1) +
+                    '.' +
+                    _currentDate.getFullYear() +
+                    ' ' +
+                    _currentDate.getHours() +
+                    ':' +
+                    _currentDate.getMinutes() +
+                    ':' +
+                    _currentDate.getSeconds();
+                setDateTime(_dateTime);
+                // console.log(dateTime);
+
+                let l = [...(innerGroup.sportsmen || []), ...(innerGroup.teams || [])];
+                for (let i = 0; i < l.length; i++) {
+                    const item = l[i];
+                    const sportsman = item.sportsman;
+                    const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
+                    const device = story?.mxDevices?.get(+_device);
+                    // console.log(device);
+
+                    if (device !== undefined) {
+                        const sec = innerGroup.sportsmen.length / 2 + 2;
+                        const startDate = device.pingTime;
+                        const endDate = Date.now();
+                        const seconds = (endDate - startDate) / 1000;
+                        // console.log(seconds);
+
+                        if (seconds > sec * 2) {
+                            device.connected = 0;
+                        } else if (seconds > sec) {
+                            device.connected = 1;
+                        } else {
+                            device.connected = 2;
+                        }
+                    }
+                }
+            }, 1000);
+            return () => clearInterval(interval);
+        }, [group, dateTime]);
 
         function checkStatus(param: number, sportsman: ISportsman | undefined, status?: number) {
             const _status: number = status !== undefined ? status : 0;
@@ -218,19 +264,33 @@ export const TableGroup: FC<IProps> = observer(
                     const device = story?.mxDevices?.get(+_device);
 
                     if (device !== undefined) {
-                        const sec = innerGroup.sportsmen.length / 2 + 2;
-                        const startDate = device.pingTime;
-                        const endDate = Date.now();
-                        const seconds = (endDate - startDate) / 1000;
-
-                        if (seconds > sec * 2) {
-                            // if ((_status & (7 << 0)) !== 0) {
-                            //     return <CheckCircle sx={{ color: red[500] }} />;
-                            // } else {
-                            //     return <Error sx={{ color: red[500] }} />;
-                            // }
+                        // const sec = innerGroup.sportsmen.length / 2 + 2;
+                        // const startDate = device.pingTime;
+                        // const endDate = Date.now();
+                        // const seconds = (endDate - startDate) / 1000;
+                        // if (seconds > sec * 2) {
+                        //     // if ((_status & (7 << 0)) !== 0) {
+                        //     //     return <CheckCircle sx={{ color: red[500] }} />;
+                        //     // } else {
+                        //     //     return <Error sx={{ color: red[500] }} />;
+                        //     // }
+                        //     return <Cancel sx={{ color: red[500] }} />;
+                        // } else if (seconds > sec) {
+                        //     if ((_status & (7 << 0)) !== 0) {
+                        //         return <CheckCircle sx={{ color: orange[500] }} />;
+                        //     } else {
+                        //         return <Error sx={{ color: orange[500] }} />;
+                        //     }
+                        // } else {
+                        //     if ((_status & (7 << 0)) !== 0) {
+                        //         return <CheckCircle sx={{ color: green[500] }} />;
+                        //     } else {
+                        //         return <Error sx={{ color: green[500] }} />;
+                        //     }
+                        // }
+                        if (device.connected === 0) {
                             return <Cancel sx={{ color: red[500] }} />;
-                        } else if (seconds > sec) {
+                        } else if (device.connected === 1) {
                             if ((_status & (7 << 0)) !== 0) {
                                 return <CheckCircle sx={{ color: orange[500] }} />;
                             } else {
@@ -475,6 +535,7 @@ export const TableGroup: FC<IProps> = observer(
 
         return (
             <Paper key={innerGroup._id} elevation={isSelected(innerGroup) ? 5 : 1} className={styles.paper}>
+                {/*<span>{dateTime}</span>*/}
                 <List
                     dense
                     onClick={onSelect(innerGroup._id)}

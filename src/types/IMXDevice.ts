@@ -10,4 +10,5 @@ export interface IMXDevice {
     lat: number;
     lon: number;
     rssi: number;
+    connected: number;
 }
