@@ -33,8 +33,55 @@ import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { matrixLapsWithPitStop } from '@/utils/matrixLapsWithPitStop';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { TypeRace } from '@/types/TypeRace';
+import { IMXResult } from '@/types/IMXResult';
 
 import styles from './styles.module.scss';
+
+interface ILapsProps {
+    laps: number | undefined;
+    refresh_time: number | undefined;
+}
+interface ILapsState {
+    color: string;
+}
+class LapsCell extends React.Component<ILapsProps, ILapsState> {
+    timer: any;
+
+    constructor(props: ILapsProps) {
+        super(props);
+        this.state = {
+            color: 'white'
+        };
+    }
+
+    componentDidMount() {
+        // this.timer = setTimeout(() => {
+        //     this.setState({ color: 'blue' });
+        // }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer);
+    }
+
+    componentDidUpdate(prevProps: Readonly<ILapsProps>, prevState: Readonly<ILapsState>, snapshot?: any) {
+        if (prevProps.laps !== this.props.laps) {
+            this.setState({ color: 'blue' });
+
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this.setState({ color: 'white' });
+            }, 500);
+        }
+    }
+
+    render() {
+        const style = {
+            backgroundColor: this.state.color
+        };
+        return <TableCell style={style}>{this.props.laps}</TableCell>;
+    }
+}
 
 interface IProps {
     round: IRound;
@@ -53,10 +100,7 @@ export const TableMXLaps: FC<IProps> = observer(
 
         function resultS(sportsman: ISportsman | undefined) {
             const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
-            // console.log(_device);
-            const result = story?.mxResults?.get(+_device);
-            // console.log(result);
-            return result;
+            return story?.mxResults?.get(+_device);
         }
 
         function speedF(speed: number | undefined) {
@@ -112,47 +156,58 @@ export const TableMXLaps: FC<IProps> = observer(
         }
 
         // 12413030 -> 12:41:30.300
-        function gpsToTime(time: number | undefined) {
-            let _time = time == undefined ? 0.0 : time;
+        // function gpsToTime(time: number | undefined) {
+        //     let _time = time == undefined ? 0.0 : time;
+        //
+        //     if (_time < 0.001 || _time >= 1000000000) {
+        //         return '00:00:00.000';
+        //     } else {
+        //         let _h = Math.trunc(_time / 1000000);
+        //         let h = '00';
+        //         if (_h < 10) {
+        //             h = '0' + _h;
+        //         } else {
+        //             h = '' + _h;
+        //         }
+        //
+        //         let _m = Math.trunc((_time - _h * 1000000) / 10000);
+        //         let m = '00';
+        //         if (_m < 10) {
+        //             m = '0' + _m;
+        //         } else {
+        //             m = '' + _m;
+        //         }
+        //
+        //         let _s = Math.trunc((_time - _h * 1000000 - _m * 10000) / 100);
+        //         let s = '00';
+        //         if (_s < 10) {
+        //             s = '0' + _s;
+        //         } else {
+        //             s = '' + _s;
+        //         }
+        //
+        //         let _ms = _time % 100;
+        //         let ms = '000';
+        //         if (_ms < 10) {
+        //             ms = '0' + _ms + '0';
+        //         } else {
+        //             ms = '' + _ms + '0';
+        //         }
+        //
+        //         return `${h}:${m}:${s}.${ms}`;
+        //     }
+        // }
 
-            if (_time < 0.001 || _time >= 1000000000) {
-                return '00:00:00.000';
-            } else {
-                let _h = Math.trunc(_time / 1000000);
-                let h = '00';
-                if (_h < 10) {
-                    h = '0' + _h;
-                } else {
-                    h = '' + _h;
-                }
-
-                let _m = Math.trunc((_time - _h * 1000000) / 10000);
-                let m = '00';
-                if (_m < 10) {
-                    m = '0' + _m;
-                } else {
-                    m = '' + _m;
-                }
-
-                let _s = Math.trunc((_time - _h * 1000000 - _m * 10000) / 100);
-                let s = '00';
-                if (_s < 10) {
-                    s = '0' + _s;
-                } else {
-                    s = '' + _s;
-                }
-
-                let _ms = _time % 100;
-                let ms = '000';
-                if (_ms < 10) {
-                    ms = '0' + _ms + '0';
-                } else {
-                    ms = '' + _ms + '0';
-                }
-
-                return `${h}:${m}:${s}.${ms}`;
-            }
-        }
+        // function lapsCell(result: IMXResult | undefined) {
+        //     const style = {
+        //         backgroundColor: 'red'
+        //     };
+        //     return (
+        //         <TableCell id={'cell_laps_' + result?.device} style={style}>
+        //             {result?.laps}
+        //         </TableCell>
+        //     );
+        // }
 
         return (
             <TableContainer component={Paper} variant="outlined" className={styles.root} ref={refTableContainer}>
@@ -170,7 +225,11 @@ export const TableMXLaps: FC<IProps> = observer(
                         {membersGroup.map((item) => (
                             <TableRow>
                                 <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
-                                <TableCell>{resultS(item?.sportsman)?.laps}</TableCell>
+                                {/*{lapsCell(resultS(item?.sportsman))}*/}
+                                <LapsCell
+                                    laps={resultS(item?.sportsman)?.laps}
+                                    refresh_time={resultS(item?.sportsman)?.refresh_time}
+                                />
                                 <TableCell>{speedF(resultS(item?.sportsman)?.best_speed)}</TableCell>
                                 <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
                                 <TableCell>{millisToTime(resultS(item?.sportsman)?.best_time)}</TableCell>

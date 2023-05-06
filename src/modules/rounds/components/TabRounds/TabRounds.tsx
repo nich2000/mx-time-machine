@@ -106,7 +106,8 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
                 story.competition?.latitude,
                 story.competition?.longitude,
                 story.competition?.radius,
-                story.competition?.course
+                story.competition?.course,
+                story.competition?.delay
             );
             window.api.ipcRenderer.send(
                 'MXAction',
@@ -116,7 +117,8 @@ export const TabRounds: FC<IProps> = observer(({ rounds, selectedId, onSelect, o
                 story.competition?.latitude,
                 story.competition?.longitude,
                 story.competition?.radius,
-                story.competition?.course
+                story.competition?.course,
+                story.competition?.delay
             );
         };
 

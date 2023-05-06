@@ -66,14 +66,17 @@ function handleConnection(conn) {
         for (let i = 0; i < dataList.length; i++) {
             try {
                 // console.log('onConnData, packet: ', dataList[i]);
-                let object = JSON.parse(dataList[i]);
+                // let object = JSON.parse(dataList[i]);
+                // TODO Костыль начинается в полночь - приходит время в виде числа с нулём спереди
+                let item = dataList[i].replaceAll('"time":0', '"time":')
+                let object = JSON.parse(item);
                 // console.log(object);
 
                 switch (object.cmd) {
                     case "ping": {
                         object.pingTime = Date.now()
 
-                        console.log(object);
+                        // console.log(object);
                         sendToAllMessage('mx-ping', object);
                         break;
                     }

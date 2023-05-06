@@ -15,6 +15,7 @@ export interface ICompetition {
     longitude: number;
     radius: number;
     course: number;
+    delay: number;
 
     color1: Color;
     color2: Color;

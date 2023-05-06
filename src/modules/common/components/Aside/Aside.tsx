@@ -10,6 +10,8 @@ import { ReactComponent as Report } from '../../../../media/report.svg';
 
 import styles from './styles.module.scss';
 
+const AppVersion = 'v.1.3';
+
 export const Aside = () => {
     return (
         <aside>
@@ -32,6 +34,7 @@ export const Aside = () => {
             {/*    <Broadcast />*/}
             {/*    <span>Broadcast</span>*/}
             {/*</Link>*/}
+            <span>{AppVersion}</span>
         </aside>
     );
 };

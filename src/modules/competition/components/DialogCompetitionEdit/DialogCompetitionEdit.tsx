@@ -52,6 +52,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
     const [longitude, setLongitude] = useState<number>(competition?.longitude || 0);
     const [radius, setRadius] = useState<number>(competition?.radius || 0);
     const [course, setCourse] = useState<number>(competition?.course || 0);
+    const [delay, setDelay] = useState<number>(competition?.delay || 0);
 
     const [color1, setColor1] = useState<Color>(competition?.color1 || Color.BLUE);
     const [color2, setColor2] = useState<Color>(competition?.color2 || Color.RED);
@@ -110,6 +111,10 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
 
     const handleChangeCourse = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setCourse(Number(event.target.value));
+    }, []);
+
+    const handleChangeDelay = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setDelay(Number(event.target.value));
     }, []);
 
     const handleChangeSelected = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,6 +205,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                 longitude,
                 radius,
                 course,
+                delay,
                 selected,
                 skipFirstGate,
                 playFail,
@@ -253,6 +259,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
         longitude,
         radius,
         course,
+        delay,
         onClose,
         selected,
         skipFirstGate,
@@ -380,6 +387,17 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                                 value={course}
                                 error={course < 0 || course > 360}
                                 onChange={handleChangeCourse}
+                            />
+                            <TextField
+                                id="outlined-basic"
+                                label="Start delay"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="0"
+                                value={delay}
+                                error={delay < 0 || delay > 10000}
+                                onChange={handleChangeDelay}
                             />
                         </Box>
                     </div>

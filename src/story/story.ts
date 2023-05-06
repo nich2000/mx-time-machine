@@ -17,6 +17,7 @@ import { IBroadCast } from '@/types/IBroadCast';
 import { mxLapInsertAction } from '@/actions/actionLapRequest';
 import { mxResultSetAction } from '@/actions/actionLapRequest';
 import { IMXResult } from '@/types/IMXResult';
+import { beep } from '@/utils/beep';
 
 function gps_to_millis(gps: number) {
     let _time = gps;
@@ -63,7 +64,8 @@ export class Story {
     public wlanStatus: IWlanStatus | undefined = undefined;
     public mxBase: IMXBase | undefined = undefined;
     public mxDevices: Map<number, IMXDevice> | undefined;
-    public mxResults: Map<number, IMXLap> | undefined;
+    public mxResults: Map<number, IMXResult> | undefined;
+    public mxLaps: Map<number, Map<number, IMXLap>> | undefined;
     public connected: boolean = false;
     public startTime: number | undefined = undefined;
     public groupInRace: IGroup | undefined = undefined;
@@ -133,69 +135,71 @@ export class Story {
     };
 
     public setMXLap = (newMXLap: IMXLap): void => {
-        // console.log(this.raceStatus);
-        // console.log(this.startTime);
-
-        if (this.mxResults === undefined) {
-            this.mxResults = new Map<number, IMXLap>();
+        // Все круги
+        if (this.mxLaps === undefined) {
+            this.mxLaps = new Map<number, Map<number, IMXLap>>();
         }
-        let lap = this.mxResults.get(newMXLap.device);
-        if (lap !== undefined) {
-            lap.cmd = newMXLap.cmd;
-            lap.base = newMXLap.base;
-            lap.device = newMXLap.device;
-            lap.time = newMXLap.time;
-            lap.status = newMXLap.status;
-            lap.lap_time = newMXLap.lap_time;
-            lap.max_speed = newMXLap.max_speed;
-            lap.sectors = newMXLap.sectors;
-
-            lap.lap_time = gps_to_millis(lap.time) - gps_to_millis(lap.last_time);
-            lap.last_time = lap.time; // ms
-
-            lap.laps += 1;
-            if (lap.lap_time < lap.best_time) {
-                lap.best_time = lap.lap_time; // ms
-            }
-            if (lap.max_speed > lap.best_speed) {
-                lap.best_speed = lap.max_speed; // ms
-            }
-            lap.total_time += lap.lap_time; // ms
-        } else {
-            lap = { ...newMXLap };
-
-            if (this.startTime !== undefined) {
-                lap.lap_time = gps_to_millis(lap.time) - unix_to_millis(this.startTime);
+        // Круги для девайса
+        if (this.mxLaps.get(newMXLap.device) === undefined) {
+            this.mxLaps.set(newMXLap.device, new Map<number, IMXLap>());
+        }
+        let laps = this.mxLaps.get(newMXLap.device);
+        let duplicate = false;
+        if (laps !== undefined) {
+            // Конкретный круг девайса
+            if (laps.get(newMXLap.time) !== undefined) {
+                // Дубль
+                duplicate = true;
             } else {
-                lap.lap_time = 0;
-            }
-            lap.last_time = lap.time; // ms
+                laps.set(newMXLap.time, { ...newMXLap });
 
-            lap.laps = 1;
-            lap.best_time = lap.lap_time; // ms
-            lap.best_speed = lap.max_speed;
-            lap.total_time = lap.lap_time; // ms
+                // let cloneLap = { ...lap };
+                // const cloneLap = Object.assign({}, lap)
+                // const cloneLap = JSON.parse(JSON.stringify(lap));
+                // const cloneLap = _.cloneDeep(lap)
+                mxLapInsertAction({ ...newMXLap });
+            }
+
+            beep(50, 1000, 1, 'sine');
         }
 
-        // console.log(lap);
-        this.mxResults.set(lap.device, lap);
-
-        let cloneLap = { ...lap };
-        // const cloneLap = Object.assign({}, lap)
-        // const cloneLap = JSON.parse(JSON.stringify(lap));
-        // const cloneLap = _.cloneDeep(lap)
-        mxLapInsertAction(cloneLap);
-
-        let result: IMXResult = {
-            date: 123,
-            device: lap.device,
-            sportsman: '',
-            laps: lap.laps,
-            best_speed: lap.best_speed,
-            lap_time: lap.lap_time,
-            best_time: lap.best_speed
-        };
-        mxResultSetAction(lap.device, result);
+        // Сводная информация
+        if (this.mxResults === undefined) {
+            this.mxResults = new Map<number, IMXResult>();
+        }
+        // Результаты конкретного девайса
+        let result = this.mxResults.get(newMXLap.device);
+        if (result !== undefined) {
+            if (!duplicate) {
+                result.lap_time = gps_to_millis(newMXLap.time) - gps_to_millis(result.last_time);
+                result.last_time = newMXLap.time; // ms
+                result.laps += 1;
+                if (newMXLap.lap_time < result.best_time) {
+                    result.best_time = newMXLap.lap_time; // ms
+                }
+                if (newMXLap.max_speed > result.best_speed) {
+                    result.best_speed = newMXLap.max_speed; // ms
+                }
+                result.total_time += result.lap_time; // ms
+                result.refresh_time = Date.now();
+            }
+        } else {
+            result = {
+                date: 1,
+                device: newMXLap.device,
+                sportsman: '',
+                laps: 1,
+                best_speed: newMXLap.max_speed,
+                lap_time:
+                    this.startTime !== undefined ? gps_to_millis(newMXLap.time) - unix_to_millis(this.startTime) : 0,
+                best_time: newMXLap.lap_time,
+                last_time: newMXLap.time,
+                total_time: newMXLap.lap_time,
+                refresh_time: Date.now()
+            };
+        }
+        this.mxResults.set(result.device, result);
+        mxResultSetAction(result.device, result);
     };
 
     public setConnected = (newConnected: boolean): void => {

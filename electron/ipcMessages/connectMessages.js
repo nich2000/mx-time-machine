@@ -49,9 +49,9 @@ ipcMain.on('status-connect-request', async (e) => {
     }
 });
 
-ipcMain.on('MXAction', async (e, id, action, devices, latitude, longitude, radius, course) => {
+ipcMain.on('MXAction', async (e, id, action, devices, latitude, longitude, radius, course, delay) => {
     // console.log('MXAction');
-    console.log(id, action, devices, latitude, longitude, radius, course);
+    console.log(id, action, devices, latitude, longitude, radius, course, delay);
 
     // const os = require("os");
     // const filePath = os.homedir() + "/MX/"
@@ -97,6 +97,7 @@ ipcMain.on('MXAction', async (e, id, action, devices, latitude, longitude, radiu
                     StartLon: longitude,
                     StartRadius: radius,
                     StartCourse: course,
+                    StartDelay: delay,
                 };
                 console.log(cmd);
                 break;
