@@ -32,6 +32,8 @@ export const lapDeleteAction = (_id: string): void => {
 };
 
 export const mxResultSetAction = (_id: number, result: IMXResult): void => {
+    // console.log("[DEBUG] mx-result-set-request, id: " + _id);
+
     window.api.ipcRenderer.send('mx-result-set-request', _id, result);
 };
 

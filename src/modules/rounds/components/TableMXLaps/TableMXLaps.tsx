@@ -198,17 +198,6 @@ export const TableMXLaps: FC<IProps> = observer(
         //     }
         // }
 
-        // function lapsCell(result: IMXResult | undefined) {
-        //     const style = {
-        //         backgroundColor: 'red'
-        //     };
-        //     return (
-        //         <TableCell id={'cell_laps_' + result?.device} style={style}>
-        //             {result?.laps}
-        //         </TableCell>
-        //     );
-        // }
-
         return (
             <TableContainer component={Paper} variant="outlined" className={styles.root} ref={refTableContainer}>
                 <Table size="small" stickyHeader>
@@ -225,12 +214,11 @@ export const TableMXLaps: FC<IProps> = observer(
                         {membersGroup.map((item) => (
                             <TableRow>
                                 <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
-                                {/*{lapsCell(resultS(item?.sportsman))}*/}
                                 <LapsCell
                                     laps={resultS(item?.sportsman)?.laps}
                                     refresh_time={resultS(item?.sportsman)?.refresh_time}
                                 />
-                                <TableCell>{speedF(resultS(item?.sportsman)?.best_speed)}</TableCell>
+                                <TableCell>{speedF(resultS(item?.sportsman)?.max_speed)}</TableCell>
                                 <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
                                 <TableCell>{millisToTime(resultS(item?.sportsman)?.best_time)}</TableCell>
                             </TableRow>

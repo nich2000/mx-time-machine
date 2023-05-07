@@ -18,6 +18,7 @@ import { mxLapInsertAction } from '@/actions/actionLapRequest';
 import { mxResultSetAction } from '@/actions/actionLapRequest';
 import { IMXResult } from '@/types/IMXResult';
 import { beep } from '@/utils/beep';
+import { sportsmanName } from '@/utils/sportsmanName';
 
 function gps_to_millis(gps: number) {
     let _time = gps;
@@ -177,6 +178,7 @@ export class Story {
                 if (newMXLap.lap_time < result.best_time) {
                     result.best_time = newMXLap.lap_time; // ms
                 }
+                result.max_speed = newMXLap.max_speed;
                 if (newMXLap.max_speed > result.best_speed) {
                     result.best_speed = newMXLap.max_speed; // ms
                 }
@@ -184,11 +186,39 @@ export class Story {
                 result.refresh_time = Date.now();
             }
         } else {
+            let date = new Date();
+            let y = '' + date.getFullYear();
+            let m = '' + (date.getMonth() + 1);
+            if (date.getMonth() + 1 < 10) {
+                m = '0' + m;
+            }
+            let d = '' + date.getDate();
+            if (date.getDate() < 10) {
+                d = '0' + d;
+            }
+            let dateStr: string = y + m + d;
+
+            let sportsman: string = '';
+            for (let i = 0; i < story.sportsmen.length; i++) {
+                let needBreak = false;
+                for (let j = 0; j < story.sportsmen[i].transponders.length; j++) {
+                    if (story.sportsmen[i].transponders[j] == newMXLap.device) {
+                        sportsman = sportsmanName(story.sportsmen[i]);
+                        needBreak = true;
+                        break;
+                    }
+                }
+                if (needBreak) {
+                    break;
+                }
+            }
+
             result = {
-                date: 1,
+                date: parseInt(dateStr, 10),
+                sportsman: sportsman,
                 device: newMXLap.device,
-                sportsman: '',
                 laps: 1,
+                max_speed: newMXLap.max_speed,
                 best_speed: newMXLap.max_speed,
                 lap_time:
                     this.startTime !== undefined ? gps_to_millis(newMXLap.time) - unix_to_millis(this.startTime) : 0,
@@ -198,8 +228,10 @@ export class Story {
                 refresh_time: Date.now()
             };
         }
-        this.mxResults.set(result.device, result);
-        mxResultSetAction(result.device, result);
+        if (!duplicate) {
+            this.mxResults.set(result.device, result);
+            mxResultSetAction(result.device, { ...result });
+        }
     };
 
     public setConnected = (newConnected: boolean): void => {

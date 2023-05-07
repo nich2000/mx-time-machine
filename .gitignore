@@ -26,3 +26,4 @@ yarn-error.log*
 /reports/
 /.idea/
 /vs-time-machine.iml
+tmp

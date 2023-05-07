@@ -4,6 +4,7 @@ export interface IMXResult {
     sportsman: string;
     laps: number;
     best_speed: number;
+    max_speed: number;
     lap_time: number;
     best_time: number;
     last_time: number;

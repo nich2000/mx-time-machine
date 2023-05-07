@@ -23,10 +23,15 @@ const db = {
 };
 
 db.competition.ensureIndex({ fieldName: 'selected' });
+
 db.sportsman.ensureIndex({ fieldName: 'competitionId' });
+
 db.team.ensureIndex({ fieldName: 'competitionId' });
+
 db.round.ensureIndex({ fieldName: 'competitionId' });
+
 db.group.ensureIndex({ fieldName: 'roundId' });
+
 db.lap.ensureIndex({ fieldName: 'memberGroupId' });
 db.lap.ensureIndex({ fieldName: 'groupId' });
 db.lap.ensureIndex({ fieldName: 'roundId' });

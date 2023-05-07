@@ -178,7 +178,7 @@ export const ReportMXLaps: FC<IProps> = observer(() => {
                         <TableRow>
                             <TableCell>{item?.sportsman}</TableCell>
                             <TableCell>{item?.laps}</TableCell>
-                            <TableCell>{speedF(item?.best_speed)}</TableCell>
+                            <TableCell>{speedF(item?.max_speed)}</TableCell>
                             <TableCell>{millisToTime(item?.lap_time)}</TableCell>
                             <TableCell>{millisToTime(item?.best_time)}</TableCell>
                         </TableRow>

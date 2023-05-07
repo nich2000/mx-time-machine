@@ -81,12 +81,16 @@ const lapDeleteByGroupId = (groupId) => {
 };
 
 const mxResultUpdate = async (device, result) => {
+    // console.log("[DEBUG] mxResultUpdate");
+
     let count;
 
     let _result = await db.mx_result.find({ device });
     if (_result.length === 0) {
         await db.mx_result.insert(result);
         count = 1;
+
+        console.log("[DEBUG] mxResult, insert: " + device + ", count: " + count);
     } else {
         count = await db.mx_result.update(
             { device },
@@ -96,6 +100,8 @@ const mxResultUpdate = async (device, result) => {
                 }
             }
         );
+
+        console.log("[DEBUG] mxResult, update: " + device + ", count: " + count);
     }
 
     return count;
