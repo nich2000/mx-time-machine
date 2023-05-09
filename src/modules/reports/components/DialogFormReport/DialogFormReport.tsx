@@ -31,23 +31,34 @@ interface IProps {
     rounds?: IRound[];
 }
 
+function dateTimeStr(): string {
+    let date = new Date();
+    let y = '' + date.getFullYear();
+    let m = '' + (date.getMonth() + 1);
+    if (date.getMonth() + 1 < 10) {
+        m = '0' + m;
+    }
+    let d = '' + date.getDate();
+    if (date.getDate() < 10) {
+        d = '0' + d;
+    }
+    let h = '' + date.getHours();
+    if (date.getHours() < 10) {
+        h = '0' + h;
+    }
+    let mm = '' + date.getMinutes();
+    if (date.getMinutes() < 10) {
+        mm = '0' + mm;
+    }
+    let s = '' + date.getSeconds();
+    if (date.getSeconds() < 10) {
+        s = '0' + s;
+    }
+    return y + m + d + '_' + h + mm + s;
+}
+
 export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, onDelete, report, rounds }: IProps) => {
-    let _date = Date.now();
-    let date = new Date(_date);
-    let dateStr =
-        date.getFullYear() +
-        '' +
-        date.getMonth() +
-        '' +
-        date.getDate() +
-        '' +
-        '_' +
-        date.getHours() +
-        '' +
-        date.getMinutes() +
-        '' +
-        date.getHours();
-    const [name, setName] = useState(report?.name || dateStr);
+    const [name, setName] = useState(report?.name || dateTimeStr());
     const [type, setType] = useState(report?.type || TypeReport.MX_LAPS);
     const [typeRound, setTypeRound] = useState(report?.typeRound || TypeRoundReport.PRACTICE);
     const [notCountedRounds, setNotCountedRounds] = useState(report?.notCountedRounds || 1);

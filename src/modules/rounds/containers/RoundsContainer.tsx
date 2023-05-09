@@ -189,17 +189,17 @@ export const RoundsContainer: FC = observer(() => {
         [selectedRound]
     );
 
-    const handleInvitationRace = useCallback(() => {
-        if (selectedGroup) {
-            if (raceReadyToStart) {
-                invitationRaceAction({
-                    ..._.cloneDeep(selectedGroup),
-                    competition: _.cloneDeep(story.competition),
-                    round: _.cloneDeep(selectedRound)
-                });
-            }
-        }
-    }, [raceReadyToStart, selectedGroup, selectedRound]);
+    // const handleInvitationRace = useCallback(() => {
+    //     if (selectedGroup) {
+    //         if (raceReadyToStart) {
+    //             invitationRaceAction({
+    //                 ..._.cloneDeep(selectedGroup),
+    //                 competition: _.cloneDeep(story.competition),
+    //                 round: _.cloneDeep(selectedRound)
+    //             });
+    //         }
+    //     }
+    // }, [raceReadyToStart, selectedGroup, selectedRound]);
 
     const handleStartRace = useCallback(() => {
         if (selectedGroup) {
@@ -220,15 +220,15 @@ export const RoundsContainer: FC = observer(() => {
         }
     }, [raceReadyToStart, selectedGroup, selectedRound]);
 
-    const handleStartSearch = useCallback(() => {
-        if (selectedGroup) {
-            if (raceReadyToStart) {
-                startSearchAction(_.cloneDeep(selectedGroup));
-            } else {
-                stopRaceAction();
-            }
-        }
-    }, [raceReadyToStart, selectedGroup]);
+    // const handleStartSearch = useCallback(() => {
+    //     if (selectedGroup) {
+    //         if (raceReadyToStart) {
+    //             startSearchAction(_.cloneDeep(selectedGroup));
+    //         } else {
+    //             stopRaceAction();
+    //         }
+    //     }
+    // }, [raceReadyToStart, selectedGroup]);
 
     const handleCopyListGroups = useCallback(() => {
         const textGroups = groups
@@ -253,6 +253,8 @@ export const RoundsContainer: FC = observer(() => {
     useEffect(() => {
         if (selectedGroup) {
             loadLapsForGroupAction(selectedGroup._id);
+
+            story.setGroupInRace(selectedGroup);
         }
     }, [selectedGroup]);
 
@@ -328,14 +330,14 @@ export const RoundsContainer: FC = observer(() => {
                                         raceStatus={story.raceStatus}
                                         startTime={story.startTime}
                                     />
-                                    <Button
-                                        variant="contained"
-                                        className={styles.invite}
-                                        onClick={handleInvitationRace}
-                                        // disabled={!raceReadyToStart || !story.connected}
-                                    >
-                                        INVITE
-                                    </Button>
+                                    {/*<Button*/}
+                                    {/*    variant="contained"*/}
+                                    {/*    className={styles.invite}*/}
+                                    {/*    onClick={handleInvitationRace}*/}
+                                    {/*    // disabled={!raceReadyToStart || !story.connected}*/}
+                                    {/*>*/}
+                                    {/*    INVITE*/}
+                                    {/*</Button>*/}
                                     <Button
                                         variant="contained"
                                         color={raceReadyToStart ? 'success' : 'error'}

@@ -81,7 +81,7 @@ function handleConnection(conn) {
                         break;
                     }
                     case "lap": {
-                        // console.log(object);
+                        console.log(object);
                         sendToAllMessage('mx-lap', object);
                         break;
                     }

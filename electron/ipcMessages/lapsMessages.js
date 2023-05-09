@@ -42,7 +42,7 @@ ipcMain.on('lap-delete-request', async (e, _id) => {
 ipcMain.on('mx-result-set-request', async (e, _id, result) => {
     const newResult = await mxResultUpdate(_id, result);
     // sendToAllMessage('mx-result-set-response', newResult);
-    console.log("[DEBUG] mx-result-set-request, result: " + newResult);
+    // console.log("[DEBUG] mx-result-set-request, result: " + newResult);
 });
 
 ipcMain.on('mx-lap-insert-request', async (e, lap) => {

@@ -90,7 +90,7 @@ const mxResultUpdate = async (device, result) => {
         await db.mx_result.insert(result);
         count = 1;
 
-        console.log("[DEBUG] mxResult, insert: " + device + ", count: " + count);
+        // console.log("[DEBUG] mxResult, insert: " + device + ", count: " + count);
     } else {
         count = await db.mx_result.update(
             { device },
@@ -101,7 +101,7 @@ const mxResultUpdate = async (device, result) => {
             }
         );
 
-        console.log("[DEBUG] mxResult, update: " + device + ", count: " + count);
+        // console.log("[DEBUG] mxResult, update: " + device + ", count: " + count);
     }
 
     return count;

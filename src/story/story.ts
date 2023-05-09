@@ -50,27 +50,48 @@ function unix_to_millis(unix: number) {
     return (_h * 3600 + _m * 60 + _s) * 1000 + _ms;
 }
 
+function dateStr(): string {
+    let date = new Date();
+    let y = '' + date.getFullYear();
+    let m = '' + (date.getMonth() + 1);
+    if (date.getMonth() + 1 < 10) {
+        m = '0' + m;
+    }
+    let d = '' + date.getDate();
+    if (date.getDate() < 10) {
+        d = '0' + d;
+    }
+    return y + m + d;
+}
+
+// mxChampionship
+//   competition
+//     rounds
+//       mxSession
+
 export class Story {
-    public competitions: Array<ICompetition> = [];
-    public sportsmen: Array<ISportsman> = [];
-    public teams: Array<ITeam> = [];
-    public competition: ICompetition | undefined = undefined;
-    public rounds: Array<IRound> = [];
-    public groups: Array<IGroup> = [];
-    public reports: Array<IReport> = [];
     public broadCasts: Array<IBroadCast> = [];
-    public laps: Array<ILap> = [];
-    public raceStatus: TypeRaceStatus | undefined = undefined;
-    public serialPortStatus: ISerialPortStatus | undefined = undefined;
-    public wlanStatus: IWlanStatus | undefined = undefined;
-    public mxBase: IMXBase | undefined = undefined;
-    public mxDevices: Map<number, IMXDevice> | undefined;
-    public mxResults: Map<number, IMXResult> | undefined;
-    public mxLaps: Map<number, Map<number, IMXLap>> | undefined;
+    public competition: ICompetition | undefined = undefined;
+    public competitions: Array<ICompetition> = [];
     public connected: boolean = false;
-    public startTime: number | undefined = undefined;
-    public groupInRace: IGroup | undefined = undefined;
     public connectorMessage: string | undefined = undefined;
+    public groupInRace: IGroup | undefined = undefined;
+    public groups: Array<IGroup> = [];
+    public laps: Array<ILap> = [];
+    public mxBase: IMXBase | undefined = undefined; // TODO use connected
+    public mxChampionship: any | undefined = undefined;
+    public mxDevices: Map<number, IMXDevice> | undefined;
+    public mxLaps: Map<number, Map<number, IMXLap>> | undefined;
+    public mxResults: Map<number, IMXResult> | undefined;
+    public mxSession: any | undefined = undefined;
+    public raceStatus: TypeRaceStatus | undefined = undefined;
+    public reports: Array<IReport> = [];
+    public rounds: Array<IRound> = [];
+    public serialPortStatus: ISerialPortStatus | undefined = undefined;
+    public sportsmen: Array<ISportsman> = [];
+    public startTime: number | undefined = undefined;
+    public teams: Array<ITeam> = [];
+    public wlanStatus: IWlanStatus | undefined = undefined;
 
     public constructor() {
         makeAutoObservable(this);
@@ -186,18 +207,6 @@ export class Story {
                 result.refresh_time = Date.now();
             }
         } else {
-            let date = new Date();
-            let y = '' + date.getFullYear();
-            let m = '' + (date.getMonth() + 1);
-            if (date.getMonth() + 1 < 10) {
-                m = '0' + m;
-            }
-            let d = '' + date.getDate();
-            if (date.getDate() < 10) {
-                d = '0' + d;
-            }
-            let dateStr: string = y + m + d;
-
             let sportsman: string = '';
             for (let i = 0; i < story.sportsmen.length; i++) {
                 let needBreak = false;
@@ -214,7 +223,7 @@ export class Story {
             }
 
             result = {
-                date: parseInt(dateStr, 10),
+                date: parseInt(dateStr(), 10),
                 sportsman: sportsman,
                 device: newMXLap.device,
                 laps: 1,
