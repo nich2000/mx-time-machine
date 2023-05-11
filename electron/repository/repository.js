@@ -36,11 +36,9 @@ db.lap.ensureIndex({ fieldName: 'memberGroupId' });
 db.lap.ensureIndex({ fieldName: 'groupId' });
 db.lap.ensureIndex({ fieldName: 'roundId' });
 
-// db.mx_result.ensureIndex({ fieldName: 'memberGroupId' });
-// db.mx_result.ensureIndex({ fieldName: 'groupId' });
-// db.mx_result.ensureIndex({ fieldName: 'roundId' });
 db.mx_result.ensureIndex({ fieldName: 'device' });
-// db.mx_result.ensureIndex({ fieldName: 'date' }); // TODO Добавить еще какие-то ключи
+db.mx_result.ensureIndex({ fieldName: 'sessionDate' });
+db.mx_result.ensureIndex({ fieldName: 'sessionTime' });
 
 // db.mx_lap.ensureIndex({ fieldName: 'memberGroupId' });
 // db.mx_lap.ensureIndex({ fieldName: 'groupId' });

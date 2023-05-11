@@ -35,19 +35,15 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { TypeRace } from '@/types/TypeRace';
 import { IMXResult } from '@/types/IMXResult';
 import { loadMXResultsAction } from '@/actions/actionReportRequest';
+import { IReport } from '@/types/IReport';
 
 // import styles from './styles.module.scss';
 
 interface IProps {
-    // round: IRound;
-    // group: IGroup;
-    // readonly?: boolean;
-    // raceStatus?: TypeRaceStatus;
-    // onChangePosition?: (id: string) => void;
-    // groupLaps?: ILap[];
+    report: IReport;
 }
 
-export const ReportMXLaps: FC<IProps> = observer(() => {
+export const ReportMXLaps: FC<IProps> = observer(({ report }) => {
     const refTableContainer = useRef<HTMLDivElement>(null);
 
     // const membersGroup = useMemo(() => [...group.sportsmen, ...group.teams], [group.sportsmen, group.teams]);
@@ -158,7 +154,7 @@ export const ReportMXLaps: FC<IProps> = observer(() => {
     const [rows, setRows] = useState<Array<IMXResult>>([]);
 
     useEffect(() => {
-        loadMXResultsAction().then(setRows);
+        loadMXResultsAction(report.date, report.time).then(setRows);
     }, []);
 
     return (

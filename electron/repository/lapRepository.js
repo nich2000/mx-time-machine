@@ -80,20 +80,20 @@ const lapDeleteByGroupId = (groupId) => {
     return db.lap.remove({ groupId }, { multi: true });
 };
 
-const mxResultUpdate = async (device, result) => {
+const mxResultUpdate = async (device, sessionDate, sessionTime, result) => {
     // console.log("[DEBUG] mxResultUpdate");
 
     let count;
 
-    let _result = await db.mx_result.find({ device });
+    let _result = await db.mx_result.find({ device, sessionDate, sessionTime });
     if (_result.length === 0) {
         await db.mx_result.insert(result);
         count = 1;
 
-        // console.log("[DEBUG] mxResult, insert: " + device + ", count: " + count);
+        console.log("[DEBUG] mxResultUpdate, insert: " + device + ", count: " + count);
     } else {
         count = await db.mx_result.update(
-            { device },
+            { device, sessionDate, sessionTime },
             {
                 $set: {
                     ...result
@@ -101,14 +101,15 @@ const mxResultUpdate = async (device, result) => {
             }
         );
 
-        // console.log("[DEBUG] mxResult, update: " + device + ", count: " + count);
+        console.log("[DEBUG] mxResultUpdate, update: " + device + ", count: " + count);
     }
 
     return count;
 };
 
-const mxResults = async () => {
-    return db.mx_result.find({});
+const mxResults = async (sessionDate, sessionTime) => {
+    let result = await db.mx_result.find({sessionDate, sessionTime});
+    return result;
 };
 
 const mxLapInsert = (lap) => {

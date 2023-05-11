@@ -20,7 +20,7 @@ interface IProps {
 export const ContentReport: FC<IProps> = observer(({ report, isBroadcast, className }: IProps) => {
     return (
         <div className={className}>
-            {report.type === TypeReport.MX_LAPS && <ReportMXLaps />}
+            {report.type === TypeReport.MX_LAPS && <ReportMXLaps report={report} />}
             {report.type === TypeReport.BEST_LAP && (
                 <BestLapReport report={report} rounds={story.rounds} sportsmen={story.sportsmen} teams={story.teams} />
             )}

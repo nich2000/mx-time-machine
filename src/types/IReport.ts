@@ -7,6 +7,8 @@ export interface IReport {
     roundId?: string;
     name: string;
     type: TypeReport;
+    date: number;
+    time: number;
     typeRound: TypeRoundReport;
     notCountedRounds?: number;
     onlySportsmen?: boolean;

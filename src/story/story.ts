@@ -50,20 +50,6 @@ function unix_to_millis(unix: number) {
     return (_h * 3600 + _m * 60 + _s) * 1000 + _ms;
 }
 
-function dateStr(): string {
-    let date = new Date();
-    let y = '' + date.getFullYear();
-    let m = '' + (date.getMonth() + 1);
-    if (date.getMonth() + 1 < 10) {
-        m = '0' + m;
-    }
-    let d = '' + date.getDate();
-    if (date.getDate() < 10) {
-        d = '0' + d;
-    }
-    return y + m + d;
-}
-
 // mxChampionship
 //   competition
 //     rounds
@@ -75,6 +61,8 @@ export class Story {
     public competitions: Array<ICompetition> = [];
     public connected: boolean = false;
     public connectorMessage: string | undefined = undefined;
+    public curSessionDate: number = 0;
+    public curSessionTime: number = 0;
     public groupInRace: IGroup | undefined = undefined;
     public groups: Array<IGroup> = [];
     public laps: Array<ILap> = [];
@@ -223,7 +211,8 @@ export class Story {
             }
 
             result = {
-                date: parseInt(dateStr(), 10),
+                sessionDate: story.curSessionDate,
+                sessionTime: story.curSessionTime,
                 sportsman: sportsman,
                 device: newMXLap.device,
                 laps: 1,
@@ -239,7 +228,7 @@ export class Story {
         }
         if (!duplicate) {
             this.mxResults.set(result.device, result);
-            mxResultSetAction(result.device, { ...result });
+            mxResultSetAction(result.device, result.sessionDate, result.sessionTime, { ...result });
         }
     };
 

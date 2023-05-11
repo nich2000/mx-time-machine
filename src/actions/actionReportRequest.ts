@@ -21,6 +21,6 @@ export const reportDeleteAction = (_id: string): void => {
     window.api.ipcRenderer.send('report-delete-request', _id);
 };
 
-export const loadMXResultsAction = (): Promise<Array<IMXResult>> => {
-    return window.api.ipcRenderer.invoke('load-mx-results-request');
+export const loadMXResultsAction = (date: number, time: number): Promise<Array<IMXResult>> => {
+    return window.api.ipcRenderer.invoke('load-mx-results-request', date, time);
 };

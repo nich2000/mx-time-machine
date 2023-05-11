@@ -27,6 +27,6 @@ ipcMain.on('report-delete-request', async (e, _id) => {
     sendToAllMessage('report-delete-response', count);
 });
 
-ipcMain.handle('load-mx-results-request', async (e) => {
-    return mxResults();
+ipcMain.handle('load-mx-results-request', async (e, date, time) => {
+    return mxResults(date, time);
 });

@@ -31,10 +31,8 @@ export const lapDeleteAction = (_id: string): void => {
     window.api.ipcRenderer.send('lap-delete-request', _id);
 };
 
-export const mxResultSetAction = (_id: number, result: IMXResult): void => {
-    // console.log("[DEBUG] mx-result-set-request, id: " + _id);
-
-    window.api.ipcRenderer.send('mx-result-set-request', _id, result);
+export const mxResultSetAction = (device: number, date: number, time: number, result: IMXResult): void => {
+    window.api.ipcRenderer.send('mx-result-set-request', device, date, time, result);
 };
 
 export const mxLapInsertAction = (lap: IMXLap): void => {

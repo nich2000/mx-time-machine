@@ -39,8 +39,8 @@ ipcMain.on('lap-delete-request', async (e, _id) => {
     sendToAllMessage('lap-delete-response', count);
 });
 
-ipcMain.on('mx-result-set-request', async (e, _id, result) => {
-    const newResult = await mxResultUpdate(_id, result);
+ipcMain.on('mx-result-set-request', async (e, device, date, time, result) => {
+    const newResult = await mxResultUpdate(device, date, time, result);
     // sendToAllMessage('mx-result-set-response', newResult);
     // console.log("[DEBUG] mx-result-set-request, result: " + newResult);
 });

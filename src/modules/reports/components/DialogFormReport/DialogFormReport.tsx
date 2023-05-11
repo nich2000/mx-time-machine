@@ -20,6 +20,7 @@ import { TypeReport } from '@/types/TypeReport';
 import _ from 'lodash';
 import { TypeRoundReport } from '@/types/TypeRoundReport';
 import { IRound } from '@/types/IRound';
+import { dateTimeStr } from '@/utils/dateTimeUtils';
 
 interface IProps {
     open: boolean;
@@ -31,35 +32,11 @@ interface IProps {
     rounds?: IRound[];
 }
 
-function dateTimeStr(): string {
-    let date = new Date();
-    let y = '' + date.getFullYear();
-    let m = '' + (date.getMonth() + 1);
-    if (date.getMonth() + 1 < 10) {
-        m = '0' + m;
-    }
-    let d = '' + date.getDate();
-    if (date.getDate() < 10) {
-        d = '0' + d;
-    }
-    let h = '' + date.getHours();
-    if (date.getHours() < 10) {
-        h = '0' + h;
-    }
-    let mm = '' + date.getMinutes();
-    if (date.getMinutes() < 10) {
-        mm = '0' + mm;
-    }
-    let s = '' + date.getSeconds();
-    if (date.getSeconds() < 10) {
-        s = '0' + s;
-    }
-    return y + m + d + '_' + h + mm + s;
-}
-
 export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, onDelete, report, rounds }: IProps) => {
     const [name, setName] = useState(report?.name || dateTimeStr());
     const [type, setType] = useState(report?.type || TypeReport.MX_LAPS);
+    const [date, setDate] = useState(report?.date || 0);
+    const [time, setTime] = useState(report?.time || 0);
     const [typeRound, setTypeRound] = useState(report?.typeRound || TypeRoundReport.PRACTICE);
     const [notCountedRounds, setNotCountedRounds] = useState(report?.notCountedRounds || 1);
     const [onlySportsmen, setOnlySportsmen] = useState(report?.onlySportsmen || false);
@@ -70,6 +47,12 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
 
     const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
+    }, []);
+    const handleChangeDate = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setDate(parseInt(event.target.value, 10));
+    }, []);
+    const handleChangeTime = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setTime(parseInt(event.target.value, 10));
     }, []);
     const handleChangeType = useCallback((event: SelectChangeEvent<TypeReport>) => {
         setType(event.target.value as TypeReport);
@@ -100,6 +83,8 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
         const newReport = {
             name,
             type,
+            date,
+            time,
             typeRound,
             notCountedRounds,
             onlySportsmen,
@@ -160,6 +145,8 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
                             </MenuItem>
                         </Select>
                     </FormControl>
+                    <TextField fullWidth label="Date" type="number" value={date} onChange={handleChangeDate} />
+                    <TextField fullWidth label="Time" type="number" value={time} onChange={handleChangeTime} />
 
                     {/*{[TypeReport.BEST_LAP, TypeReport.BEST_PIT_STOP, TypeReport.COUNT_LAPS].includes(type) && (*/}
                     {/*    <FormControl fullWidth>*/}
