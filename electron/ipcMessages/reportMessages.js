@@ -1,7 +1,9 @@
 const { reportFindByCompetitionId, reportInsert, reportUpdate, reportDelete } = require('../repository/reportRepository');
-const { mxResults } = require('../repository/lapRepository');
 const { ipcMain } = require('electron');
 const { sendToAllMessage } = require('./sendMessage');
+const { mxSessions } = require("../repository/mxSessionRepository");
+const { mxResults } = require("../repository/mxResultRepository");
+const { mxLaps } = require("../repository/mxLapRepository");
 
 ipcMain.on('load-reports-request', async (e, competitionId) => {
     const reports = await reportFindByCompetitionId(competitionId);
@@ -27,6 +29,14 @@ ipcMain.on('report-delete-request', async (e, _id) => {
     sendToAllMessage('report-delete-response', count);
 });
 
-ipcMain.handle('load-mx-results-request', async (e, date, time) => {
-    return mxResults(date, time);
+ipcMain.handle('load-mx-sessions-request', async (e) => {
+    return mxSessions();
+});
+
+ipcMain.handle('load-mx-results-request', async (e, session) => {
+    return mxResults(session);
+});
+
+ipcMain.handle('load-mx-laps-request', async (e, session) => {
+    return mxLaps(session);
 });

@@ -9,6 +9,9 @@ const raceMessages = require('./raceMessages');
 const connectMessages = require('./connectMessages');
 const reportMessages = require('./reportMessages');
 const broadCastMessages = require('./broadCastMessages');
+const mxLapMessages = require('./mxLapMessages');
+const mxResultMessages = require('./mxResultMessages');
+const mxSessionMessages = require('./mxSessionMessages');
 
 module.exports = {
     lapsMessages,
@@ -21,5 +24,8 @@ module.exports = {
     raceMessages,
     connectMessages,
     reportMessages,
-    broadCastMessages
+    broadCastMessages,
+    mxLapMessages,
+    mxResultMessages,
+    mxSessionMessages
 };

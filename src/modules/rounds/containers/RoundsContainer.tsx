@@ -27,7 +27,13 @@ import {
     roundSelectAction,
     roundUpdateAction
 } from '@/actions/actionRoundRequest';
-import { invitationRaceAction, startRaceAction, startSearchAction, stopRaceAction } from '@/actions/actionRaceRequest';
+import {
+    invitationRaceAction,
+    newSessionAction,
+    startRaceAction,
+    startSearchAction,
+    stopRaceAction
+} from '@/actions/actionRaceRequest';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { StopWatch } from '@/modules/rounds/components/StopWatch/StopWatch';
 
@@ -35,7 +41,7 @@ import styles from './styles.module.scss';
 import { sportsmanName } from '@/utils/sportsmanName';
 import { ColorCss } from '@/types/Color';
 import { DialogChangePositionsInGroup } from '@/modules/rounds/components/DialogChangePositionsInGroup/DialogChangePositionsInGroup';
-import { dateStr, timeStr } from '@/utils/dateTimeUtils';
+import { dateStr, dateTimeStr, timeStr } from '@/utils/dateTimeUtils';
 
 export const RoundsContainer: FC = observer(() => {
     const [openDialogAddRound, setOpenDialogAddRound] = useState(false);
@@ -226,8 +232,9 @@ export const RoundsContainer: FC = observer(() => {
                     ? window.confirm('There is lap data in the group, if you restart the race it will be deleted!')
                     : true)
             ) {
-                story.curSessionDate = parseInt(dateStr(), 10);
-                story.curSessionTime = parseInt(timeStr(), 10);
+                story.curSession = dateTimeStr();
+
+                newSessionAction({ sessionId: story.curSession });
 
                 startRaceAction({
                     ..._.cloneDeep(selectedGroup),

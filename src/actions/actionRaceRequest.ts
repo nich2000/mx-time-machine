@@ -1,10 +1,15 @@
 import { IGroup } from '@/types/IGroup';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { story } from '@/story/story';
-// import { IMXLap } from '@/types/IMXLap';
+import { IMXSession } from '@/types/IMXSession';
 
 export const invitationRaceAction = (group: IGroup): void => {
     window.api.ipcRenderer.send('race-invitation-request', group);
+};
+
+export const newSessionAction = (session: IMXSession): void => {
+    // console.log('newSessionAction, session: ' + session);
+    window.api.ipcRenderer.send('mx-session-insert-request', session);
 };
 
 export const startRaceAction = (group: IGroup): void => {
@@ -26,7 +31,7 @@ export const startRaceAction = (group: IGroup): void => {
     }
 
     // TODO При первом нажатии на старт список пустой. Потом всё ок.
-    if (devices.length == 0) {
+    if (devices.length === 0) {
         return;
     }
 

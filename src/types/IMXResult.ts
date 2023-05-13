@@ -7,8 +7,7 @@ export interface IMXResult {
     last_time: number;
     max_speed: number;
     refresh_time: number;
-    sessionDate: number;
-    sessionTime: number;
+    session: string;
     sportsman: string;
     total_time: number;
 }

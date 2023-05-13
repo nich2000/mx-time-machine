@@ -18,6 +18,7 @@ const db = {
     lap: dbFactory('lap.db'),
     report: dbFactory('report.db'),
     broadcast: dbFactory('broadcast.db'),
+    mx_session: dbFactory('mx_session.db'),
     mx_result: dbFactory('mx_result.db'),
     mx_lap: dbFactory('mx_lap.db')
 };
@@ -35,6 +36,8 @@ db.group.ensureIndex({ fieldName: 'roundId' });
 db.lap.ensureIndex({ fieldName: 'memberGroupId' });
 db.lap.ensureIndex({ fieldName: 'groupId' });
 db.lap.ensureIndex({ fieldName: 'roundId' });
+
+db.mx_session.ensureIndex({ fieldName: 'sessionId' });
 
 db.mx_result.ensureIndex({ fieldName: 'device' });
 db.mx_result.ensureIndex({ fieldName: 'sessionDate' });

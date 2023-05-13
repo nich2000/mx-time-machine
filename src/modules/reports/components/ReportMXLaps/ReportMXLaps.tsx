@@ -154,7 +154,7 @@ export const ReportMXLaps: FC<IProps> = observer(({ report }) => {
     const [rows, setRows] = useState<Array<IMXResult>>([]);
 
     useEffect(() => {
-        loadMXResultsAction(report.date, report.time).then(setRows);
+        loadMXResultsAction(report.sessionId).then(setRows);
     }, []);
 
     return (

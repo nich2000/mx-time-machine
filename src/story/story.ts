@@ -61,8 +61,7 @@ export class Story {
     public competitions: Array<ICompetition> = [];
     public connected: boolean = false;
     public connectorMessage: string | undefined = undefined;
-    public curSessionDate: number = 0;
-    public curSessionTime: number = 0;
+    public curSession: string = '';
     public groupInRace: IGroup | undefined = undefined;
     public groups: Array<IGroup> = [];
     public laps: Array<ILap> = [];
@@ -211,8 +210,7 @@ export class Story {
             }
 
             result = {
-                sessionDate: story.curSessionDate,
-                sessionTime: story.curSessionTime,
+                session: story.curSession,
                 sportsman: sportsman,
                 device: newMXLap.device,
                 laps: 1,
@@ -228,7 +226,7 @@ export class Story {
         }
         if (!duplicate) {
             this.mxResults.set(result.device, result);
-            mxResultSetAction(result.device, result.sessionDate, result.sessionTime, { ...result });
+            mxResultSetAction(result.device, result.session, { ...result });
         }
     };
 

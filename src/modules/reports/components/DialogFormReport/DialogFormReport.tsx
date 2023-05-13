@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -21,6 +21,8 @@ import _ from 'lodash';
 import { TypeRoundReport } from '@/types/TypeRoundReport';
 import { IRound } from '@/types/IRound';
 import { dateTimeStr } from '@/utils/dateTimeUtils';
+import { loadMXSessionAction } from '@/actions/actionReportRequest';
+import { IMXSession } from '@/types/IMXSession';
 
 interface IProps {
     open: boolean;
@@ -35,8 +37,7 @@ interface IProps {
 export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, onDelete, report, rounds }: IProps) => {
     const [name, setName] = useState(report?.name || dateTimeStr());
     const [type, setType] = useState(report?.type || TypeReport.MX_LAPS);
-    const [date, setDate] = useState(report?.date || 0);
-    const [time, setTime] = useState(report?.time || 0);
+    const [sessionId, setSessionId] = useState(report?.sessionId || '');
     const [typeRound, setTypeRound] = useState(report?.typeRound || TypeRoundReport.PRACTICE);
     const [notCountedRounds, setNotCountedRounds] = useState(report?.notCountedRounds || 1);
     const [onlySportsmen, setOnlySportsmen] = useState(report?.onlySportsmen || false);
@@ -48,11 +49,9 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
     const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     }, []);
-    const handleChangeDate = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setDate(parseInt(event.target.value, 10));
-    }, []);
-    const handleChangeTime = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setTime(parseInt(event.target.value, 10));
+    const handleChangeSessionId = useCallback((event: SelectChangeEvent) => {
+        setSessionId(event.target.value);
+        setName(event.target.value);
     }, []);
     const handleChangeType = useCallback((event: SelectChangeEvent<TypeReport>) => {
         setType(event.target.value as TypeReport);
@@ -83,8 +82,7 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
         const newReport = {
             name,
             type,
-            date,
-            time,
+            sessionId,
             typeRound,
             notCountedRounds,
             onlySportsmen,
@@ -119,6 +117,12 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
         }
     }, [onDelete, report]);
 
+    const [sessions, setSessions] = useState<Array<IMXSession>>([]);
+
+    useEffect(() => {
+        loadMXSessionAction().then(setSessions);
+    }, []);
+
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{report ? 'Edit' : 'New'} report</DialogTitle>
@@ -145,8 +149,11 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
                             </MenuItem>
                         </Select>
                     </FormControl>
-                    <TextField fullWidth label="Date" type="number" value={date} onChange={handleChangeDate} />
-                    <TextField fullWidth label="Time" type="number" value={time} onChange={handleChangeTime} />
+                    <Select fullWidth label="Session" value={sessionId} onChange={handleChangeSessionId}>
+                        {sessions.map((item) => (
+                            <MenuItem value={item.sessionId}>{item.sessionId}</MenuItem>
+                        ))}
+                    </Select>
 
                     {/*{[TypeReport.BEST_LAP, TypeReport.BEST_PIT_STOP, TypeReport.COUNT_LAPS].includes(type) && (*/}
                     {/*    <FormControl fullWidth>*/}
