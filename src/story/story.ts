@@ -159,6 +159,8 @@ export class Story {
             if (laps.get(newMXLap.time) !== undefined) {
                 // Дубль
                 duplicate = true;
+
+                beep(50, 1000, 1, 'square');
             } else {
                 laps.set(newMXLap.time, { ...newMXLap });
 
@@ -167,9 +169,9 @@ export class Story {
                 // const cloneLap = JSON.parse(JSON.stringify(lap));
                 // const cloneLap = _.cloneDeep(lap)
                 mxLapInsertAction({ ...newMXLap });
-            }
 
-            beep(50, 1000, 1, 'sine');
+                beep(50, 1000, 1, 'sine');
+            }
         }
 
         // Сводная информация
@@ -183,6 +185,7 @@ export class Story {
                 result.lap_time = gps_to_millis(newMXLap.time) - gps_to_millis(result.last_time);
                 result.last_time = newMXLap.time; // ms
                 result.laps += 1;
+                result.duplicate = 1;
                 if (newMXLap.lap_time < result.best_time) {
                     result.best_time = newMXLap.lap_time; // ms
                 }
@@ -192,6 +195,8 @@ export class Story {
                 }
                 result.total_time += result.lap_time; // ms
                 result.refresh_time = Date.now();
+            } else {
+                result.duplicate += 1;
             }
         } else {
             let sportsman: string = '';
@@ -214,6 +219,7 @@ export class Story {
                 sportsman: sportsman,
                 device: newMXLap.device,
                 laps: 1,
+                duplicate: 1,
                 max_speed: newMXLap.max_speed,
                 best_speed: newMXLap.max_speed,
                 lap_time:

@@ -2,6 +2,7 @@ export interface IMXResult {
     best_speed: number;
     best_time: number;
     device: number;
+    duplicate: number;
     lap_time: number;
     laps: number;
     last_time: number;

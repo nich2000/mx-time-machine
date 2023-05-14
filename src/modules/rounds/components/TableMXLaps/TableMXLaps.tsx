@@ -39,6 +39,7 @@ import styles from './styles.module.scss';
 
 interface ILapsProps {
     laps: number | undefined;
+    duplicate: number | undefined;
     refresh_time: number | undefined;
 }
 interface ILapsState {
@@ -72,6 +73,13 @@ class LapsCell extends React.Component<ILapsProps, ILapsState> {
             this.timer = setTimeout(() => {
                 this.setState({ color: 'white' });
             }, 500);
+        } else if (prevProps.duplicate !== this.props.duplicate) {
+            this.setState({ color: 'red' });
+
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this.setState({ color: 'white' });
+            }, 250);
         }
     }
 
@@ -217,6 +225,7 @@ export const TableMXLaps: FC<IProps> = observer(
                                 <LapsCell
                                     laps={resultS(item?.sportsman)?.laps}
                                     refresh_time={resultS(item?.sportsman)?.refresh_time}
+                                    duplicate={resultS(item?.sportsman)?.duplicate}
                                 />
                                 <TableCell>{speedF(resultS(item?.sportsman)?.max_speed)}</TableCell>
                                 <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
