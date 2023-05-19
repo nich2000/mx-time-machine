@@ -7,11 +7,20 @@ const { mainMenu } = require('./menu/mainMenu');
 require('./ipcMessages');
 require('./hardware/MXBaseServer');
 
+const Config = require('electron-config');
+const config = new Config();
+
 function createWindow() {
+    let opts = {show: false}
+    Object.assign(opts, config.get('winBounds'))
+    console.log("winBounds: " + opts)
+
     stayAwake.prevent();
     const mainWindow = new BrowserWindow({
-        width: 1920,
-        height: 1080,
+        width: opts.width,
+        height: opts.height,
+        x: opts.x,
+        y: opts.y,
         webPreferences: {
             preload: path.join(__dirname, './preload.js'),
             contextIsolation: true
@@ -21,6 +30,12 @@ function createWindow() {
     global.windows['main'] = mainWindow;
     init();
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
+
+    mainWindow.on('close', () => {
+        opts = mainWindow.getBounds()
+        console.log("winBounds: " + opts)
+        config.set('winBounds', opts)
+    })
 
     // Отображаем средства разработчика.
     // mainWindow.webContents.openDevTools();
@@ -32,6 +47,7 @@ app.whenReady().then(() => {
     global.windows = {};
     createWindow();
     Menu.setApplicationMenu(mainMenu);
+
     app.on('activate', function () {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });

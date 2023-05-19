@@ -29,6 +29,12 @@ const mxResultUpdate = async (device, session, result) => {
 
 const mxResults = async (session) => {
     let result = await db.mx_result.find({session});
+
+    result.sort((a, b)=>{
+        if (b.laps - a.laps) return true;
+        else return (a.total_time - b.total_time);
+    });
+
     return result;
 };
 

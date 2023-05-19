@@ -33,6 +33,7 @@ import {
     competitionInsertAction,
     competitionUpdateAction
 } from '@/actions/actionCompetitionRequest';
+import { story } from '@/story/story';
 
 interface IProps {
     open: boolean;
@@ -232,6 +233,36 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
             } else {
                 competitionInsertAction(newValue);
             }
+
+            // TODO 8) При событии изменения конфига трассы отправить команду Config на базу автоматически
+            let devices: (number | undefined)[] = [];
+            for (let j = 0; j < story.groups.length; j++) {
+                const g = story.groups[j];
+                for (let i = 0; i < g.sportsmen.length; i++) {
+                    if (g.sportsmen[i] !== undefined) {
+                        if (g.sportsmen[i].sportsman !== undefined) {
+                            if (g.sportsmen[i].sportsman?.transponders[0] !== undefined) {
+                                let id = g.sportsmen[i].sportsman?.transponders[0];
+                                if (!devices.includes(id)) {
+                                    devices.push(id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            window.api.ipcRenderer.send(
+                'MXAction',
+                '',
+                'config',
+                devices,
+                story.competition?.latitude,
+                story.competition?.longitude,
+                story.competition?.radius,
+                story.competition?.course,
+                story.competition?.delay
+            );
+
             onClose();
         }
     }, [

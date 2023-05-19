@@ -21,6 +21,7 @@
     "axios": "~0.26.1",
     "classnames": "~2.3.1",
     "dgram": "~1.0.1",
+    "electron-config": "^2.0.0",
     "electron-is-dev": "~2.0.0",
     "lodash": "~4.17.21",
     "luxon": "~2.2.0",

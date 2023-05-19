@@ -100,6 +100,11 @@ export const TableGroup: FC<IProps> = observer(
         >(undefined);
         const [openEdit, setOpenEdit] = useState<IMembersGroup>();
 
+        const [selectedSleep, setSelectedSleep] = useState<boolean | false>(false);
+        // const [selectedSleep, setSelectedSleep] = useState<boolean | false>(
+        //     window.localStorage.getItem('sleepToggle') === '1'
+        // );
+
         const isSelected = (item: IGroup) => selectedGroup?._id === item._id;
 
         const handleContextMenu = useCallback(
@@ -440,7 +445,7 @@ export const TableGroup: FC<IProps> = observer(
             }
         }
 
-        function MXActionButton(id: string, action: string, Component: any) {
+        function MXActionButton(id: string, action: string, ComponentOn: any, ComponentOff: any) {
             const [open, setOpen] = React.useState(false);
 
             const handleClickOpen = () => {
@@ -467,16 +472,26 @@ export const TableGroup: FC<IProps> = observer(
                 }
 
                 onMXAction(id, action, devices);
+
+                if (selectedSleep) setSelectedSleep(false);
+                else setSelectedSleep(true);
+                // if (selectedSleep) window.localStorage.setSetItem('sleepToggle', '1');
+                // else window.localStorage.setSetItem('sleepToggle', '0');
             };
 
             function handleClose() {
                 setOpen(false);
             }
 
+            function selectSleep(value: boolean) {
+                if (value) return <ComponentOn />;
+                else return <ComponentOff />;
+            }
+
             return (
                 <b>
                     <IconButton data-rh={action} onClick={handleClickOpen}>
-                        <Component />
+                        {selectSleep(selectedSleep)}
                     </IconButton>
 
                     <Dialog
@@ -559,7 +574,7 @@ export const TableGroup: FC<IProps> = observer(
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Sleep group">
-                                    {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon)}
+                                    {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon, StreamIcon)}
                                 </Tooltip>
                                 <Tooltip title="Delete group">
                                     <IconButton data-rh="delete" onClick={onDelete(innerGroup._id)}>

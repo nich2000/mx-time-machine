@@ -282,6 +282,34 @@ export const RoundsContainer: FC = observer(() => {
             loadLapsForGroupAction(selectedGroup._id);
 
             story.setGroupInRace(selectedGroup);
+
+            let devices: (number | undefined)[] = [];
+            for (let j = 0; j < story.groups.length; j++) {
+                const g = story.groups[j];
+                for (let i = 0; i < g.sportsmen.length; i++) {
+                    if (g.sportsmen[i] !== undefined) {
+                        if (g.sportsmen[i].sportsman !== undefined) {
+                            if (g.sportsmen[i].sportsman?.transponders[0] !== undefined) {
+                                let id = g.sportsmen[i].sportsman?.transponders[0];
+                                if (!devices.includes(id)) {
+                                    devices.push(id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            window.api.ipcRenderer.send(
+                'MXAction',
+                '',
+                'list',
+                devices,
+                story.competition?.latitude,
+                story.competition?.longitude,
+                story.competition?.radius,
+                story.competition?.course,
+                story.competition?.delay
+            );
         }
     }, [selectedGroup]);
 

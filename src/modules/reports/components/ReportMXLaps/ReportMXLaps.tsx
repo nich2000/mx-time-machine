@@ -154,6 +154,7 @@ export const ReportMXLaps: FC<IProps> = observer(({ report }) => {
     const [rows, setRows] = useState<Array<IMXResult>>([]);
 
     useEffect(() => {
+        // loadMXResultsAction(report.sessionId).then(setRows);
         loadMXResultsAction(report.sessionId).then(setRows);
     }, []);
 
@@ -162,21 +163,23 @@ export const ReportMXLaps: FC<IProps> = observer(({ report }) => {
             <Table size="small" stickyHeader>
                 <TableHead>
                     <TableRow>
+                        <TableCell>Position</TableCell>
                         <TableCell>Pilot</TableCell>
                         <TableCell>Laps</TableCell>
-                        <TableCell>Max speed</TableCell>
-                        <TableCell>Last lap</TableCell>
-                        <TableCell>Best lap</TableCell>
+                        <TableCell>Best speed</TableCell>
+                        <TableCell>Best time</TableCell>
+                        <TableCell>Total time</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((item) => (
+                    {rows.map((item, index) => (
                         <TableRow>
+                            <TableCell>{index + 1}</TableCell>
                             <TableCell>{item?.sportsman}</TableCell>
                             <TableCell>{item?.laps}</TableCell>
-                            <TableCell>{speedF(item?.max_speed)}</TableCell>
-                            <TableCell>{millisToTime(item?.lap_time)}</TableCell>
+                            <TableCell>{speedF(item?.best_speed)}</TableCell>
                             <TableCell>{millisToTime(item?.best_time)}</TableCell>
+                            <TableCell>{millisToTime(item?.total_time)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
