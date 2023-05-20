@@ -302,6 +302,17 @@ export const RoundsContainer: FC = observer(() => {
             window.api.ipcRenderer.send(
                 'MXAction',
                 '',
+                'config',
+                devices,
+                story.competition?.latitude,
+                story.competition?.longitude,
+                story.competition?.radius,
+                story.competition?.course,
+                story.competition?.delay
+            );
+            window.api.ipcRenderer.send(
+                'MXAction',
+                '',
                 'list',
                 devices,
                 story.competition?.latitude,

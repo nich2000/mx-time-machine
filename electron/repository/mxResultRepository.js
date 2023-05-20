@@ -28,12 +28,19 @@ const mxResultUpdate = async (device, session, result) => {
 };
 
 const mxResults = async (session) => {
-    let result = await db.mx_result.find({session});
+    // console.log('mxResults');
 
-    result.sort((a, b)=>{
-        if (b.laps - a.laps) return true;
-        else return (a.total_time - b.total_time);
-    });
+    // let result = await db.mx_result.find({session});
+    //
+    // result.sort((a, b)=>{
+    //     if (b.laps - a.laps) return true;
+    //     else return (a.total_time - b.total_time);
+    // });
+    //
+    // return result;
+
+    let result = db.mx_result.find({session}).sort({laps: -1, total_time: 1});
+    // console.log(result);
 
     return result;
 };

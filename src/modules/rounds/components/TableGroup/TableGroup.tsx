@@ -11,10 +11,12 @@ import {
     MenuItem,
     Paper,
     Menu,
-    Typography
+    Typography,
+    createTheme
 } from '@mui/material';
+import Switch, { SwitchProps } from '@mui/material/Switch';
 import cn from 'classnames';
-// import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+import { styled } from '@mui/material/styles';
 import { Tooltip } from '@mui/material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import CheckCircle from '@mui/icons-material/CheckCircle';
@@ -50,7 +52,7 @@ import { Color } from '@/types/Color';
 import { Channel } from '@/types/VTXChannel';
 import { story } from '@/story/story';
 import { observer } from 'mobx-react';
-import { green, orange, red } from '@mui/material/colors';
+import { green, orange, red, yellow } from '@mui/material/colors';
 import ReactHintFactory from 'react-hint';
 import 'react-hint/css/index.css';
 import Button1 from '@mui/material/Button';
@@ -269,30 +271,6 @@ export const TableGroup: FC<IProps> = observer(
                     const device = story?.mxDevices?.get(+_device);
 
                     if (device !== undefined) {
-                        // const sec = innerGroup.sportsmen.length / 2 + 2;
-                        // const startDate = device.pingTime;
-                        // const endDate = Date.now();
-                        // const seconds = (endDate - startDate) / 1000;
-                        // if (seconds > sec * 2) {
-                        //     // if ((_status & (7 << 0)) !== 0) {
-                        //     //     return <CheckCircle sx={{ color: red[500] }} />;
-                        //     // } else {
-                        //     //     return <Error sx={{ color: red[500] }} />;
-                        //     // }
-                        //     return <Cancel sx={{ color: red[500] }} />;
-                        // } else if (seconds > sec) {
-                        //     if ((_status & (7 << 0)) !== 0) {
-                        //         return <CheckCircle sx={{ color: orange[500] }} />;
-                        //     } else {
-                        //         return <Error sx={{ color: orange[500] }} />;
-                        //     }
-                        // } else {
-                        //     if ((_status & (7 << 0)) !== 0) {
-                        //         return <CheckCircle sx={{ color: green[500] }} />;
-                        //     } else {
-                        //         return <Error sx={{ color: green[500] }} />;
-                        //     }
-                        // }
                         if (device.connected === 0) {
                             return <Cancel sx={{ color: red[500] }} />;
                         } else if (device.connected === 1) {
@@ -377,7 +355,7 @@ export const TableGroup: FC<IProps> = observer(
         function checkBattery(battery?: number) {
             let _battery: number = battery !== undefined ? battery : 0;
 
-            const isCharging = _battery >= 128;
+            const isCharging = _battery > 128;
 
             if (isCharging) {
                 _battery = _battery - 128;
@@ -397,8 +375,8 @@ export const TableGroup: FC<IProps> = observer(
                 if (isCharging) return <BatteryCharging60 color="action" />;
                 else return <Battery60 color="action" />;
             } else if (_battery > 0) {
-                if (isCharging) return <BatteryCharging20 sx={{ color: red[500] }} />;
-                else return <Battery20 sx={{ color: red[500] }} />;
+                if (isCharging) return <BatteryCharging20 sx={{ color: orange[500] }} />;
+                else return <Battery20 sx={{ color: orange[500] }} />;
             } else {
                 return <BatteryAlert sx={{ color: red[500] }} />;
             }
@@ -407,110 +385,110 @@ export const TableGroup: FC<IProps> = observer(
         function checkRSSI(rssi?: number) {
             const _rssi: number = rssi !== undefined ? rssi : 255;
 
-            if (_rssi < 70) {
+            if (_rssi < 50) {
                 return (
                     <span>
                         <SignalCellular4Bar color="action" />
-                        {_rssi}
+                        <b style={{ fontSize: 13 }}>{_rssi}</b>
                     </span>
                 );
-            } else if (_rssi < 100) {
+            } else if (_rssi < 70) {
                 return (
                     <span>
                         <SignalCellular3Bar color="action" />
-                        {_rssi}
+                        <b style={{ fontSize: 13 }}>{_rssi}</b>
                     </span>
                 );
-            } else if (_rssi < 130) {
+            } else if (_rssi < 80) {
                 return (
                     <span>
                         <SignalCellular2Bar color="action" />
-                        {_rssi}
+                        <b style={{ fontSize: 13 }}>{_rssi}</b>
                     </span>
                 );
-            } else if (_rssi < 160) {
+            } else if (_rssi < 90) {
                 return (
                     <span>
-                        <SignalCellular1Bar color="action" />
-                        {_rssi}
+                        <SignalCellular1Bar sx={{ color: orange[500] }} />
+                        <b style={{ fontSize: 13 }}>{_rssi}</b>
                     </span>
                 );
             } else {
                 return (
                     <span>
                         <SignalCellular0Bar sx={{ color: red[500] }} />
-                        {_rssi}
+                        <b style={{ fontSize: 13 }}>{_rssi}</b>
                     </span>
                 );
             }
         }
 
-        function MXActionButton(id: string, action: string, ComponentOn: any, ComponentOff: any) {
-            const [open, setOpen] = React.useState(false);
-
-            const handleClickOpen = () => {
-                setOpen(true);
-            };
-
-            const handleDisagree = () => {
-                setOpen(false);
-            };
-
-            const handleAgree = () => {
-                setOpen(false);
-
-                let devices = [];
-                for (let i = 0; i < group.sportsmen.length; i++) {
-                    if (group.sportsmen[i] !== undefined) {
-                        if (group.sportsmen[i].sportsman !== undefined) {
-                            if (group.sportsmen[i].sportsman?.transponders[0] !== undefined) {
-                                let id = group.sportsmen[i].sportsman?.transponders[0];
-                                devices.push(id);
-                            }
-                        }
-                    }
-                }
-
-                onMXAction(id, action, devices);
-
-                if (selectedSleep) setSelectedSleep(false);
-                else setSelectedSleep(true);
-                // if (selectedSleep) window.localStorage.setSetItem('sleepToggle', '1');
-                // else window.localStorage.setSetItem('sleepToggle', '0');
-            };
-
-            function handleClose() {
-                setOpen(false);
-            }
-
-            function selectSleep(value: boolean) {
-                if (value) return <ComponentOn />;
-                else return <ComponentOff />;
-            }
-
-            return (
-                <b>
-                    <IconButton data-rh={action} onClick={handleClickOpen}>
-                        {selectSleep(selectedSleep)}
-                    </IconButton>
-
-                    <Dialog
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">{`Send command "${action}" to device group?`}</DialogTitle>
-                        <DialogActions>
-                            <Button1 onClick={handleDisagree}>NO</Button1>
-                            <Button1 onClick={handleAgree} autoFocus>
-                                YES
-                            </Button1>
-                        </DialogActions>
-                    </Dialog>
-                </b>
-            );
-        }
+        // function MXActionButton(id: string, action: string, ComponentOn: any, ComponentOff: any) {
+        //     const [open, setOpen] = React.useState(false);
+        //
+        //     const handleClickOpen = () => {
+        //         setOpen(true);
+        //     };
+        //
+        //     const handleDisagree = () => {
+        //         setOpen(false);
+        //     };
+        //
+        //     const handleAgree = () => {
+        //         setOpen(false);
+        //
+        //         let devices = [];
+        //         for (let i = 0; i < group.sportsmen.length; i++) {
+        //             if (group.sportsmen[i] !== undefined) {
+        //                 if (group.sportsmen[i].sportsman !== undefined) {
+        //                     if (group.sportsmen[i].sportsman?.transponders[0] !== undefined) {
+        //                         let id = group.sportsmen[i].sportsman?.transponders[0];
+        //                         devices.push(id);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //
+        //         onMXAction(id, action, devices);
+        //
+        //         if (selectedSleep) setSelectedSleep(false);
+        //         else setSelectedSleep(true);
+        //         // if (selectedSleep) window.localStorage.setSetItem('sleepToggle', '1');
+        //         // else window.localStorage.setSetItem('sleepToggle', '0');
+        //     };
+        //
+        //     function handleClose() {
+        //         setOpen(false);
+        //     }
+        //
+        //     function selectSleep(value: boolean) {
+        //         if (value) return <ComponentOn />;
+        //         else return <ComponentOff />;
+        //     }
+        //
+        //     return (
+        //         <b>
+        //             <IconButton data-rh={action} onClick={handleClickOpen}>
+        //                 {selectSleep(selectedSleep)}
+        //             </IconButton>
+        //
+        //             <Dialog
+        //                 open={open}
+        //                 onClose={handleClose}
+        //                 aria-labelledby="alert-dialog-title"
+        //                 aria-describedby="alert-dialog-description"
+        //             >
+        //                 <DialogTitle id="alert-dialog-title">{`Send command "${action}" to device group?`}</DialogTitle>
+        //                 <DialogActions>
+        //                     <Button1 onClick={handleDisagree}>NO</Button1>
+        //                     <Button1 onClick={handleAgree} autoFocus>
+        //                         YES
+        //                     </Button1>
+        //                 </DialogActions>
+        //             </Dialog>
+        //         </b>
+        //     );
+        // }
 
         function transponder(sportsman: ISportsman | undefined) {
             return sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
@@ -548,6 +526,103 @@ export const TableGroup: FC<IProps> = observer(
         //     return story?.mxDevices?.get(index);
         // }
 
+        // const theme = createTheme({
+        //     components: {
+        //         MuiSwitch: {
+        //             styleOverrides: {
+        //                 switchBase: {
+        //                     //thumb - unchecked
+        //                     color: 'orange'
+        //                 },
+        //                 colorPrimary: {
+        //                     '&.Mui-checked': {
+        //                         // thumb - checked
+        //                         color: 'red'
+        //                     }
+        //                 },
+        //                 track: {
+        //                     // track - unchecked
+        //                     opacity: 0.2,
+        //                     backgroundColor: 'blue',
+        //                     '.Mui-checked.Mui-checked + &': {
+        //                         // track - checked
+        //                         opacity: 0.9,
+        //                         backgroundColor: 'pink'
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // });
+
+        const MaterialUISwitch = styled(Switch)(({ theme }) => ({
+            width: 62,
+            height: 34,
+            padding: 7,
+            '& .MuiSwitch-switchBase': {
+                margin: 1,
+                padding: 0,
+                transform: 'translateX(6px)',
+                '&.Mui-checked': {
+                    color: '#fff',
+                    transform: 'translateX(22px)',
+                    '& .MuiSwitch-thumb:before': {
+                        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
+                            '#fff'
+                        )}" d="M4.2 2.5l-.7 1.8-1.8.7 1.8.7.7 1.8.6-1.8L6.7 5l-1.9-.7-.6-1.8zm15 8.3a6.7 6.7 0 11-6.6-6.6 5.8 5.8 0 006.6 6.6z"/></svg>')`
+                    },
+                    '& + .MuiSwitch-track': {
+                        opacity: 0.5,
+                        backgroundColor: theme.palette.mode === 'dark' ? '#8796A5' : '#aab4be'
+                    }
+                }
+            },
+            '& .MuiSwitch-thumb': {
+                backgroundColor: theme.palette.mode === 'dark' ? '#003892' : '#001e3c',
+                width: 32,
+                height: 32,
+                '&:before': {
+                    content: "''",
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    left: 0,
+                    top: 0,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
+                        '#fff'
+                    )}" d="M9.305 1.667V3.75h1.389V1.667h-1.39zm-4.707 1.95l-.982.982L5.09 6.072l.982-.982-1.473-1.473zm10.802 0L13.927 5.09l.982.982 1.473-1.473-.982-.982zM10 5.139a4.872 4.872 0 00-4.862 4.86A4.872 4.872 0 0010 14.862 4.872 4.872 0 0014.86 10 4.872 4.872 0 0010 5.139zm0 1.389A3.462 3.462 0 0113.471 10a3.462 3.462 0 01-3.473 3.472A3.462 3.462 0 016.527 10 3.462 3.462 0 0110 6.528zM1.665 9.305v1.39h2.083v-1.39H1.666zm14.583 0v1.39h2.084v-1.39h-2.084zM5.09 13.928L3.616 15.4l.982.982 1.473-1.473-.982-.982zm9.82 0l-.982.982 1.473 1.473.982-.982-1.473-1.473zM9.305 16.25v2.083h1.389V16.25h-1.39z"/></svg>')`
+                }
+            },
+            '& .MuiSwitch-track': {
+                opacity: 0.5,
+                backgroundColor: theme.palette.mode === 'dark' ? '#8796A5' : '#aab4be',
+                borderRadius: 20 / 2
+            }
+        }));
+
+        function handleChange(id: string) {
+            if (selectedSleep) {
+                setSelectedSleep(false);
+            } else {
+                let devices = [];
+                for (let i = 0; i < group.sportsmen.length; i++) {
+                    if (group.sportsmen[i] !== undefined) {
+                        if (group.sportsmen[i].sportsman !== undefined) {
+                            if (group.sportsmen[i].sportsman?.transponders[0] !== undefined) {
+                                let id = group.sportsmen[i].sportsman?.transponders[0];
+                                devices.push(id);
+                            }
+                        }
+                    }
+                }
+                onMXAction(id, 'sleep', devices);
+
+                setSelectedSleep(true);
+            }
+        }
+
         return (
             <Paper key={innerGroup._id} elevation={isSelected(innerGroup) ? 5 : 1} className={styles.paper}>
                 {/*<span>{dateTime}</span>*/}
@@ -562,6 +637,13 @@ export const TableGroup: FC<IProps> = observer(
                             component="div"
                             className={cn(styles.headerGroup, { [styles.selected]: isSelected(innerGroup) })}
                         >
+                            <Tooltip title="Sleep group">
+                                <MaterialUISwitch
+                                    sx={{ m: 1 }}
+                                    checked={selectedSleep}
+                                    onChange={() => handleChange(innerGroup._id)}
+                                />
+                            </Tooltip>
                             {innerGroup.name}
                             {/*<ReactHint autoPosition events />*/}
                             <div className={styles.actionsGroup}>
@@ -573,9 +655,9 @@ export const TableGroup: FC<IProps> = observer(
                                         <EditIcon />
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip title="Sleep group">
-                                    {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon, StreamIcon)}
-                                </Tooltip>
+                                {/*<Tooltip title="Sleep group">*/}
+                                {/*    {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon, StreamIcon)}*/}
+                                {/*</Tooltip>*/}
                                 <Tooltip title="Delete group">
                                     <IconButton data-rh="delete" onClick={onDelete(innerGroup._id)}>
                                         <DeleteIcon />
@@ -608,7 +690,7 @@ export const TableGroup: FC<IProps> = observer(
                             />
                             <ListItemText primary={transponder(item.sportsman)} />
                             {checkStatus(-1, item.sportsman, deviceS(item.sportsman)?.status)}
-                            {/*{checkStatus(0, deviceS(item.sportsman)?.status)}*/}
+                            {checkStatus(0, item.sportsman, deviceS(item.sportsman)?.status)}
                             {/*{checkStatus(1, deviceS(item.sportsman)?.status)}*/}
                             {/*{checkStatus(2, deviceS(item.sportsman)?.status)}*/}
                             {/*{checkStatus(3, deviceS(item.sportsman)?.status)}*/}
