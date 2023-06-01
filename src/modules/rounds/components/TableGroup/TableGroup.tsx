@@ -12,7 +12,8 @@ import {
     Paper,
     Menu,
     Typography,
-    createTheme
+    createTheme,
+    FormControlLabel
 } from '@mui/material';
 import Switch, { SwitchProps } from '@mui/material/Switch';
 import cn from 'classnames';
@@ -43,6 +44,7 @@ import BedtimeIcon from '@mui/icons-material/Bedtime';
 import StreamIcon from '@mui/icons-material/Stream';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { PowerSettingsNew } from '@mui/icons-material';
 // import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import { sportsmanName } from '@/utils/sportsmanName';
 // import { ColorAndChannel } from '@/modules/rounds/components/ColorAndChannel/ColorAndChannel';
@@ -382,42 +384,55 @@ export const TableGroup: FC<IProps> = observer(
             }
         }
 
-        function checkRSSI(rssi?: number) {
+        function checkRSSI(rssi?: number, snr?: number) {
             const _rssi: number = rssi !== undefined ? rssi : 255;
+            const _rssiS = _rssi.toFixed(2);
+
+            const _snr: number = snr !== undefined ? snr : 255;
 
             if (_rssi < 50) {
                 return (
                     <span>
                         <SignalCellular4Bar color="action" />
-                        <b style={{ fontSize: 13 }}>{_rssi}</b>
+                        <b style={{ fontSize: 10 }}>
+                            {_rssiS} | {_snr}
+                        </b>
                     </span>
                 );
             } else if (_rssi < 70) {
                 return (
                     <span>
                         <SignalCellular3Bar color="action" />
-                        <b style={{ fontSize: 13 }}>{_rssi}</b>
+                        <b style={{ fontSize: 10 }}>
+                            {_rssiS} | {_snr}
+                        </b>
                     </span>
                 );
             } else if (_rssi < 80) {
                 return (
                     <span>
                         <SignalCellular2Bar color="action" />
-                        <b style={{ fontSize: 13 }}>{_rssi}</b>
+                        <b style={{ fontSize: 10 }}>
+                            {_rssiS} | {_snr}
+                        </b>
                     </span>
                 );
             } else if (_rssi < 90) {
                 return (
                     <span>
                         <SignalCellular1Bar sx={{ color: orange[500] }} />
-                        <b style={{ fontSize: 13 }}>{_rssi}</b>
+                        <b style={{ fontSize: 10 }}>
+                            {_rssiS} | {_snr}
+                        </b>
                     </span>
                 );
             } else {
                 return (
                     <span>
                         <SignalCellular0Bar sx={{ color: red[500] }} />
-                        <b style={{ fontSize: 13 }}>{_rssi}</b>
+                        <b style={{ fontSize: 10 }}>
+                            {_rssiS} | {_snr}
+                        </b>
                     </span>
                 );
             }
@@ -489,6 +504,16 @@ export const TableGroup: FC<IProps> = observer(
         //         </b>
         //     );
         // }
+
+        function MXPowerButton(id: string) {
+            function handleClick() {}
+
+            return (
+                <IconButton data-rh="power" onClick={handleClick}>
+                    <PowerSettingsNew />
+                </IconButton>
+            );
+        }
 
         function transponder(sportsman: ISportsman | undefined) {
             return sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
@@ -638,10 +663,16 @@ export const TableGroup: FC<IProps> = observer(
                             className={cn(styles.headerGroup, { [styles.selected]: isSelected(innerGroup) })}
                         >
                             <Tooltip title="Sleep group">
-                                <MaterialUISwitch
-                                    sx={{ m: 1 }}
-                                    checked={selectedSleep}
-                                    onChange={() => handleChange(innerGroup._id)}
+                                {/*<MaterialUISwitch*/}
+                                {/*    sx={{ m: 1 }}*/}
+                                {/*    checked={selectedSleep}*/}
+                                {/*    onChange={() => handleChange(innerGroup._id)}*/}
+                                {/*/>*/}
+                                <FormControlLabel
+                                    control={
+                                        <Switch checked={selectedSleep} onChange={() => handleChange(innerGroup._id)} />
+                                    }
+                                    label="Sleep"
                                 />
                             </Tooltip>
                             {innerGroup.name}
@@ -655,14 +686,12 @@ export const TableGroup: FC<IProps> = observer(
                                         <EditIcon />
                                     </IconButton>
                                 </Tooltip>
-                                {/*<Tooltip title="Sleep group">*/}
-                                {/*    {MXActionButton(innerGroup._id, 'sleep', BedtimeIcon, StreamIcon)}*/}
-                                {/*</Tooltip>*/}
                                 <Tooltip title="Delete group">
                                     <IconButton data-rh="delete" onClick={onDelete(innerGroup._id)}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </Tooltip>
+                                <Tooltip title="Power off group">{MXPowerButton(innerGroup._id)}</Tooltip>
                             </div>
                         </ListSubheader>
                     }
@@ -696,7 +725,7 @@ export const TableGroup: FC<IProps> = observer(
                             {/*{checkStatus(3, deviceS(item.sportsman)?.status)}*/}
                             {/*{checkStatus(4, item.sportsman, deviceS(item.sportsman)?.status)}*/}
                             {checkBattery(deviceS(item.sportsman)?.battery)}
-                            {checkRSSI(deviceS(item.sportsman)?.rssi)}
+                            {checkRSSI(deviceS(item.sportsman)?.rssi, deviceS(item.sportsman)?.snr)}
                             {/*{item.channel !== undefined && item.color !== undefined && (*/}
                             {/*    <ColorAndChannel channel={item.channel} color={item.color} />*/}
                             {/*)}*/}

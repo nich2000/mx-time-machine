@@ -1,7 +1,7 @@
 const { db } = require('./repository');
 
 const reportFindByCompetitionId = (competitionId) => {
-    return db.report.find({ competitionId });
+    return db.report.find({ competitionId }).sort({name: -1});
 };
 
 const reportInsert = async (report) => {

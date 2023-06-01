@@ -42,6 +42,7 @@ import { sportsmanName } from '@/utils/sportsmanName';
 import { ColorCss } from '@/types/Color';
 import { DialogChangePositionsInGroup } from '@/modules/rounds/components/DialogChangePositionsInGroup/DialogChangePositionsInGroup';
 import { dateStr, dateTimeStr, timeStr } from '@/utils/dateTimeUtils';
+import { DateTime } from 'luxon';
 
 export const RoundsContainer: FC = observer(() => {
     const [openDialogAddRound, setOpenDialogAddRound] = useState(false);
@@ -232,7 +233,11 @@ export const RoundsContainer: FC = observer(() => {
                     ? window.confirm('There is lap data in the group, if you restart the race it will be deleted!')
                     : true)
             ) {
+                story.mxLaps?.clear();
+
                 story.curSession = dateTimeStr();
+
+                story.startTime = DateTime.now().toMillis();
 
                 newSessionAction({ sessionId: story.curSession });
 

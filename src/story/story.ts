@@ -19,6 +19,7 @@ import { mxResultSetAction } from '@/actions/actionLapRequest';
 import { IMXResult } from '@/types/IMXResult';
 import { beep } from '@/utils/beep';
 import { sportsmanName } from '@/utils/sportsmanName';
+import { DateTime } from 'luxon';
 
 function gps_to_millis(gps: number) {
     let _time = gps;
@@ -28,12 +29,17 @@ function gps_to_millis(gps: number) {
     let _ms = (_time % 100) * 10;
 
     // Учитываем часовой пояс
-    _h += 3;
-    if (_h > 24) {
-        _h -= 24;
+    const __time = new Date(DateTime.now().toMillis());
+    const __h = __time.getHours();
+    // Если время совпадает, значит это эмуляция
+    if (_h !== __h) {
+        _h += 3;
+        if (_h > 24) {
+            _h -= 24;
+        }
     }
 
-    console.log('g', _h, _m, _s, _ms);
+    console.log('gps', gps, _h, _m, _s, _ms);
 
     return (_h * 3600 + _m * 60 + _s) * 1000 + _ms;
 }
@@ -45,7 +51,7 @@ function unix_to_millis(unix: number) {
     let _s = _time.getSeconds();
     let _ms = Math.trunc((unix % 1000000) / 1000);
 
-    console.log('u', _h, _m, _s, _ms);
+    console.log('unix', _h, _m, _s, _ms);
 
     return (_h * 3600 + _m * 60 + _s) * 1000 + _ms;
 }
@@ -182,18 +188,23 @@ export class Story {
         let result = this.mxResults.get(newMXLap.device);
         if (result !== undefined) {
             if (!duplicate) {
-                result.lap_time = gps_to_millis(newMXLap.time) - gps_to_millis(result.last_time);
-                result.last_time = newMXLap.time; // ms
                 result.laps += 1;
                 result.duplicate = 1;
-                if (newMXLap.lap_time < result.best_time) {
-                    result.best_time = newMXLap.lap_time; // ms
-                }
                 result.max_speed = newMXLap.max_speed;
-                if (newMXLap.max_speed > result.best_speed) {
+                if (newMXLap.max_speed > result.best_speed || result.best_speed == 0) {
                     result.best_speed = newMXLap.max_speed; // ms
                 }
-                result.total_time += result.lap_time; // ms
+                // ms
+                result.lap_time = gps_to_millis(newMXLap.time) - gps_to_millis(result.last_time);
+                // ms
+                if (result.lap_time < result.best_time) {
+                    result.best_time = result.lap_time;
+                }
+                // ms
+                result.total_time += result.lap_time;
+                // gps
+                result.last_time = newMXLap.time;
+                // time
                 result.refresh_time = Date.now();
             } else {
                 result.duplicate += 1;
@@ -214,6 +225,8 @@ export class Story {
                 }
             }
 
+            // 8121000
+            // 83702502
             result = {
                 session: story.curSession,
                 sportsman: sportsman,
@@ -222,11 +235,18 @@ export class Story {
                 duplicate: 1,
                 max_speed: newMXLap.max_speed,
                 best_speed: newMXLap.max_speed,
+                // ms
                 lap_time:
-                    this.startTime !== undefined ? gps_to_millis(newMXLap.time) - unix_to_millis(this.startTime) : 0,
-                best_time: newMXLap.lap_time,
+                    this.startTime !== undefined ? gps_to_millis(newMXLap.time) - unix_to_millis(this.startTime) : 1,
+                // ms
+                best_time:
+                    this.startTime !== undefined ? gps_to_millis(newMXLap.time) - unix_to_millis(this.startTime) : 1,
+                // ms
+                total_time:
+                    this.startTime !== undefined ? gps_to_millis(newMXLap.time) - unix_to_millis(this.startTime) : 1,
+                // gps
                 last_time: newMXLap.time,
-                total_time: newMXLap.lap_time,
+                // time
                 refresh_time: Date.now()
             };
         }
