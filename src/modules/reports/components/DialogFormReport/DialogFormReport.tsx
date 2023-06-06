@@ -36,7 +36,7 @@ interface IProps {
 
 export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, onDelete, report, rounds }: IProps) => {
     const [name, setName] = useState(report?.name || dateTimeStr());
-    const [type, setType] = useState(report?.type || TypeReport.MX_LAPS);
+    const [type, setType] = useState(report?.type || TypeReport.MX_RESULTS);
     const [sessionId, setSessionId] = useState(report?.sessionId || '');
     const [typeRound, setTypeRound] = useState(report?.typeRound || TypeRoundReport.PRACTICE);
     const [notCountedRounds, setNotCountedRounds] = useState(report?.notCountedRounds || 1);
@@ -144,6 +144,9 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
                             {/*        {key}*/}
                             {/*    </MenuItem>*/}
                             {/*))}*/}
+                            <MenuItem key={'MX_RESULTS'} value={'MX_RESULTS'}>
+                                {'MX_RESULTS'}
+                            </MenuItem>
                             <MenuItem key={'MX_LAPS'} value={'MX_LAPS'}>
                                 {'MX_LAPS'}
                             </MenuItem>

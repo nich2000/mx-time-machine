@@ -170,7 +170,7 @@ ipcMain.on('MXResult', async (e, results) => {
     let object = JSON.parse(results);
     // console.log(object);
 
-    let data = 'Pilot;Device;Laps;MaxSpeed;LastLap;BestLap\n';
+    let data = 'Pilot;Device;Laps;BestSpeed;BestTime;TotalTime\n';
     for (let i = 0; i < object.length; i++) {
         // console.log(object[i]);
         // console.log(object[i][0]);
@@ -181,8 +181,8 @@ ipcMain.on('MXResult', async (e, results) => {
         data += 'device' + ';';
         data += lap.laps + ';';
         data += lap.best_speed + ';';
-        data += lap.last_time + ';';
-        data += lap.best_time + '\n';
+        data += lap.best_time + ';';
+        data += lap.total_time + '\n';
     }
 
     const os = require("os");
@@ -201,7 +201,7 @@ ipcMain.on('MXResult', async (e, results) => {
     let minutes = date_ob.getMinutes();
     let seconds = date_ob.getSeconds();
     let timestamp = year + "" + month + "" + date + "_" + hours + "" + minutes + "" + seconds;
-    let fileName = filePath + 'MXReport_' + timestamp + '_' + randomInt(100, 999) + '.csv';
+    let fileName = filePath + 'MXResults_' + timestamp + '_' + randomInt(100, 999) + '.csv';
     console.log(fileName)
 
     try {

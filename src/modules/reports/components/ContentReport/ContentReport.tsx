@@ -9,7 +9,8 @@ import { BestPitStopReport } from '@/modules/reports/components/BestPitStopRepor
 import { PositionSportsmenReport } from '@/modules/reports/components/PositionSportsmenReport/PositionSportsmenReport';
 import { RoundGroupsReport } from '@/modules/reports/components/RoundGroupsReport/RoundGroupsReport';
 import { RoundGroupsLaps } from '@/modules/reports/components/RoundGroupsLaps/RoundGroupsLaps';
-import { ReportMXLaps } from '@/modules/reports/components/ReportMXLaps/ReportMXLaps';
+import { MXResultsReport } from '@/modules/reports/components/MXResultsReport/MXResultsReport';
+import { MXLapsReport } from '@/modules/reports/components/MXLapsReport/MXLapsReport';
 
 interface IProps {
     report: IReport;
@@ -20,7 +21,8 @@ interface IProps {
 export const ContentReport: FC<IProps> = observer(({ report, isBroadcast, className }: IProps) => {
     return (
         <div className={className}>
-            {report.type === TypeReport.MX_LAPS && <ReportMXLaps report={report} />}
+            {report.type === TypeReport.MX_RESULTS && <MXResultsReport report={report} />}
+            {report.type === TypeReport.MX_LAPS && <MXLapsReport report={report} />}
             {report.type === TypeReport.BEST_LAP && (
                 <BestLapReport report={report} rounds={story.rounds} sportsmen={story.sportsmen} teams={story.teams} />
             )}

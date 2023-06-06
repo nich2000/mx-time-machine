@@ -1,6 +1,7 @@
 import { IReport } from '@/types/IReport';
 import { IMXResult } from '@/types/IMXResult';
 import { IMXSession } from '@/types/IMXSession';
+import { IMXLap } from '@/types/IMXLap';
 
 export const loadReportsAction = (competitionId: string): void => {
     window.api.ipcRenderer.send('load-reports-request', competitionId);
@@ -28,4 +29,8 @@ export const loadMXSessionAction = (): Promise<Array<IMXSession>> => {
 
 export const loadMXResultsAction = (sessionId: string): Promise<Array<IMXResult>> => {
     return window.api.ipcRenderer.invoke('load-mx-results-request', sessionId);
+};
+
+export const loadMXLapsAction = (sessionId: string): Promise<Array<IMXLap>> => {
+    return window.api.ipcRenderer.invoke('load-mx-laps-request', sessionId);
 };

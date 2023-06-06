@@ -169,6 +169,8 @@ export class Story {
 
                 beep(50, 1000, 1, 'square');
             } else {
+                newMXLap.session = story.curSession;
+
                 laps.set(newMXLap.time, { ...newMXLap });
 
                 // let cloneLap = { ...lap };

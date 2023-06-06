@@ -43,7 +43,7 @@ interface IProps {
     report: IReport;
 }
 
-export const ReportMXLaps: FC<IProps> = observer(({ report }) => {
+export const MXResultsReport: FC<IProps> = observer(({ report }) => {
     const refTableContainer = useRef<HTMLDivElement>(null);
 
     // const membersGroup = useMemo(() => [...group.sportsmen, ...group.teams], [group.sportsmen, group.teams]);
