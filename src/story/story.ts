@@ -33,8 +33,12 @@ function gps_to_millis(gps: number) {
     const __h = __time.getHours();
     // Если время совпадает, значит это эмуляция
     if (_h !== __h) {
+        const d = new Date();
+        const offset = d.getTimezoneOffset() / 60;
+
         // _h += 3; // Москва
-        _h += 4; // Дубай
+        // _h += 4; // Дубай
+        _h += offset; // TODO Проверить
         if (_h > 24) {
             _h -= 24;
         }

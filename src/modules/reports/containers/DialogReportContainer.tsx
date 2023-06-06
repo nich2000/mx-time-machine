@@ -2,7 +2,15 @@ import React, { FC, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { v4 } from 'uuid';
 import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton
+} from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 import { story } from '@/story/story';
 import { IReport } from '@/types/IReport';
@@ -28,10 +36,29 @@ export const DialogReportContainer: FC<IProps> = observer(({ open, onClose, repo
                         alt="logo"
                     />
                 </div>
+
                 <DialogTitle className={styles.title}>{report.name}</DialogTitle>
+
+                <DialogContentText className={styles.header}>Fourth round - Khorfakan - 10 sep 2022</DialogContentText>
+                <DialogContentText className={styles.header}>Final Results</DialogContentText>
+                <DialogContentText className={styles.header}>RUNABOUT OPEN</DialogContentText>
+
                 <DialogContent>
                     <ContentReport key={v4()} report={report} />
                 </DialogContent>
+
+                <table className={styles.footer}>
+                    <tr>
+                        <th>Race Timekeper</th>
+                        <th>Race Director</th>
+                        <th>O.O.D</th>
+                    </tr>
+                    <tr>
+                        <td>Almustafa Nabil</td>
+                        <td>Ali Al-Langawi</td>
+                        <td>Ahmed Eisa Al Hosani</td>
+                    </tr>
+                </table>
             </div>
             <DialogActions>
                 <ReactToPrint content={() => refReport.current}>

@@ -27,15 +27,32 @@
 
 .title {
   text-align: center;
+
+  display: none;
 }
 
 .logo {
-  display: none;
-  @media print {
-    display: block;
-  }
+  //display: none;
+  //@media print {
+  //  display: block;
+  //}
+
+  display: block;
   padding: 24px 0 20px 24px;
   img {
-    height: 60px;
+    height: 180px;
+    width: 100%;
+  }
+}
+
+.header {
+  text-align: center;
+}
+
+.footer {
+  width: 100%;
+
+  tr {
+    text-align: center;
   }
 }
