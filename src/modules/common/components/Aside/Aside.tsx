@@ -10,7 +10,7 @@ import { ReactComponent as Report } from '../../../../media/report.svg';
 
 import styles from './styles.module.scss';
 
-const AppVersion = 'v.1.5';
+const AppVersion = 'v.1.7';
 
 export const Aside = () => {
     return (

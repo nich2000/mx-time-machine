@@ -58,4 +58,6 @@ const init = () => {
     copyDefaultImages();
 };
 
+console.log("userData", app.getPath('userData'))
+
 module.exports = { init };

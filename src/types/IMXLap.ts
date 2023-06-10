@@ -5,8 +5,10 @@ export interface IMXLap {
     device: number;
     lap_time: number;
     max_speed: number;
+    num: number;
     sectors: number;
     session: string;
+    sportsman: string;
     status: number;
     time: number;
 }

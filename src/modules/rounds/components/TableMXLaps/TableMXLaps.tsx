@@ -12,6 +12,8 @@ import {
     Avatar,
     Badge,
     IconButton,
+    Menu,
+    MenuItem,
     Paper,
     Table,
     TableBody,
@@ -28,7 +30,13 @@ import { sportsmanName } from '@/utils/sportsmanName';
 import { story } from '@/story/story';
 import { millisecondsToTimeString } from '@/utils/millisecondsToTimeString';
 import { ListAllLaps } from '@/modules/rounds/components/ListAllLaps/ListAllLaps';
-import { lapDeleteAction, lapInsertAction, lapUpdateAction, loadLapsForGroupAction } from '@/actions/actionLapRequest';
+import {
+    lapDeleteAction,
+    lapInsertAction,
+    lapUpdateAction,
+    loadLapsForGroupAction,
+    mxResultSetAction
+} from '@/actions/actionLapRequest';
 import { TypeRaceStatus } from '@/types/TypeRaceStatus';
 import { matrixLapsWithPitStop } from '@/utils/matrixLapsWithPitStop';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -41,6 +49,7 @@ interface ILapsProps {
     laps: number | undefined;
     duplicate: number | undefined;
     refresh_time: number | undefined;
+    onContextMenu: any;
 }
 interface ILapsState {
     color: string;
@@ -87,7 +96,11 @@ class LapsCell extends React.Component<ILapsProps, ILapsState> {
         const style = {
             backgroundColor: this.state.color
         };
-        return <TableCell style={style}>{this.props.laps}</TableCell>;
+        return (
+            <TableCell style={style} onContextMenu={this.props.onContextMenu}>
+                {this.props.laps}
+            </TableCell>
+        );
     }
 }
 
@@ -105,6 +118,69 @@ export const TableMXLaps: FC<IProps> = observer(
         const refTableContainer = useRef<HTMLDivElement>(null);
 
         const membersGroup = useMemo(() => [...group.sportsmen, ...group.teams], [group.sportsmen, group.teams]);
+
+        const [contextMenu, setContextMenu] = React.useState<
+            | {
+                  mouseX: number;
+                  mouseY: number;
+                  mxResult: IMXResult | undefined;
+              }
+            | undefined
+        >(undefined);
+
+        const handleContextMenu = useCallback(
+            (mxResult: IMXResult | undefined) => (event: React.MouseEvent<HTMLLIElement>) => {
+                event.preventDefault();
+                setContextMenu(
+                    contextMenu === undefined
+                        ? {
+                              mouseX: event.clientX - 2,
+                              mouseY: event.clientY - 4,
+                              mxResult: mxResult
+                          }
+                        : undefined
+                );
+            },
+            [contextMenu]
+        );
+
+        const handleClose = useCallback(() => {
+            // setOpenEdit(undefined);
+            setContextMenu(undefined);
+        }, []);
+
+        const handleLapDown = useCallback(() => {
+            // alert('Lap down');
+            let mxResults = story.mxResults;
+            let mxResult = contextMenu?.mxResult;
+            if (mxResults != undefined && mxResult != undefined && mxResults.get(mxResult.device) != undefined) {
+                let device = mxResults.get(mxResult.device);
+                if (device != undefined && device.lap_down_count != undefined) {
+                    device.lap_down_count += 1;
+                }
+                mxResults.set(mxResult.device, mxResult);
+                mxResultSetAction(mxResult.device, mxResult.session, { ...mxResult });
+            }
+            // setOpenEdit(contextMenu?.mxResult);
+            setContextMenu(undefined);
+        }, [contextMenu?.mxResult]);
+
+        const handlePlus5Sec = useCallback(() => {
+            // alert('+5 sec');
+            let mxResults = story.mxResults;
+            let mxResult = contextMenu?.mxResult;
+            if (mxResults != undefined && mxResult != undefined && mxResults.get(mxResult.device) != undefined) {
+                let device = mxResults.get(mxResult.device);
+                if (device != undefined && device.plus_5sec_count != undefined) {
+                    device.plus_5sec_count += 1;
+                }
+                mxResults.set(mxResult.device, mxResult);
+                mxResultSetAction(mxResult.device, mxResult.session, { ...mxResult });
+            }
+
+            // setOpenEdit(contextMenu?.mxResult);
+            setContextMenu(undefined);
+        }, [contextMenu?.mxResult]);
 
         function resultS(sportsman: ISportsman | undefined) {
             const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
@@ -207,36 +283,55 @@ export const TableMXLaps: FC<IProps> = observer(
         // }
 
         return (
-            <TableContainer component={Paper} variant="outlined" className={styles.root} ref={refTableContainer}>
-                <Table size="small" stickyHeader>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Pilot</TableCell>
-                            <TableCell>Laps</TableCell>
-                            <TableCell>Max speed</TableCell>
-                            <TableCell>Last lap</TableCell>
-                            <TableCell>Best lap</TableCell>
-                            <TableCell>Total time</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {membersGroup.map((item) => (
+            <div>
+                <TableContainer component={Paper} variant="outlined" className={styles.root} ref={refTableContainer}>
+                    <Table size="small" stickyHeader>
+                        <TableHead>
                             <TableRow>
-                                <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
-                                <LapsCell
-                                    laps={resultS(item?.sportsman)?.laps}
-                                    refresh_time={resultS(item?.sportsman)?.refresh_time}
-                                    duplicate={resultS(item?.sportsman)?.duplicate}
-                                />
-                                <TableCell>{speedF(resultS(item?.sportsman)?.max_speed)}</TableCell>
-                                <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
-                                <TableCell>{millisToTime(resultS(item?.sportsman)?.best_time)}</TableCell>
-                                <TableCell>{millisToTime(resultS(item?.sportsman)?.total_time)}</TableCell>
+                                <TableCell>Pilot</TableCell>
+                                <TableCell>Laps</TableCell>
+                                <TableCell>Max speed</TableCell>
+                                <TableCell>Last lap</TableCell>
+                                <TableCell>Best lap</TableCell>
+                                <TableCell>Total time</TableCell>
+                                <TableCell>Penalties</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {membersGroup.map((item) => (
+                                <TableRow>
+                                    <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
+                                    <LapsCell
+                                        laps={resultS(item?.sportsman)?.laps}
+                                        refresh_time={resultS(item?.sportsman)?.refresh_time}
+                                        duplicate={resultS(item?.sportsman)?.duplicate}
+                                        onContextMenu={handleContextMenu(resultS(item?.sportsman))}
+                                    />
+                                    <TableCell>{speedF(resultS(item?.sportsman)?.max_speed)}</TableCell>
+                                    <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
+                                    <TableCell>{millisToTime(resultS(item?.sportsman)?.best_time)}</TableCell>
+                                    <TableCell>{millisToTime(resultS(item?.sportsman)?.total_time)}</TableCell>
+                                    <TableCell>
+                                        {resultS(item?.sportsman)?.lap_down_count}{' '}
+                                        {resultS(item?.sportsman)?.plus_5sec_count}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <Menu
+                    open={contextMenu !== undefined}
+                    onClose={handleClose}
+                    anchorReference="anchorPosition"
+                    anchorPosition={
+                        contextMenu !== undefined ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined
+                    }
+                >
+                    <MenuItem onClick={handleLapDown}>Lap down</MenuItem>
+                    <MenuItem onClick={handlePlus5Sec}>+5 sec</MenuItem>
+                </Menu>
+            </div>
         );
     }
 );

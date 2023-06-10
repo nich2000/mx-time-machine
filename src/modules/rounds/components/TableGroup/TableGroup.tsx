@@ -40,8 +40,8 @@ import SignalCellular1Bar from '@mui/icons-material/SignalCellular1Bar';
 import SignalCellular2Bar from '@mui/icons-material/SignalCellular2Bar';
 import SignalCellular3Bar from '@mui/icons-material/SignalCellular3Bar';
 import SignalCellular4Bar from '@mui/icons-material/SignalCellular4Bar';
-import BedtimeIcon from '@mui/icons-material/Bedtime';
-import StreamIcon from '@mui/icons-material/Stream';
+// import BedtimeIcon from '@mui/icons-material/Bedtime';
+// import StreamIcon from '@mui/icons-material/Stream';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { PowerSettingsNew } from '@mui/icons-material';
@@ -62,9 +62,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 // import DialogContent from '@mui/material/DialogContent';
 // import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+// import DialogTitle from '@mui/material/DialogTitle';
 import { ISportsman } from '@/types/ISportsman';
-import { IMXDevice } from '@/types/IMXDevice';
+// import { IMXDevice } from '@/types/IMXDevice';
 import { Cancel } from '@mui/icons-material';
 
 interface IProps {

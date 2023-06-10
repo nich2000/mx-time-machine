@@ -5,7 +5,7 @@ const mxLapInsert = (lap) => {
 };
 
 const mxLaps = async (session) => {
-    let result = await db.mx_lap.find({session});
+    let result = await db.mx_lap.find({session}).sort({device: 1, num: 1});
     return result;
 };
 

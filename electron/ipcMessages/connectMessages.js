@@ -191,7 +191,7 @@ ipcMain.on('MXResult', async (e, results) => {
     if (!fs.existsSync(filePath)) {
         fs.mkdirSync(filePath);
     }
-    console.log(filePath)
+    // console.log(filePath)
 
     let date_ob = new Date();
     let date = ("0" + date_ob.getDate()).slice(-2);
@@ -202,7 +202,7 @@ ipcMain.on('MXResult', async (e, results) => {
     let seconds = date_ob.getSeconds();
     let timestamp = year + "" + month + "" + date + "_" + hours + "" + minutes + "" + seconds;
     let fileName = filePath + 'MXResults_' + timestamp + '_' + randomInt(100, 999) + '.csv';
-    console.log(fileName)
+    console.log('Report saved to:', fileName)
 
     try {
         fs.writeFileSync(

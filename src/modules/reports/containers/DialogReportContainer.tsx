@@ -39,9 +39,9 @@ export const DialogReportContainer: FC<IProps> = observer(({ open, onClose, repo
 
                 <DialogTitle className={styles.title}>{report.name}</DialogTitle>
 
-                <DialogContentText className={styles.header}>Fourth round - Khorfakan - 10 sep 2022</DialogContentText>
-                <DialogContentText className={styles.header}>Final Results</DialogContentText>
-                <DialogContentText className={styles.header}>RUNABOUT OPEN</DialogContentText>
+                {/*<DialogContentText className={styles.header}>Fourth round - Khorfakan - 10 sep 2022</DialogContentText>*/}
+                {/*<DialogContentText className={styles.header}>Final Results</DialogContentText>*/}
+                {/*<DialogContentText className={styles.header}>RUNABOUT OPEN</DialogContentText>*/}
 
                 <DialogContent>
                     <ContentReport key={v4()} report={report} />
@@ -49,9 +49,9 @@ export const DialogReportContainer: FC<IProps> = observer(({ open, onClose, repo
 
                 <table className={styles.footer}>
                     <tr>
-                        <th>Race Timekeper</th>
+                        <th>Race Timekeeper</th>
                         <th>Race Director</th>
-                        <th>O.O.D</th>
+                        <th>O.O.D.</th>
                     </tr>
                     <tr>
                         <td>Almustafa Nabil</td>

@@ -169,6 +169,7 @@ export const MXResultsReport: FC<IProps> = observer(({ report }) => {
                         <TableCell>Best speed</TableCell>
                         <TableCell>Best time</TableCell>
                         <TableCell>Total time</TableCell>
+                        <TableCell>Penalties</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -180,6 +181,9 @@ export const MXResultsReport: FC<IProps> = observer(({ report }) => {
                             <TableCell>{speedF(item?.best_speed)}</TableCell>
                             <TableCell>{millisToTime(item?.best_time)}</TableCell>
                             <TableCell>{millisToTime(item?.total_time)}</TableCell>
+                            <TableCell>
+                                {item?.lap_down_count} {item?.plus_5sec_count}
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

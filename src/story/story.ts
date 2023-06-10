@@ -37,8 +37,8 @@ function gps_to_millis(gps: number) {
         const offset = d.getTimezoneOffset() / 60;
 
         // _h += 3; // Москва
-        // _h += 4; // Дубай
-        _h += offset; // TODO Проверить
+        _h += 4; // Дубай
+        // _h += offset; // TODO Проверить
         if (_h > 24) {
             _h -= 24;
         }
@@ -88,6 +88,7 @@ export class Story {
     public serialPortStatus: ISerialPortStatus | undefined = undefined;
     public sportsmen: Array<ISportsman> = [];
     public startTime: number | undefined = undefined;
+    public finishTime: number | undefined = undefined;
     public teams: Array<ITeam> = [];
     public wlanStatus: IWlanStatus | undefined = undefined;
 
@@ -159,23 +160,62 @@ export class Story {
         if (this.mxLaps === undefined) {
             this.mxLaps = new Map<number, Map<number, IMXLap>>();
         }
-        // Круги для девайса
+        // Сводная информация
+        if (this.mxResults === undefined) {
+            this.mxResults = new Map<number, IMXResult>();
+        }
+        // Создание кругов для девайса
         if (this.mxLaps.get(newMXLap.device) === undefined) {
             this.mxLaps.set(newMXLap.device, new Map<number, IMXLap>());
         }
-        let laps = this.mxLaps.get(newMXLap.device);
+
+        // Результаты конкретного девайса
+        let mxResult = this.mxResults.get(newMXLap.device);
+
+        // Круги конкретного девайса
+        let mxLaps = this.mxLaps.get(newMXLap.device);
+
+        // Находим спортсмена по девайсу
+        let sportsman: string = '' + newMXLap.device;
+        for (let i = 0; i < story.sportsmen.length; i++) {
+            let needBreak = false;
+            for (let j = 0; j < story.sportsmen[i].transponders.length; j++) {
+                if (story.sportsmen[i].transponders[j] == newMXLap.device) {
+                    sportsman = sportsmanName(story.sportsmen[i]);
+                    needBreak = true;
+                    break;
+                }
+            }
+            if (needBreak) {
+                break;
+            }
+        }
+
         let duplicate = false;
-        if (laps !== undefined) {
+        if (mxLaps !== undefined) {
             // Конкретный круг девайса
-            if (laps.get(newMXLap.time) !== undefined) {
+            if (mxLaps.get(newMXLap.time) !== undefined) {
                 // Дубль
                 duplicate = true;
 
                 beep(50, 1000, 1, 'square');
             } else {
+                newMXLap.num = mxLaps.size + 1;
                 newMXLap.session = story.curSession;
+                newMXLap.sportsman = sportsman;
 
-                laps.set(newMXLap.time, { ...newMXLap });
+                if (mxResult !== undefined) {
+                    // Если это последующие круги
+                    newMXLap.lap_time = gps_to_millis(newMXLap.time) - gps_to_millis(mxResult.last_time);
+                } else {
+                    // Если это первый круг
+                    newMXLap.lap_time =
+                        this.startTime !== undefined
+                            ? gps_to_millis(newMXLap.time) - unix_to_millis(this.startTime)
+                            : 1;
+                }
+
+                mxLaps.set(newMXLap.time, { ...newMXLap });
 
                 // let cloneLap = { ...lap };
                 // const cloneLap = Object.assign({}, lap)
@@ -187,60 +227,41 @@ export class Story {
             }
         }
 
-        // Сводная информация
-        if (this.mxResults === undefined) {
-            this.mxResults = new Map<number, IMXResult>();
-        }
-        // Результаты конкретного девайса
-        let result = this.mxResults.get(newMXLap.device);
-        if (result !== undefined) {
+        if (mxResult !== undefined) {
+            // Если это последующие круги
             if (!duplicate) {
-                result.laps += 1;
-                result.duplicate = 1;
-                result.max_speed = newMXLap.max_speed;
-                if (newMXLap.max_speed > result.best_speed || result.best_speed == 0) {
-                    result.best_speed = newMXLap.max_speed; // ms
+                mxResult.laps += 1;
+                mxResult.duplicate = 1;
+                mxResult.max_speed = newMXLap.max_speed;
+                if (newMXLap.max_speed > mxResult.best_speed || mxResult.best_speed == 0) {
+                    mxResult.best_speed = newMXLap.max_speed; // ms
                 }
                 // ms
-                result.lap_time = gps_to_millis(newMXLap.time) - gps_to_millis(result.last_time);
+                mxResult.lap_time = gps_to_millis(newMXLap.time) - gps_to_millis(mxResult.last_time);
                 // ms
-                if (result.lap_time < result.best_time) {
-                    result.best_time = result.lap_time;
+                if (mxResult.lap_time < mxResult.best_time) {
+                    mxResult.best_time = mxResult.lap_time;
                 }
                 // ms
-                result.total_time += result.lap_time;
+                mxResult.total_time += mxResult.lap_time;
                 // gps
-                result.last_time = newMXLap.time;
+                mxResult.last_time = newMXLap.time;
                 // time
-                result.refresh_time = Date.now();
+                mxResult.refresh_time = Date.now();
             } else {
-                result.duplicate += 1;
+                mxResult.duplicate += 1;
             }
         } else {
-            let sportsman: string = '';
-            for (let i = 0; i < story.sportsmen.length; i++) {
-                let needBreak = false;
-                for (let j = 0; j < story.sportsmen[i].transponders.length; j++) {
-                    if (story.sportsmen[i].transponders[j] == newMXLap.device) {
-                        sportsman = sportsmanName(story.sportsmen[i]);
-                        needBreak = true;
-                        break;
-                    }
-                }
-                if (needBreak) {
-                    break;
-                }
-            }
-
-            // 8121000
-            // 83702502
-            result = {
+            // Если это первый круг
+            mxResult = {
                 session: story.curSession,
                 sportsman: sportsman,
                 device: newMXLap.device,
                 laps: 1,
                 duplicate: 1,
+                lap_down_count: 0,
                 max_speed: newMXLap.max_speed,
+                plus_5sec_count: 0,
                 best_speed: newMXLap.max_speed,
                 // ms
                 lap_time:
@@ -257,9 +278,10 @@ export class Story {
                 refresh_time: Date.now()
             };
         }
+
         if (!duplicate) {
-            this.mxResults.set(result.device, result);
-            mxResultSetAction(result.device, result.session, { ...result });
+            this.mxResults.set(mxResult.device, mxResult);
+            mxResultSetAction(mxResult.device, mxResult.session, { ...mxResult });
         }
     };
 

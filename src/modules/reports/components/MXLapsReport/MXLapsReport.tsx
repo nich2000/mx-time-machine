@@ -4,6 +4,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { IMXLap } from '@/types/IMXLap';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { loadMXLapsAction } from '@/actions/actionReportRequest';
+import { story } from '@/story/story';
 
 interface IProps {
     report: IReport;
@@ -66,6 +67,18 @@ export const MXLapsReport: FC<IProps> = observer(({ report }) => {
         }
     }
 
+    function pilotByDevice(device: number | undefined) {
+        const pilots = story.sportsmen;
+        for (let i = 0; i < pilots.length; i++) {
+            const pilot = pilots[i];
+            const _device: number = pilot?.transponders[0] !== undefined ? pilot?.transponders[0] : 0;
+            if (_device == device) {
+                return pilots[i].lastName;
+            }
+        }
+        return device;
+    }
+
     useEffect(() => {
         loadMXLapsAction(report.sessionId).then(setRows);
     }, []);
@@ -75,8 +88,9 @@ export const MXLapsReport: FC<IProps> = observer(({ report }) => {
             <Table size="small" stickyHeader>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Position</TableCell>
+                        {/*<TableCell>Position</TableCell>*/}
                         <TableCell>Pilot</TableCell>
+                        {/*<TableCell>Device</TableCell>*/}
                         <TableCell>Lap</TableCell>
                         <TableCell>Max speed</TableCell>
                         <TableCell>Lap time</TableCell>
@@ -85,9 +99,10 @@ export const MXLapsReport: FC<IProps> = observer(({ report }) => {
                 <TableBody>
                     {rows.map((item, index) => (
                         <TableRow>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell>{item?.device}</TableCell>
-                            <TableCell>{index + 1}</TableCell>
+                            {/*<TableCell>{index + 1}</TableCell>*/}
+                            <TableCell>{pilotByDevice(item?.device)}</TableCell>
+                            {/*<TableCell>{item?.device}</TableCell>*/}
+                            <TableCell>{item?.num}</TableCell>
                             <TableCell>{speedF(item?.max_speed)}</TableCell>
                             <TableCell>{millisToTime(item?.lap_time)}</TableCell>
                         </TableRow>

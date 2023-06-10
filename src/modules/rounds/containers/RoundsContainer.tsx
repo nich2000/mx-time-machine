@@ -248,6 +248,10 @@ export const RoundsContainer: FC = observer(() => {
                 });
             } else {
                 stopRaceAction();
+
+                story.curSession = '';
+
+                story.finishTime = DateTime.now().toMillis();
             }
         }
     }, [raceReadyToStart, selectedGroup, selectedRound]);
