@@ -20,7 +20,7 @@ import { ListGroups } from '@/modules/rounds/components/ListGroups/ListGroups';
 import { DialogFormGroup } from '@/modules/rounds/components/DialogFormGroup/DialogFormGroup';
 import { IGroup } from '@/types/IGroup';
 import { TableLaps } from '@/modules/rounds/components/TableLaps/TableLaps';
-import { TableMXLaps } from '@/modules/rounds/components/TableMXLaps/TableMXLaps';
+import { TableMXResults } from '@/modules/rounds/components/TableMXResults/TableMXResults';
 import {
     roundDeleteAction,
     roundInsertAction,
@@ -430,7 +430,7 @@ export const RoundsContainer: FC = observer(() => {
                                 {/*    groupLaps={story.laps}*/}
                                 {/*    onChangePosition={handleOpenChangePositions}*/}
                                 {/*/>*/}
-                                <TableMXLaps
+                                <TableMXResults
                                     round={selectedRound}
                                     group={selectedGroup}
                                     raceStatus={story.raceStatus}

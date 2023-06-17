@@ -49,6 +49,7 @@ interface ILapsProps {
     laps: number | undefined;
     duplicate: number | undefined;
     refresh_time: number | undefined;
+    is_finished: boolean | undefined;
     onContextMenu: any;
 }
 interface ILapsState {
@@ -98,7 +99,8 @@ class LapsCell extends React.Component<ILapsProps, ILapsState> {
         };
         return (
             <TableCell style={style} onContextMenu={this.props.onContextMenu}>
-                {this.props.laps}
+                {!!this.props.is_finished && <b>{this.props.laps}</b>}
+                {!this.props.is_finished && this.props.laps}
             </TableCell>
         );
     }
@@ -113,7 +115,7 @@ interface IProps {
     groupLaps?: ILap[];
 }
 
-export const TableMXLaps: FC<IProps> = observer(
+export const TableMXResults: FC<IProps> = observer(
     ({ round, group, readonly, raceStatus, onChangePosition, groupLaps }: IProps) => {
         const refTableContainer = useRef<HTMLDivElement>(null);
 
@@ -150,7 +152,6 @@ export const TableMXLaps: FC<IProps> = observer(
         }, []);
 
         const handleLapDown = useCallback(() => {
-            // alert('Lap down');
             let mxResults = story.mxResults;
             let mxResult = contextMenu?.mxResult;
             if (mxResults != undefined && mxResult != undefined && mxResults.get(mxResult.device) != undefined) {
@@ -166,13 +167,28 @@ export const TableMXLaps: FC<IProps> = observer(
         }, [contextMenu?.mxResult]);
 
         const handlePlus5Sec = useCallback(() => {
-            // alert('+5 sec');
             let mxResults = story.mxResults;
             let mxResult = contextMenu?.mxResult;
             if (mxResults != undefined && mxResult != undefined && mxResults.get(mxResult.device) != undefined) {
                 let device = mxResults.get(mxResult.device);
                 if (device != undefined && device.plus_5sec_count != undefined) {
                     device.plus_5sec_count += 1;
+                }
+                mxResults.set(mxResult.device, mxResult);
+                mxResultSetAction(mxResult.device, mxResult.session, { ...mxResult });
+            }
+
+            // setOpenEdit(contextMenu?.mxResult);
+            setContextMenu(undefined);
+        }, [contextMenu?.mxResult]);
+
+        const handleIsFinished = useCallback(() => {
+            let mxResults = story.mxResults;
+            let mxResult = contextMenu?.mxResult;
+            if (mxResults != undefined && mxResult != undefined && mxResults.get(mxResult.device) != undefined) {
+                let device = mxResults.get(mxResult.device);
+                if (device != undefined && device.is_finished != undefined) {
+                    device.is_finished = !device.is_finished;
                 }
                 mxResults.set(mxResult.device, mxResult);
                 mxResultSetAction(mxResult.device, mxResult.session, { ...mxResult });
@@ -305,6 +321,7 @@ export const TableMXLaps: FC<IProps> = observer(
                                         laps={resultS(item?.sportsman)?.laps}
                                         refresh_time={resultS(item?.sportsman)?.refresh_time}
                                         duplicate={resultS(item?.sportsman)?.duplicate}
+                                        is_finished={resultS(item?.sportsman)?.is_finished}
                                         onContextMenu={handleContextMenu(resultS(item?.sportsman))}
                                     />
                                     <TableCell>{speedF(resultS(item?.sportsman)?.max_speed)}</TableCell>
@@ -330,6 +347,7 @@ export const TableMXLaps: FC<IProps> = observer(
                 >
                     <MenuItem onClick={handleLapDown}>Lap down</MenuItem>
                     <MenuItem onClick={handlePlus5Sec}>+5 sec</MenuItem>
+                    <MenuItem onClick={handleIsFinished}>Is finished</MenuItem>
                 </Menu>
             </div>
         );

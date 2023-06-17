@@ -172,6 +172,13 @@ export class Story {
         // Результаты конкретного девайса
         let mxResult = this.mxResults.get(newMXLap.device);
 
+        // Если это последующие круги
+        if (mxResult !== undefined) {
+            if (mxResult.is_finished) {
+                return;
+            }
+        }
+
         // Круги конкретного девайса
         let mxLaps = this.mxLaps.get(newMXLap.device);
 
@@ -259,6 +266,8 @@ export class Story {
                 device: newMXLap.device,
                 laps: 1,
                 duplicate: 1,
+                finish_time: 0,
+                is_finished: false,
                 lap_down_count: 0,
                 max_speed: newMXLap.max_speed,
                 plus_5sec_count: 0,

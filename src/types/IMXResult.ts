@@ -3,6 +3,8 @@ export interface IMXResult {
     best_time: number;
     device: number;
     duplicate: number;
+    finish_time: number;
+    is_finished: boolean;
     lap_down_count: number;
     lap_time: number;
     laps: number;

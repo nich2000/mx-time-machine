@@ -239,12 +239,13 @@ export const TableGroup: FC<IProps> = observer(
                 for (let i = 0; i < l.length; i++) {
                     const item = l[i];
                     const sportsman = item.sportsman;
+                    const count = story?.mxDevices !== undefined ? story?.mxDevices?.size : 0;
                     const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
                     const device = story?.mxDevices?.get(+_device);
                     // console.log(device);
 
                     if (device !== undefined) {
-                        const sec = innerGroup.sportsmen.length / 2 + 2;
+                        const sec = count / 2 + 2;
                         const startDate = device.pingTime;
                         const endDate = Date.now();
                         const seconds = (endDate - startDate) / 1000;
