@@ -10,6 +10,7 @@ import {
     DialogContent,
     DialogTitle,
     FormControlLabel,
+    InputAdornment,
     Switch,
     Tab,
     Tabs,
@@ -378,6 +379,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                             <TextField
                                 id="outlined-basic"
                                 label="Start latitude"
+                                // helperText="Start latitude"
                                 type="number"
                                 fullWidth
                                 variant="outlined"
@@ -389,6 +391,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                             <TextField
                                 id="outlined-basic"
                                 label="Start longitude"
+                                // helperText="Start longitude"
                                 type="number"
                                 fullWidth
                                 variant="outlined"
@@ -400,6 +403,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                             <TextField
                                 id="outlined-basic"
                                 label="Start radius"
+                                helperText="Min 0 Max 100"
                                 type="number"
                                 fullWidth
                                 variant="outlined"
@@ -407,10 +411,13 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                                 value={radius}
                                 error={radius < 1 || radius > 100}
                                 onChange={handleChangeRadius}
+                                // InputProps={{ startAdornment: <InputAdornment position="start">m</InputAdornment> }}
+                                InputProps={{ endAdornment: <InputAdornment position="start">m</InputAdornment> }}
                             />
                             <TextField
                                 id="outlined-basic"
                                 label="Start course"
+                                helperText="Min 0 Max 360"
                                 type="number"
                                 fullWidth
                                 variant="outlined"
@@ -418,17 +425,20 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                                 value={course}
                                 error={course < 0 || course > 360}
                                 onChange={handleChangeCourse}
+                                InputProps={{ endAdornment: <InputAdornment position="start">°</InputAdornment> }}
                             />
                             <TextField
                                 id="outlined-basic"
                                 label="Start delay"
+                                helperText="Min 0 Max 255"
                                 type="number"
                                 fullWidth
                                 variant="outlined"
-                                placeholder="0"
+                                placeholder="10"
                                 value={delay}
-                                error={delay < 0 || delay > 10000}
+                                error={delay < 0 || delay > 255}
                                 onChange={handleChangeDelay}
+                                InputProps={{ endAdornment: <InputAdornment position="start">s</InputAdornment> }}
                             />
                         </Box>
                     </div>
