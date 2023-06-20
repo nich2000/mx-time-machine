@@ -402,8 +402,8 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                             />
                             <TextField
                                 id="outlined-basic"
-                                label="Start radius"
-                                helperText="Min 0 Max 100"
+                                label="Start radius (1 - 100 meters)"
+                                // helperText="Min 0 Max 100"
                                 type="number"
                                 fullWidth
                                 variant="outlined"
@@ -416,8 +416,8 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                             />
                             <TextField
                                 id="outlined-basic"
-                                label="Start course"
-                                helperText="Min 0 Max 360"
+                                label="Start course (0 - 360 degrees)"
+                                // helperText="Min 0 Max 360"
                                 type="number"
                                 fullWidth
                                 variant="outlined"
@@ -429,8 +429,8 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                             />
                             <TextField
                                 id="outlined-basic"
-                                label="Start delay"
-                                helperText="Min 0 Max 255"
+                                label="Minimum lap time (0 - 255 seconds)"
+                                // helperText="Min 0 Max 255"
                                 type="number"
                                 fullWidth
                                 variant="outlined"

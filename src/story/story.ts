@@ -67,30 +67,30 @@ function unix_to_millis(unix: number) {
 //       mxSession
 
 export class Story {
-    public broadCasts: Array<IBroadCast> = [];
-    public competition: ICompetition | undefined = undefined;
-    public competitions: Array<ICompetition> = [];
-    public connected: boolean = false;
-    public connectorMessage: string | undefined = undefined;
-    public curSession: string = '';
-    public groupInRace: IGroup | undefined = undefined;
-    public groups: Array<IGroup> = [];
-    public laps: Array<ILap> = [];
-    public mxBase: IMXBase | undefined = undefined; // TODO use connected
-    public mxChampionship: any | undefined = undefined;
-    public mxDevices: Map<number, IMXDevice> | undefined;
-    public mxLaps: Map<number, Map<number, IMXLap>> | undefined;
-    public mxResults: Map<number, IMXResult> | undefined;
-    public mxSession: any | undefined = undefined;
-    public raceStatus: TypeRaceStatus | undefined = undefined;
-    public reports: Array<IReport> = [];
-    public rounds: Array<IRound> = [];
-    public serialPortStatus: ISerialPortStatus | undefined = undefined;
-    public sportsmen: Array<ISportsman> = [];
-    public startTime: number | undefined = undefined;
-    public finishTime: number | undefined = undefined;
-    public teams: Array<ITeam> = [];
-    public wlanStatus: IWlanStatus | undefined = undefined;
+    public broadCasts: Array<IBroadCast> = []; // not MX
+    public competition: ICompetition | undefined = undefined; // MX
+    public competitions: Array<ICompetition> = []; // MX
+    public connected: boolean = false; // ?
+    public connectorMessage: string | undefined = undefined; // ?
+    public curSession: string = ''; // MX
+    public groupInRace: IGroup | undefined = undefined; // ?
+    public groups: Array<IGroup> = []; // MX
+    public laps: Array<ILap> = []; // not MX
+    public mxBase: IMXBase | undefined = undefined; // MX TODO use connected
+    public mxChampionship: any | undefined = undefined; // MX
+    public mxDevices: Map<number, IMXDevice> | undefined; // MX
+    public mxLaps: Map<number, Map<number, IMXLap>> | undefined; // MX
+    public mxResults: Map<number, IMXResult> | undefined; // MX
+    public mxSession: any | undefined = undefined; // MX
+    public raceStatus: TypeRaceStatus | undefined = undefined; // ?
+    public reports: Array<IReport> = []; // MX
+    public rounds: Array<IRound> = []; // MX
+    public serialPortStatus: ISerialPortStatus | undefined = undefined; // not MX
+    public sportsmen: Array<ISportsman> = []; // MX
+    public startTime: number | undefined = undefined; // MX
+    public finishTime: number | undefined = undefined; // MX
+    public teams: Array<ITeam> = []; // MX
+    public wlanStatus: IWlanStatus | undefined = undefined; // not MX
 
     public constructor() {
         makeAutoObservable(this);

@@ -5,17 +5,27 @@ import { Channel } from '@/types/VTXChannel';
 export interface ICompetition {
     _id: string;
     name: string;
+    // description: string;
     logo: string;
     selected: boolean;
-    skipFirstGate?: boolean;
-    playFail?: boolean;
-    gates: IGate[];
+
+    // person1_title: string;
+    // person1_name: string;
+    // person2_title: string;
+    // person2_name: string;
+    // person3_title: string;
+    // person3_name: string;
 
     latitude: number;
     longitude: number;
     radius: number;
     course: number;
     delay: number;
+
+    // deprecated
+    skipFirstGate?: boolean;
+    playFail?: boolean;
+    gates: IGate[];
 
     color1: Color;
     color2: Color;

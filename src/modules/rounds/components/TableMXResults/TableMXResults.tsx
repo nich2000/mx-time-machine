@@ -314,26 +314,47 @@ export const TableMXResults: FC<IProps> = observer(
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {membersGroup.map((item) => (
-                                <TableRow>
-                                    <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
-                                    <LapsCell
-                                        laps={resultS(item?.sportsman)?.laps}
-                                        refresh_time={resultS(item?.sportsman)?.refresh_time}
-                                        duplicate={resultS(item?.sportsman)?.duplicate}
-                                        is_finished={resultS(item?.sportsman)?.is_finished}
-                                        onContextMenu={handleContextMenu(resultS(item?.sportsman))}
-                                    />
-                                    <TableCell>{speedF(resultS(item?.sportsman)?.max_speed)}</TableCell>
-                                    <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
-                                    <TableCell>{millisToTime(resultS(item?.sportsman)?.best_time)}</TableCell>
-                                    <TableCell>{millisToTime(resultS(item?.sportsman)?.total_time)}</TableCell>
-                                    <TableCell>
-                                        {resultS(item?.sportsman)?.lap_down_count}{' '}
-                                        {resultS(item?.sportsman)?.plus_5sec_count}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {membersGroup
+                                .sort((item1, item2) => {
+                                    let result1 = resultS(item1?.sportsman);
+                                    let result2 = resultS(item2?.sportsman);
+
+                                    if (result1 == undefined) return 0;
+                                    if (result2 == undefined) return 0;
+
+                                    if (result1?.laps > result2?.laps) {
+                                        return -1;
+                                    } else if (result1?.laps < result2?.laps) {
+                                        return 1;
+                                    } else {
+                                        if (result1?.total_time > result2?.total_time) {
+                                            return 1;
+                                        } else if (result1?.total_time < result2?.total_time) {
+                                            return -1;
+                                        }
+                                    }
+                                    return 0;
+                                })
+                                .map((item) => (
+                                    <TableRow>
+                                        <TableCell>{sportsmanName(item?.sportsman!)}</TableCell>
+                                        <LapsCell
+                                            laps={resultS(item?.sportsman)?.laps}
+                                            refresh_time={resultS(item?.sportsman)?.refresh_time}
+                                            duplicate={resultS(item?.sportsman)?.duplicate}
+                                            is_finished={resultS(item?.sportsman)?.is_finished}
+                                            onContextMenu={handleContextMenu(resultS(item?.sportsman))}
+                                        />
+                                        <TableCell>{speedF(resultS(item?.sportsman)?.max_speed)}</TableCell>
+                                        <TableCell>{millisToTime(resultS(item?.sportsman)?.lap_time)}</TableCell>
+                                        <TableCell>{millisToTime(resultS(item?.sportsman)?.best_time)}</TableCell>
+                                        <TableCell>{millisToTime(resultS(item?.sportsman)?.total_time)}</TableCell>
+                                        <TableCell>
+                                            {resultS(item?.sportsman)?.lap_down_count}{' '}
+                                            {resultS(item?.sportsman)?.plus_5sec_count}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
