@@ -41,7 +41,7 @@ import styles from './styles.module.scss';
 import { sportsmanName } from '@/utils/sportsmanName';
 import { ColorCss } from '@/types/Color';
 import { DialogChangePositionsInGroup } from '@/modules/rounds/components/DialogChangePositionsInGroup/DialogChangePositionsInGroup';
-import { dateStr, dateTimeStr, timeStr } from '@/utils/dateTimeUtils';
+import { dateTimeStr } from '@/utils/dateTimeUtils';
 import { DateTime } from 'luxon';
 
 export const RoundsContainer: FC = observer(() => {

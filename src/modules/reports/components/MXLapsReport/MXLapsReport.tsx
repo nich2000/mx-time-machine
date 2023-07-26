@@ -16,7 +16,7 @@ export const MXLapsReport: FC<IProps> = observer(({ report }) => {
     const [rows, setRows] = useState<Array<IMXLap>>([]);
 
     function speedF(speed: number | undefined) {
-        let _speed = speed == undefined ? 0.0 : speed;
+        let _speed = speed === undefined ? 0.0 : speed;
 
         _speed /= 100;
 
@@ -24,7 +24,7 @@ export const MXLapsReport: FC<IProps> = observer(({ report }) => {
     }
 
     function millisToTime(time: number | undefined) {
-        let _time = time == undefined ? 0.0 : time;
+        let _time = time === undefined ? 0.0 : time;
 
         if (_time < 0.001 || _time >= 1000000000) {
             return '00:00:00.000';
@@ -72,7 +72,7 @@ export const MXLapsReport: FC<IProps> = observer(({ report }) => {
         for (let i = 0; i < pilots.length; i++) {
             const pilot = pilots[i];
             const _device: number = pilot?.transponders[0] !== undefined ? pilot?.transponders[0] : 0;
-            if (_device == device) {
+            if (_device === device) {
                 return pilots[i].lastName;
             }
         }
@@ -81,7 +81,7 @@ export const MXLapsReport: FC<IProps> = observer(({ report }) => {
 
     useEffect(() => {
         loadMXLapsAction(report.sessionId).then(setRows);
-    }, []);
+    });
 
     return (
         <TableContainer component={Paper} variant="outlined" ref={refTableContainer}>

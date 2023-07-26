@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { makeAutoObservable } from 'mobx';
 import { ICompetition } from '@/types/ICompetition';
 import { IRound } from '@/types/IRound';
@@ -33,8 +32,8 @@ function gps_to_millis(gps: number) {
     const __h = __time.getHours();
     // Если время совпадает, значит это эмуляция
     if (_h !== __h) {
-        const d = new Date();
-        const offset = d.getTimezoneOffset() / 60;
+        // const d = new Date();
+        // const offset = d.getTimezoneOffset() / 60;
 
         // _h += 3; // Москва
         _h += 4; // Дубай
@@ -187,7 +186,7 @@ export class Story {
         for (let i = 0; i < story.sportsmen.length; i++) {
             let needBreak = false;
             for (let j = 0; j < story.sportsmen[i].transponders.length; j++) {
-                if (story.sportsmen[i].transponders[j] == newMXLap.device) {
+                if (story.sportsmen[i].transponders[j] === newMXLap.device) {
                     sportsman = sportsmanName(story.sportsmen[i]);
                     needBreak = true;
                     break;
@@ -240,7 +239,7 @@ export class Story {
                 mxResult.laps += 1;
                 mxResult.duplicate = 1;
                 mxResult.max_speed = newMXLap.max_speed;
-                if (newMXLap.max_speed > mxResult.best_speed || mxResult.best_speed == 0) {
+                if (newMXLap.max_speed > mxResult.best_speed || mxResult.best_speed === 0) {
                     mxResult.best_speed = newMXLap.max_speed; // ms
                 }
                 // ms

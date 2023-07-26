@@ -7,11 +7,9 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
-    FormControlLabel,
     InputLabel,
     MenuItem,
     Select,
-    Switch,
     TextField
 } from '@mui/material';
 import { IReport } from '@/types/IReport';
@@ -56,27 +54,27 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
     const handleChangeType = useCallback((event: SelectChangeEvent<TypeReport>) => {
         setType(event.target.value as TypeReport);
     }, []);
-    const handleChangeTypeRound = useCallback((event: SelectChangeEvent<TypeRoundReport>) => {
-        setTypeRound(event.target.value as TypeRoundReport);
-    }, []);
-    const handleChangeNotCountedRounds = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setNotCountedRounds(Number(event.target.value));
-    }, []);
-    const handleChangeOnlySportsmen = useCallback((_event: React.ChangeEvent<HTMLInputElement>) => {
-        setOnlySportsmen((prev) => !prev);
-    }, []);
-    const handleChangeSimplified = useCallback((_event: React.ChangeEvent<HTMLInputElement>) => {
-        setSimplified((prev) => !prev);
-    }, []);
-    const handleChangeBroadCastStyle = useCallback((_event: React.ChangeEvent<HTMLInputElement>) => {
-        setBroadCastStyle((prev) => !prev);
-    }, []);
-    const handleChangeCount = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setCount(Number(event.target.value));
-    }, []);
-    const handleChangeRoundId = useCallback((event: SelectChangeEvent) => {
-        setRoundId(event.target.value as TypeReport);
-    }, []);
+    // const handleChangeTypeRound = useCallback((event: SelectChangeEvent<TypeRoundReport>) => {
+    //     setTypeRound(event.target.value as TypeRoundReport);
+    // }, []);
+    // const handleChangeNotCountedRounds = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setNotCountedRounds(Number(event.target.value));
+    // }, []);
+    // const handleChangeOnlySportsmen = useCallback((_event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setOnlySportsmen((prev) => !prev);
+    // }, []);
+    // const handleChangeSimplified = useCallback((_event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setSimplified((prev) => !prev);
+    // }, []);
+    // const handleChangeBroadCastStyle = useCallback((_event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setBroadCastStyle((prev) => !prev);
+    // }, []);
+    // const handleChangeCount = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setCount(Number(event.target.value));
+    // }, []);
+    // const handleChangeRoundId = useCallback((event: SelectChangeEvent) => {
+    //     setRoundId(event.target.value as TypeReport);
+    // }, []);
 
     const handleSave = useCallback(() => {
         const newReport = {

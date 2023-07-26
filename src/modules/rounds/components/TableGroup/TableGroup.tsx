@@ -44,7 +44,7 @@ import SignalCellular4Bar from '@mui/icons-material/SignalCellular4Bar';
 // import StreamIcon from '@mui/icons-material/Stream';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { PowerSettingsNew } from '@mui/icons-material';
+import { PowerSettingsNew, WifiOff } from '@mui/icons-material';
 // import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import { sportsmanName } from '@/utils/sportsmanName';
 // import { ColorAndChannel } from '@/modules/rounds/components/ColorAndChannel/ColorAndChannel';
@@ -103,11 +103,6 @@ export const TableGroup: FC<IProps> = observer(
             | undefined
         >(undefined);
         const [openEdit, setOpenEdit] = useState<IMembersGroup>();
-
-        const [selectedSleep, setSelectedSleep] = useState<boolean | false>(false);
-        // const [selectedSleep, setSelectedSleep] = useState<boolean | false>(
-        //     window.localStorage.getItem('sleepToggle') === '1'
-        // );
 
         const isSelected = (item: IGroup) => selectedGroup?._id === item._id;
 
@@ -439,79 +434,72 @@ export const TableGroup: FC<IProps> = observer(
             }
         }
 
-        // function MXActionButton(id: string, action: string, ComponentOn: any, ComponentOff: any) {
-        //     const [open, setOpen] = React.useState(false);
-        //
-        //     const handleClickOpen = () => {
-        //         setOpen(true);
-        //     };
-        //
-        //     const handleDisagree = () => {
-        //         setOpen(false);
-        //     };
-        //
-        //     const handleAgree = () => {
-        //         setOpen(false);
-        //
-        //         let devices = [];
-        //         for (let i = 0; i < group.sportsmen.length; i++) {
-        //             if (group.sportsmen[i] !== undefined) {
-        //                 if (group.sportsmen[i].sportsman !== undefined) {
-        //                     if (group.sportsmen[i].sportsman?.transponders[0] !== undefined) {
-        //                         let id = group.sportsmen[i].sportsman?.transponders[0];
-        //                         devices.push(id);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //
-        //         onMXAction(id, action, devices);
-        //
-        //         if (selectedSleep) setSelectedSleep(false);
-        //         else setSelectedSleep(true);
-        //         // if (selectedSleep) window.localStorage.setSetItem('sleepToggle', '1');
-        //         // else window.localStorage.setSetItem('sleepToggle', '0');
-        //     };
-        //
-        //     function handleClose() {
-        //         setOpen(false);
-        //     }
-        //
-        //     function selectSleep(value: boolean) {
-        //         if (value) return <ComponentOn />;
-        //         else return <ComponentOff />;
-        //     }
-        //
-        //     return (
-        //         <b>
-        //             <IconButton data-rh={action} onClick={handleClickOpen}>
-        //                 {selectSleep(selectedSleep)}
-        //             </IconButton>
-        //
-        //             <Dialog
-        //                 open={open}
-        //                 onClose={handleClose}
-        //                 aria-labelledby="alert-dialog-title"
-        //                 aria-describedby="alert-dialog-description"
-        //             >
-        //                 <DialogTitle id="alert-dialog-title">{`Send command "${action}" to device group?`}</DialogTitle>
-        //                 <DialogActions>
-        //                     <Button1 onClick={handleDisagree}>NO</Button1>
-        //                     <Button1 onClick={handleAgree} autoFocus>
-        //                         YES
-        //                     </Button1>
-        //                 </DialogActions>
-        //             </Dialog>
-        //         </b>
-        //     );
-        // }
+        function getDevices() {
+            let devices = [];
+            for (let i = 0; i < group.sportsmen.length; i++) {
+                if (group.sportsmen[i] !== undefined) {
+                    if (group.sportsmen[i].sportsman !== undefined) {
+                        if (group.sportsmen[i].sportsman?.transponders[0] !== undefined) {
+                            let id = group.sportsmen[i].sportsman?.transponders[0];
+                            devices.push(id);
+                        }
+                    }
+                }
+            }
+            return devices;
+        }
+
+        function MXSleepCheck(id: string) {
+            const [selectedLabel, setSelectedLabel] = useState<string | ''>('Sleep');
+            const [selectedSleep, setSelectedSleep] = useState<boolean | false>(false);
+            // const [selectedSleep, setSelectedSleep] = useState<boolean | false>(
+            //     window.localStorage.getItem('sleepToggle') === '1'
+            // );
+
+            function handleChange(id: string) {
+                if (selectedSleep) {
+                    let devices = getDevices();
+                    onMXAction(id, 'wake', devices);
+                    setSelectedSleep(false);
+                    setSelectedLabel('Wake');
+                } else {
+                    let devices = getDevices();
+                    onMXAction(id, 'sleep', devices);
+                    setSelectedSleep(true);
+                    setSelectedLabel('Sleep');
+                }
+            }
+
+            return (
+                <FormControlLabel
+                    control={<Switch checked={selectedSleep} onChange={() => handleChange(innerGroup._id)} />}
+                    label={selectedLabel}
+                />
+            );
+        }
 
         function MXPowerButton(id: string) {
-            function handleClick() {}
+            function handleClick() {
+                let devices = getDevices();
+                onMXAction(id, 'power', devices);
+            }
 
             return (
                 <IconButton data-rh="power" onClick={handleClick}>
                     <PowerSettingsNew />
+                </IconButton>
+            );
+        }
+
+        function MXWiFiPowerButton(id: string) {
+            function handleClick() {
+                let devices = getDevices();
+                onMXAction(id, 'wifi', devices);
+            }
+
+            return (
+                <IconButton data-rh="power" onClick={handleClick}>
+                    <WifiOff />
                 </IconButton>
             );
         }
@@ -527,59 +515,6 @@ export const TableGroup: FC<IProps> = observer(
             // console.log(device);
             return device;
         }
-
-        // function deviceColor(sportsman: ISportsman | undefined) {
-        //     const _device: number = sportsman?.transponders[0] !== undefined ? sportsman?.transponders[0] : 0;
-        //     const device = story?.mxDevices?.get(+_device);
-        //
-        //     if (device !== undefined) {
-        //         const sec = innerGroup.sportsmen.length / 2 + 2;
-        //         const startDate = device.pingTime;
-        //         const endDate = Date.now();
-        //         const seconds = (endDate - startDate) / 1000;
-        //         if (seconds > sec * 2) {
-        //             return 'red';
-        //         } else if (seconds > sec) {
-        //             return 'orange';
-        //         } else {
-        //             return 'green';
-        //         }
-        //     }
-        //     return 'black';
-        // }
-
-        // function device(index: number) {
-        //     return story?.mxDevices?.get(index);
-        // }
-
-        // const theme = createTheme({
-        //     components: {
-        //         MuiSwitch: {
-        //             styleOverrides: {
-        //                 switchBase: {
-        //                     //thumb - unchecked
-        //                     color: 'orange'
-        //                 },
-        //                 colorPrimary: {
-        //                     '&.Mui-checked': {
-        //                         // thumb - checked
-        //                         color: 'red'
-        //                     }
-        //                 },
-        //                 track: {
-        //                     // track - unchecked
-        //                     opacity: 0.2,
-        //                     backgroundColor: 'blue',
-        //                     '.Mui-checked.Mui-checked + &': {
-        //                         // track - checked
-        //                         opacity: 0.9,
-        //                         backgroundColor: 'pink'
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // });
 
         const MaterialUISwitch = styled(Switch)(({ theme }) => ({
             width: 62,
@@ -628,27 +563,6 @@ export const TableGroup: FC<IProps> = observer(
             }
         }));
 
-        function handleChange(id: string) {
-            if (selectedSleep) {
-                setSelectedSleep(false);
-            } else {
-                let devices = [];
-                for (let i = 0; i < group.sportsmen.length; i++) {
-                    if (group.sportsmen[i] !== undefined) {
-                        if (group.sportsmen[i].sportsman !== undefined) {
-                            if (group.sportsmen[i].sportsman?.transponders[0] !== undefined) {
-                                let id = group.sportsmen[i].sportsman?.transponders[0];
-                                devices.push(id);
-                            }
-                        }
-                    }
-                }
-                onMXAction(id, 'sleep', devices);
-
-                setSelectedSleep(true);
-            }
-        }
-
         return (
             <Paper key={innerGroup._id} elevation={isSelected(innerGroup) ? 5 : 1} className={styles.paper}>
                 {/*<span>{dateTime}</span>*/}
@@ -663,19 +577,7 @@ export const TableGroup: FC<IProps> = observer(
                             component="div"
                             className={cn(styles.headerGroup, { [styles.selected]: isSelected(innerGroup) })}
                         >
-                            <Tooltip title="Sleep group">
-                                {/*<MaterialUISwitch*/}
-                                {/*    sx={{ m: 1 }}*/}
-                                {/*    checked={selectedSleep}*/}
-                                {/*    onChange={() => handleChange(innerGroup._id)}*/}
-                                {/*/>*/}
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={selectedSleep} onChange={() => handleChange(innerGroup._id)} />
-                                    }
-                                    label="Sleep"
-                                />
-                            </Tooltip>
+                            <Tooltip title="Sleep group">{MXSleepCheck(innerGroup._id)}</Tooltip>
                             {innerGroup.name}
                             {/*<ReactHint autoPosition events />*/}
                             <div className={styles.actionsGroup}>
@@ -693,6 +595,7 @@ export const TableGroup: FC<IProps> = observer(
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Power off group">{MXPowerButton(innerGroup._id)}</Tooltip>
+                                <Tooltip title="WiFi off group">{MXWiFiPowerButton(innerGroup._id)}</Tooltip>
                             </div>
                         </ListSubheader>
                     }

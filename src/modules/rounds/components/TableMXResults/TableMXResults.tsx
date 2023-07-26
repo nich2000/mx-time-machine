@@ -154,7 +154,7 @@ export const TableMXResults: FC<IProps> = observer(
         const handleLapDown = useCallback(() => {
             let mxResults = story.mxResults;
             let mxResult = contextMenu?.mxResult;
-            if (mxResults != undefined && mxResult != undefined && mxResults.get(mxResult.device) != undefined) {
+            if (mxResults !== undefined && mxResult !== undefined && mxResults.get(mxResult.device) !== undefined) {
                 let device = mxResults.get(mxResult.device);
                 if (device != undefined && device.lap_down_count != undefined) {
                     device.lap_down_count += 1;
@@ -187,7 +187,7 @@ export const TableMXResults: FC<IProps> = observer(
             let mxResult = contextMenu?.mxResult;
             if (mxResults != undefined && mxResult != undefined && mxResults.get(mxResult.device) != undefined) {
                 let device = mxResults.get(mxResult.device);
-                if (device != undefined && device.is_finished != undefined) {
+                if (device != undefined && device.is_finished !== undefined) {
                     device.is_finished = !device.is_finished;
                 }
                 mxResults.set(mxResult.device, mxResult);
@@ -204,7 +204,7 @@ export const TableMXResults: FC<IProps> = observer(
         }
 
         function speedF(speed: number | undefined) {
-            let _speed = speed == undefined ? 0.0 : speed;
+            let _speed = speed === undefined ? 0.0 : speed;
 
             _speed /= 100;
 
@@ -212,7 +212,7 @@ export const TableMXResults: FC<IProps> = observer(
         }
 
         function millisToTime(time: number | undefined) {
-            let _time = time == undefined ? 0.0 : time;
+            let _time = time === undefined ? 0.0 : time;
 
             if (_time < 0.001 || _time >= 1000000000) {
                 return '00:00:00.000';
@@ -319,8 +319,8 @@ export const TableMXResults: FC<IProps> = observer(
                                     let result1 = resultS(item1?.sportsman);
                                     let result2 = resultS(item2?.sportsman);
 
-                                    if (result1 == undefined) return 0;
-                                    if (result2 == undefined) return 0;
+                                    if (result1 === undefined) return 0;
+                                    if (result2 === undefined) return 0;
 
                                     if (result1?.laps > result2?.laps) {
                                         return -1;

@@ -51,7 +51,7 @@ ipcMain.on('status-connect-request', async (e) => {
 
 ipcMain.on('MXAction', async (e, id, action, devices, latitude, longitude, radius, course, delay) => {
     // console.log('MXAction');
-    console.log(id, action, devices, latitude, longitude, radius, course, delay);
+    // console.log(id, action, devices, latitude, longitude, radius, course, delay);
 
     // const os = require("os");
     // const filePath = os.homedir() + "/MX/"
@@ -61,95 +61,121 @@ ipcMain.on('MXAction', async (e, id, action, devices, latitude, longitude, radiu
     // }
     // console.log(filePath)
 
-    if(connections.length > 0) {
-        let cmd = {};
-        switch (action) {
-            case "list" : {
-                cmd = {
-                  cmd: "list",
-                  device: devices
-                };
-                break;
-            }
-            case "config" : {
-                // const configName = filePath + 'config.json'
-                // if(!fs.existsSync(configName)) {
-                //     console.log('Config not exists, create default config.');
-                //     try {
-                //         fs.writeFileSync(
-                //             configName,
-                //             '{"StartLat":5537362, "StartLon":2531864, "StartCourse":0, "StartRadius":30}',
-                //             'utf-8'
-                //         );
-                //     }
-                //     catch(e) {
-                //         console.log(e);
-                //     }
-                // }
-                // let buffer = fs.readFileSync(configName, 'utf8');
-                // let data = JSON.parse(buffer.toString());
-                // console.log(data);
-
-                cmd = {
-                    cmd: "config",
-                    object: "base",
-                    StartLat: latitude,
-                    StartLon: longitude,
-                    StartRadius: radius,
-                    StartCourse: course,
-                    StartDelay: delay,
-                };
-                console.log(cmd);
-                break;
-            }
-            case "sleep" : {
-                cmd = {
-                    cmd: "mode",
-                    object: "sleep",
-                    value: "",
-                    device: devices
-                };
-                break;
-            }
-            case "ready" : {
-                cmd = {
-                    cmd: "mode",
-                    object: "ready",
-                    value: "",
-                    device: devices
-                };
-                break;
-            }
-            case "start" : {
-                cmd = {
-                    cmd: "event",
-                    object: "start",
-                    value: "",
-                    device: devices
-                };
-                break;
-            }
-            case "stop" : {
-                cmd = {
-                    cmd: "event",
-                    object: "stop",
-                    value: "",
-                    device: devices
-                };
-                break;
-            }
-            default : {
-                console.log("unknown action")
-                return;
-            }
+    let cmd = {};
+    switch (action) {
+        case "list" : {
+            cmd = {
+              cmd: "list",
+              device: devices
+            };
+            break;
         }
+        case "config" : {
+            // const configName = filePath + 'config.json'
+            // if(!fs.existsSync(configName)) {
+            //     console.log('Config not exists, create default config.');
+            //     try {
+            //         fs.writeFileSync(
+            //             configName,
+            //             '{"StartLat":5537362, "StartLon":2531864, "StartCourse":0, "StartRadius":30}',
+            //             'utf-8'
+            //         );
+            //     }
+            //     catch(e) {
+            //         console.log(e);
+            //     }
+            // }
+            // let buffer = fs.readFileSync(configName, 'utf8');
+            // let data = JSON.parse(buffer.toString());
+            // console.log(data);
 
+            cmd = {
+                cmd: "config",
+                object: "base",
+                StartLat: latitude,
+                StartLon: longitude,
+                StartRadius: radius,
+                StartCourse: course,
+                StartDelay: delay,
+            };
+            break;
+        }
+        case "sleep" : {
+            cmd = {
+                cmd: "mode",
+                object: "sleep",
+                value: "",
+                device: devices
+            };
+            break;
+        }
+        case "wake" : {
+            cmd = {
+                cmd: "mode",
+                object: "wake",
+                value: "",
+                device: devices
+            };
+            break;
+        }
+        case "ready" : {
+            cmd = {
+                cmd: "mode",
+                object: "ready",
+                value: "",
+                device: devices
+            };
+            break;
+        }
+        case "power" : {
+            cmd = {
+                cmd: "power",
+                object: "power",
+                value: "off",
+                device: devices
+            };
+            break;
+        }
+        case "wifi" : {
+            cmd = {
+                cmd: "power",
+                object: "wifi",
+                value: "off",
+                device: devices
+            };
+            break;
+        }
+        case "start" : {
+            cmd = {
+                cmd: "event",
+                object: "start",
+                value: "",
+                device: devices
+            };
+            break;
+        }
+        case "stop" : {
+            cmd = {
+                cmd: "event",
+                object: "stop",
+                value: "",
+                device: devices
+            };
+            break;
+        }
+        default : {
+            console.log("unknown action")
+            return;
+        }
+    }
+    // console.log(cmd);
+    let msg = JSON.stringify(cmd);
+    console.log(msg);
+
+    if(connections.length > 0) {
         try {
             let conn = connections[0];
-
-            let msg = JSON.stringify(cmd);
-            console.log('send', msg);
-
+            // console.log('send', msg);
             conn.write(msg);
         } catch (error) {
             console.log(error);

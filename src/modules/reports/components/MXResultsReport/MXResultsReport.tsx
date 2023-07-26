@@ -57,7 +57,7 @@ export const MXResultsReport: FC<IProps> = observer(({ report }) => {
     }
 
     function speedF(speed: number | undefined) {
-        let _speed = speed == undefined ? 0.0 : speed;
+        let _speed = speed === undefined ? 0.0 : speed;
 
         _speed /= 100;
 
@@ -65,7 +65,7 @@ export const MXResultsReport: FC<IProps> = observer(({ report }) => {
     }
 
     function millisToTime(time: number | undefined) {
-        let _time = time == undefined ? 0.0 : time;
+        let _time = time === undefined ? 0.0 : time;
 
         if (_time < 0.001 || _time >= 1000000000) {
             return '00:00:00.000';
@@ -110,7 +110,7 @@ export const MXResultsReport: FC<IProps> = observer(({ report }) => {
 
     // 12413030 -> 12:41:30.300
     function gpsToTime(time: number | undefined) {
-        let _time = time == undefined ? 0.0 : time;
+        let _time = time === undefined ? 0.0 : time;
 
         if (_time < 0.001 || _time >= 1000000000) {
             return '00:00:00.000';

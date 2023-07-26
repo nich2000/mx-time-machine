@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, useCallback, useRef, useState } from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { observer } from 'mobx-react';
@@ -123,13 +123,13 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
         setSelected((prev) => !prev);
     }, []);
 
-    const handleChangeSkipFirstGate = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setSkipFirstGate((prev) => !prev);
-    }, []);
+    // const handleChangeSkipFirstGate = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setSkipFirstGate((prev) => !prev);
+    // }, []);
 
-    const handleChangePlayFail = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setPlayFail((prev) => !prev);
-    }, []);
+    // const handleChangePlayFail = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setPlayFail((prev) => !prev);
+    // }, []);
 
     const handleChangeLogo = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
         if (inputFileRef.current && inputFileRef.current.files?.[0]?.path) {

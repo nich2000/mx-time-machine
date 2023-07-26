@@ -20,7 +20,6 @@ import { loadBroadCastsAction } from '@/actions/actionBroadcastRequest';
 import { IMXBase } from '@/types/IMXBase';
 import { IMXDevice } from '@/types/IMXDevice';
 import { IMXLap } from '@/types/IMXLap';
-import { IMXResult } from '@/types/IMXResult';
 
 window.api.ipcRenderer.on('load-competitions-response', (e: any, competitions: ICompetition[]) => {
     story.setCompetitions(competitions);

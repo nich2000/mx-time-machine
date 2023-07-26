@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import { intercept } from 'mobx';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { sportsmanName } from '@/utils/sportsmanName';
 import { millisecondsToTimeString } from '@/utils/millisecondsToTimeString';
@@ -11,7 +10,6 @@ import { ICountLapsReportRow } from '@/types/ICountLapsReportRow';
 import { calculateCountLapsReport } from '@/modules/reports/calculate/calculateCountLapsReport';
 import { observer } from 'mobx-react';
 import { story } from '@/story/story';
-import { ILap } from '@/types/ILap';
 
 interface IProps {
     report: IReport;
