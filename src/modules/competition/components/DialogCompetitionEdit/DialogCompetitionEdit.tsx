@@ -43,19 +43,23 @@ interface IProps {
 }
 export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, competition }: IProps) => {
     const [tabSelected, setTabSelected] = useState('Data');
-
+    const [description, setDescription] = useState<string>(competition?.description || '');
     const [name, setName] = useState<string>(competition?.name || '');
     const [selected, setSelected] = useState(competition?.selected || false);
     const [skipFirstGate, setSkipFirstGate] = useState(competition?.skipFirstGate || false);
     const [playFail, setPlayFail] = useState(competition?.playFail || false);
     const [logo, setLogo] = useState(competition?.logo || window.api.DEFAULT_COMPETITION_LOGO);
-
     const [latitude, setLatitude] = useState<number>(competition?.latitude || 0);
     const [longitude, setLongitude] = useState<number>(competition?.longitude || 0);
     const [radius, setRadius] = useState<number>(competition?.radius || 0);
     const [course, setCourse] = useState<number>(competition?.course || 0);
     const [delay, setDelay] = useState<number>(competition?.delay || 0);
-
+    const [official1_title, setOfficial1_title] = useState<string>(competition?.official1_title || '');
+    const [official1_name, setOfficial1_name] = useState<string>(competition?.official1_name || '');
+    const [official2_title, setOfficial2_title] = useState<string>(competition?.official2_title || '');
+    const [official2_name, setOfficial2_name] = useState<string>(competition?.official2_name || '');
+    const [official3_title, setOfficial3_title] = useState<string>(competition?.official3_title || '');
+    const [official3_name, setOfficial3_name] = useState<string>(competition?.official3_name || '');
     const [color1, setColor1] = useState<Color>(competition?.color1 || Color.BLUE);
     const [color2, setColor2] = useState<Color>(competition?.color2 || Color.RED);
     const [color3, setColor3] = useState<Color>(competition?.color3 || Color.GREEN);
@@ -64,7 +68,6 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
     const [color6, setColor6] = useState<Color>(competition?.color6 || Color.CYAN);
     const [color7, setColor7] = useState<Color>(competition?.color7 || Color.WHITE);
     const [color8, setColor8] = useState<Color>(competition?.color8 || Color.BLACK);
-
     const [channel1, setChannel1] = useState<Channel>(competition?.channel1 || Channel.R1);
     const [channel2, setChannel2] = useState<Channel>(competition?.channel2 || Channel.R2);
     const [channel3, setChannel3] = useState<Channel>(competition?.channel3 || Channel.R3);
@@ -73,10 +76,8 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
     const [channel6, setChannel6] = useState<Channel>(competition?.channel6 || Channel.R6);
     const [channel7, setChannel7] = useState<Channel>(competition?.channel7 || Channel.R7);
     const [channel8, setChannel8] = useState<Channel>(competition?.channel8 || Channel.R8);
-
     const [openAddGate, setOpenAddGate] = useState(false);
     const [openEditGate, setOpenEditGate] = useState<IGate | undefined>(undefined);
-
     const [gates, setGates] = useState<Array<IGate>>(
         competition?.gates || [
             {
@@ -117,6 +118,18 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
 
     const handleChangeDelay = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setDelay(Number(event.target.value));
+    }, []);
+
+    const handleChangeTimekeeper = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setOfficial1_name(event.target.value);
+    }, []);
+
+    const handleChangeDirector = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setOfficial2_name(event.target.value);
+    }, []);
+
+    const handleChangeOOD = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setOfficial3_name(event.target.value);
     }, []);
 
     const handleChangeSelected = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -201,16 +214,24 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
             // console.log(latitude, longitude, radius, course);
             const newValue = {
                 name,
+                description,
                 logo,
-                gates: _.cloneDeep(gates),
+                selected,
+                official1_title,
+                official1_name,
+                official2_title,
+                official2_name,
+                official3_title,
+                official3_name,
                 latitude,
                 longitude,
                 radius,
                 course,
                 delay,
-                selected,
+                // deprecated
                 skipFirstGate,
                 playFail,
+                gates: _.cloneDeep(gates),
                 color1,
                 color2,
                 color3,
@@ -319,6 +340,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                         <Tabs variant="scrollable" scrollButtons="auto" value={tabSelected} onChange={handleChangeTab}>
                             <Tab label="Data" value="Data" id="Data" />
                             <Tab label="Track" value="Track" id="Track" />
+                            <Tab label="Officials" value="Officials" id="Officials" />
                             {/*<Tab label="Gates" value="Gates" id="Gates" />*/}
                             {/*<Tab label="Channels" value="Channels" id="Channels" />*/}
                             {/*<Tab label="Colors" value="Colors" id="Colors" />*/}
@@ -439,6 +461,46 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                                 error={delay < 0 || delay > 255}
                                 onChange={handleChangeDelay}
                                 InputProps={{ endAdornment: <InputAdornment position="start">s</InputAdornment> }}
+                            />
+                        </Box>
+                    </div>
+                    <div hidden={tabSelected !== 'Officials'} className={styles.tabPanel}>
+                        <Box component="form" sx={{ '& > :not(style)': { m: 1 } }} noValidate autoComplete="off">
+                            <TextField
+                                id="outlined-basic"
+                                label="Race Timekeeper"
+                                // helperText="Start latitude"
+                                // type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="Race Timekeeper"
+                                value={official1_name}
+                                error={!official1_name}
+                                onChange={handleChangeTimekeeper}
+                            />
+                            <TextField
+                                id="outlined-basic"
+                                label="Race Director"
+                                // helperText="Start latitude"
+                                // type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="Race Director"
+                                value={official2_name}
+                                error={!official2_name}
+                                onChange={handleChangeDirector}
+                            />
+                            <TextField
+                                id="outlined-basic"
+                                label="O.O.D."
+                                // helperText="Start latitude"
+                                // type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="O.O.D."
+                                value={official3_name}
+                                error={!official3_name}
+                                onChange={handleChangeOOD}
                             />
                         </Box>
                     </div>

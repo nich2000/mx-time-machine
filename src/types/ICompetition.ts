@@ -5,16 +5,16 @@ import { Channel } from '@/types/VTXChannel';
 export interface ICompetition {
     _id: string;
     name: string;
-    // description: string;
+    description: string;
     logo: string;
     selected: boolean;
 
-    // person1_title: string;
-    // person1_name: string;
-    // person2_title: string;
-    // person2_name: string;
-    // person3_title: string;
-    // person3_name: string;
+    official1_title: string;
+    official1_name: string;
+    official2_title: string;
+    official2_name: string;
+    official3_title: string;
+    official3_name: string;
 
     latitude: number;
     longitude: number;
