@@ -450,7 +450,7 @@ export const TableGroup: FC<IProps> = observer(
         }
 
         function MXSleepCheck(id: string) {
-            const [selectedLabel, setSelectedLabel] = useState<string | ''>('Sleep');
+            const [selectedLabel, setSelectedLabel] = useState<string | ''>('Wake');
             const [selectedSleep, setSelectedSleep] = useState<boolean | false>(false);
             // const [selectedSleep, setSelectedSleep] = useState<boolean | false>(
             //     window.localStorage.getItem('sleepToggle') === '1'

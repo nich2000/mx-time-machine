@@ -54,12 +54,12 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
     const [radius, setRadius] = useState<number>(competition?.radius || 0);
     const [course, setCourse] = useState<number>(competition?.course || 0);
     const [delay, setDelay] = useState<number>(competition?.delay || 0);
-    const [official1_title, setOfficial1_title] = useState<string>(competition?.official1_title || '');
-    const [official1_name, setOfficial1_name] = useState<string>(competition?.official1_name || '');
-    const [official2_title, setOfficial2_title] = useState<string>(competition?.official2_title || '');
-    const [official2_name, setOfficial2_name] = useState<string>(competition?.official2_name || '');
-    const [official3_title, setOfficial3_title] = useState<string>(competition?.official3_title || '');
-    const [official3_name, setOfficial3_name] = useState<string>(competition?.official3_name || '');
+    const [official1_title, setOfficial1_title] = useState<string>(competition?.official1_title || 'Race Timekeeper');
+    const [official1_name, setOfficial1_name] = useState<string>(competition?.official1_name || '-');
+    const [official2_title, setOfficial2_title] = useState<string>(competition?.official2_title || 'Race Director');
+    const [official2_name, setOfficial2_name] = useState<string>(competition?.official2_name || '-');
+    const [official3_title, setOfficial3_title] = useState<string>(competition?.official3_title || 'O.O.D.');
+    const [official3_name, setOfficial3_name] = useState<string>(competition?.official3_name || '-');
     const [color1, setColor1] = useState<Color>(competition?.color1 || Color.BLUE);
     const [color2, setColor2] = useState<Color>(competition?.color2 || Color.RED);
     const [color3, setColor3] = useState<Color>(competition?.color3 || Color.GREEN);
@@ -120,15 +120,27 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
         setDelay(Number(event.target.value));
     }, []);
 
-    const handleChangeTimekeeper = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeOfficial1Title = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setOfficial1_title(event.target.value);
+    }, []);
+
+    const handleChangeOfficial2Title = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setOfficial2_title(event.target.value);
+    }, []);
+
+    const handleChangeOfficial3Title = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setOfficial3_title(event.target.value);
+    }, []);
+
+    const handleChangeOfficial1Name = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setOfficial1_name(event.target.value);
     }, []);
 
-    const handleChangeDirector = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeOfficial2Name = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setOfficial2_name(event.target.value);
     }, []);
 
-    const handleChangeOOD = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeOfficial3Name = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setOfficial3_name(event.target.value);
     }, []);
 
@@ -308,6 +320,13 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
         competition,
         logo,
         name,
+        description,
+        official1_title,
+        official1_name,
+        official2_title,
+        official2_name,
+        official3_title,
+        official3_name,
         latitude,
         longitude,
         radius,
@@ -468,39 +487,75 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                         <Box component="form" sx={{ '& > :not(style)': { m: 1 } }} noValidate autoComplete="off">
                             <TextField
                                 id="outlined-basic"
-                                label="Race Timekeeper"
+                                label="Official 1 title"
                                 // helperText="Start latitude"
                                 // type="number"
                                 fullWidth
                                 variant="outlined"
-                                placeholder="Race Timekeeper"
+                                placeholder="Official 1 title"
+                                value={official1_title}
+                                error={!official1_title}
+                                onChange={handleChangeOfficial1Title}
+                            />
+                            <TextField
+                                id="outlined-basic"
+                                label={official1_title}
+                                // helperText="Start latitude"
+                                // type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder={official1_title}
                                 value={official1_name}
                                 error={!official1_name}
-                                onChange={handleChangeTimekeeper}
+                                onChange={handleChangeOfficial1Name}
                             />
                             <TextField
                                 id="outlined-basic"
-                                label="Race Director"
+                                label="Official 2 title"
                                 // helperText="Start latitude"
                                 // type="number"
                                 fullWidth
                                 variant="outlined"
-                                placeholder="Race Director"
+                                placeholder="Official 2 title"
+                                value={official2_title}
+                                error={!official2_title}
+                                onChange={handleChangeOfficial2Title}
+                            />
+                            <TextField
+                                id="outlined-basic"
+                                label={official2_title}
+                                // helperText="Start latitude"
+                                // type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder={official2_title}
                                 value={official2_name}
                                 error={!official2_name}
-                                onChange={handleChangeDirector}
+                                onChange={handleChangeOfficial2Name}
                             />
                             <TextField
                                 id="outlined-basic"
-                                label="O.O.D."
+                                label="Official 3 title"
                                 // helperText="Start latitude"
                                 // type="number"
                                 fullWidth
                                 variant="outlined"
-                                placeholder="O.O.D."
+                                placeholder="Official 3 title"
+                                value={official3_title}
+                                error={!official3_title}
+                                onChange={handleChangeOfficial3Title}
+                            />
+                            <TextField
+                                id="outlined-basic"
+                                label={official3_title}
+                                // helperText="Start latitude"
+                                // type="number"
+                                fullWidth
+                                variant="outlined"
+                                placeholder={official3_title}
                                 value={official3_name}
                                 error={!official3_name}
-                                onChange={handleChangeOOD}
+                                onChange={handleChangeOfficial3Name}
                             />
                         </Box>
                     </div>

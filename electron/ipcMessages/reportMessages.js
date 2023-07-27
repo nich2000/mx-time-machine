@@ -4,6 +4,7 @@ const { sendToAllMessage } = require('./sendMessage');
 const { mxSessions } = require("../repository/mxSessionRepository");
 const { mxResults } = require("../repository/mxResultRepository");
 const { mxLaps } = require("../repository/mxLapRepository");
+const {competitionFindAll} = require("../repository/competitionRepository");
 
 ipcMain.on('load-reports-request', async (e, competitionId) => {
     const reports = await reportFindByCompetitionId(competitionId);
@@ -31,6 +32,10 @@ ipcMain.on('report-delete-request', async (e, _id) => {
 
 ipcMain.handle('load-mx-sessions-request', async (e) => {
     return mxSessions();
+});
+
+ipcMain.handle('load-competition-request', async (e) => {
+    return competitionFindAll();
 });
 
 ipcMain.handle('load-mx-results-request', async (e, session) => {

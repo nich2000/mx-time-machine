@@ -19,8 +19,9 @@ import _ from 'lodash';
 import { TypeRoundReport } from '@/types/TypeRoundReport';
 import { IRound } from '@/types/IRound';
 import { dateTimeStr } from '@/utils/dateTimeUtils';
-import { loadMXSessionAction } from '@/actions/actionReportRequest';
+import { loadCompetitionAction, loadMXSessionAction } from '@/actions/actionReportRequest';
 import { IMXSession } from '@/types/IMXSession';
+import { ICompetition } from '@/types/ICompetition';
 
 interface IProps {
     open: boolean;
@@ -36,6 +37,7 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
     const [name, setName] = useState(report?.name || dateTimeStr());
     const [type, setType] = useState(report?.type || TypeReport.MX_RESULTS);
     const [sessionId, setSessionId] = useState(report?.sessionId || '');
+    const [competitionId, setCompetitionId] = useState(report?.competitionId || '');
     const [typeRound, setTypeRound] = useState(report?.typeRound || TypeRoundReport.PRACTICE);
     const [notCountedRounds, setNotCountedRounds] = useState(report?.notCountedRounds || 1);
     const [onlySportsmen, setOnlySportsmen] = useState(report?.onlySportsmen || false);
@@ -47,12 +49,15 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
     const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     }, []);
+    const handleChangeType = useCallback((event: SelectChangeEvent<TypeReport>) => {
+        setType(event.target.value as TypeReport);
+    }, []);
     const handleChangeSessionId = useCallback((event: SelectChangeEvent) => {
         setSessionId(event.target.value);
         setName(event.target.value);
     }, []);
-    const handleChangeType = useCallback((event: SelectChangeEvent<TypeReport>) => {
-        setType(event.target.value as TypeReport);
+    const handleChangeCompetitionId = useCallback((event: SelectChangeEvent) => {
+        setCompetitionId(event.target.value);
     }, []);
     // const handleChangeTypeRound = useCallback((event: SelectChangeEvent<TypeRoundReport>) => {
     //     setTypeRound(event.target.value as TypeRoundReport);
@@ -76,8 +81,21 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
     //     setRoundId(event.target.value as TypeReport);
     // }, []);
 
+    // function getCompetition(): ICompetition | undefined {
+    //     for (let i = 0; i < competitions.length; i++) {
+    //         if (competitions[i]._id === competitionId) {
+    //             return competitions[i];
+    //         }
+    //     }
+    //     return undefined;
+    // }
+
     const handleSave = useCallback(() => {
+        // let competition = getCompetition();
+
         const newReport = {
+            competitionId,
+            roundId,
             name,
             type,
             sessionId,
@@ -85,9 +103,16 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
             notCountedRounds,
             onlySportsmen,
             simplified,
-            broadCastStyle,
             count,
-            roundId
+            broadCastStyle
+            // competition_name: competition?.name || '',
+            // competition_description: competition?.description || '',
+            // official1_title: competition?.official1_title || '',
+            // official1_name: competition?.official1_name || '',
+            // official2_title: competition?.official2_title || '',
+            // official2_name: competition?.official2_name || '',
+            // official3_title: competition?.official3_title || '',
+            // official3_name: competition?.official3_name || ''
         };
         if (report?._id) {
             onUpdate(report?._id, _.cloneDeep(newReport));
@@ -117,8 +142,12 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
 
     const [sessions, setSessions] = useState<Array<IMXSession>>([]);
 
+    const [competitions, setCompetitions] = useState<Array<ICompetition>>([]);
+
     useEffect(() => {
         loadMXSessionAction().then(setSessions);
+
+        loadCompetitionAction().then(setCompetitions);
     }, []);
 
     return (
@@ -136,12 +165,7 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
                     <TextField fullWidth label="Name" error={!name} value={name} onChange={handleChangeName} />
                     <FormControl fullWidth>
                         <InputLabel id="type-label">Type</InputLabel>
-                        <Select<TypeReport> labelId="type-label" value={type} label="Type" onChange={handleChangeType}>
-                            {/*{Object.keys(TypeReport).map((key) => (*/}
-                            {/*    <MenuItem key={key} value={key}>*/}
-                            {/*        {key}*/}
-                            {/*    </MenuItem>*/}
-                            {/*))}*/}
+                        <Select labelId="type-label" value={type} label="Type" onChange={handleChangeType}>
                             <MenuItem key={'MX_RESULTS'} value={'MX_RESULTS'}>
                                 {'MX_RESULTS'}
                             </MenuItem>
@@ -150,11 +174,34 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
                             </MenuItem>
                         </Select>
                     </FormControl>
-                    <Select fullWidth label="Session" value={sessionId} onChange={handleChangeSessionId}>
-                        {sessions.map((item) => (
-                            <MenuItem value={item.sessionId}>{item.sessionId}</MenuItem>
-                        ))}
-                    </Select>
+
+                    {/*<FormControl fullWidth>*/}
+                    {/*    <InputLabel id="competition-label">Competition</InputLabel>*/}
+                    {/*    <Select*/}
+                    {/*        labelId="competition-label"*/}
+                    {/*        value={competitionId}*/}
+                    {/*        label="Competition"*/}
+                    {/*        onChange={handleChangeCompetitionId}*/}
+                    {/*    >*/}
+                    {/*        {competitions.map((item) => (*/}
+                    {/*            <MenuItem value={item._id}>{item.name}</MenuItem>*/}
+                    {/*        ))}*/}
+                    {/*    </Select>*/}
+                    {/*</FormControl>*/}
+
+                    <FormControl fullWidth>
+                        <InputLabel id="session-label">Session</InputLabel>
+                        <Select
+                            labelId="session-label"
+                            value={sessionId}
+                            label="Session"
+                            onChange={handleChangeSessionId}
+                        >
+                            {sessions.map((item) => (
+                                <MenuItem value={item.sessionId}>{item.sessionId}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
 
                     {/*{[TypeReport.BEST_LAP, TypeReport.BEST_PIT_STOP, TypeReport.COUNT_LAPS].includes(type) && (*/}
                     {/*    <FormControl fullWidth>*/}

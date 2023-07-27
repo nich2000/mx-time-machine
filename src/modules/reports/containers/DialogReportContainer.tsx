@@ -49,14 +49,14 @@ export const DialogReportContainer: FC<IProps> = observer(({ open, onClose, repo
 
                 <table className={styles.footer}>
                     <tr>
-                        <th>Race Timekeeper</th>
-                        <th>Race Director</th>
-                        <th>O.O.D.</th>
+                        <th>{story.competition?.official1_title || 'Race Timekeeper'}</th>
+                        <th>{story.competition?.official2_title || 'Race Director'}</th>
+                        <th>{story.competition?.official3_title || 'O.O.D.'}</th>
                     </tr>
                     <tr>
-                        <td>Almustafa Nabil</td>
-                        <td>Ali Al-Langawi</td>
-                        <td>Ahmed Eisa Al Hosani</td>
+                        <td>{story.competition?.official1_name || '-'}</td>
+                        <td>{story.competition?.official2_name || '-'}</td>
+                        <td>{story.competition?.official3_name || '-'}</td>
                     </tr>
                 </table>
             </div>
