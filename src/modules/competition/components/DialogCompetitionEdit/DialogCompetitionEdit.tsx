@@ -354,7 +354,7 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{competition ? 'Edit' : 'New'} competition</DialogTitle>
             <DialogContent>
-                <Box sx={{ width: '100%' }}>
+                <Box sx={{ width: '500px' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs variant="scrollable" scrollButtons="auto" value={tabSelected} onChange={handleChangeTab}>
                             <Tab label="Data" value="Data" id="Data" />

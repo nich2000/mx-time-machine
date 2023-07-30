@@ -43,6 +43,7 @@ import { ColorCss } from '@/types/Color';
 import { DialogChangePositionsInGroup } from '@/modules/rounds/components/DialogChangePositionsInGroup/DialogChangePositionsInGroup';
 import { dateTimeStr } from '@/utils/dateTimeUtils';
 import { DateTime } from 'luxon';
+import { ContentCopy, ContentPaste } from '@mui/icons-material';
 
 export const RoundsContainer: FC = observer(() => {
     const [openDialogAddRound, setOpenDialogAddRound] = useState(false);
@@ -55,7 +56,11 @@ export const RoundsContainer: FC = observer(() => {
     const teams = _.sortBy(story.teams, 'name');
 
     const rounds = [...(story.rounds || [])].sort((a, b) => a.sort - b.sort);
+
     const groups = [...(story.groups || [])];
+    // let groups = [...(story.groups || [])];
+    // const tmp_groups = [...(story.groups || [])];
+    // const [groups, setGroups] = useState<IGroup[]>(tmp_groups);
 
     const selectedRound = rounds.find((round) => round.selected);
     const selectedGroup = groups.find((group) => group.selected);
@@ -77,6 +82,7 @@ export const RoundsContainer: FC = observer(() => {
         },
         [groups]
     );
+
     const handleOpenChangePositions = useCallback(
         (id: string) => {
             setOpenDialogChangePositions(_.find(groups, ['_id', id]));
@@ -267,23 +273,48 @@ export const RoundsContainer: FC = observer(() => {
     // }, [raceReadyToStart, selectedGroup]);
 
     const handleCopyListGroups = useCallback(() => {
-        const textGroups = groups
-            .map(
-                (group) =>
-                    group.name +
-                    ':\n' +
-                    [...group.sportsmen, ...group.teams]
-                        .map(
-                            (item) =>
-                                `    ${item.startNumber || ''} - ${item.team?.name || sportsmanName(item?.sportsman!)}${
-                                    item.color !== undefined ? ` ${ColorCss[item.color]}` : ''
-                                }  ${item.channel}`
-                        )
-                        .join('\n')
-            )
-            .join('\n');
+        // const textGroups = groups
+        //     .map(
+        //         (group) =>
+        //             group.name +
+        //             ':\n' +
+        //             [...group.sportsmen, ...group.teams]
+        //                 .map(
+        //                     (item) =>
+        //                         `    ${item.startNumber || ''} - ${item.team?.name || sportsmanName(item?.sportsman!)}${
+        //                             item.color !== undefined ? ` ${ColorCss[item.color]}` : ''
+        //                         }  ${item.channel}`
+        //                 )
+        //                 .join('\n')
+        //     )
+        //     .join('\n');
 
-        navigator.clipboard.writeText(textGroups).then(() => alert('Group list copied to clipboard.'));
+        const textGroups = JSON.stringify(groups);
+
+        // navigator.clipboard.writeText(textGroups).then(() => alert('Group list copied to clipboard.'));
+        navigator.clipboard.writeText(textGroups).then(() => {});
+    }, [groups]);
+
+    function omit(key: string, obj: any) {
+        const { [key]: omitted, ...rest } = obj;
+        return rest;
+    }
+
+    const handlePasteListGroups = useCallback(() => {
+        navigator.clipboard.readText().then((copiedText) => {
+            let tmpGroups = JSON.parse(copiedText);
+            // console.log(tmpGroups);
+
+            for (let i = 0; i < tmpGroups.length; i++) {
+                let group = omit('_id', tmpGroups[i]);
+                // console.log(group);
+
+                if (group.roundId !== selectedRound?._id) {
+                    group.roundId = selectedRound?._id;
+                    groupInsertAction({ ...group });
+                }
+            }
+        });
     }, [groups]);
 
     useEffect(() => {
@@ -348,8 +379,13 @@ export const RoundsContainer: FC = observer(() => {
                     <Grid item xs={6} className={styles.groupsContainer}>
                         <div className={styles.actionGroups}>
                             <Tooltip title="Copy group list">
-                                <Button color="primary" startIcon={<ContentCopyIcon />} onClick={handleCopyListGroups}>
+                                <Button color="primary" startIcon={<ContentCopy />} onClick={handleCopyListGroups}>
                                     Copy
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title="Paste group list">
+                                <Button color="primary" startIcon={<ContentPaste />} onClick={handlePasteListGroups}>
+                                    Paste
                                 </Button>
                             </Tooltip>
                             {/*<Tooltip title="Send device list to base">*/}
