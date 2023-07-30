@@ -311,6 +311,14 @@ export const RoundsContainer: FC = observer(() => {
 
                 if (group.roundId !== selectedRound?._id) {
                     group.roundId = selectedRound?._id;
+                    group.round = _.cloneDeep(selectedRound);
+                    // group.round = { ...selectedRound };
+
+                    group.competitionId = story.competition?._id;
+                    group.competition = _.cloneDeep(story.competition);
+                    // group.competition = { ...story.competition };
+
+                    console.log(group);
                     groupInsertAction({ ...group });
                 }
             }
