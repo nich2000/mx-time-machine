@@ -18,3 +18,7 @@ export const competitionUpdateAction = (
 export const competitionDeleteAction = (_id: string): void => {
     window.api.ipcRenderer.send('competition-delete-request', _id);
 };
+
+export const competitionCloneAction = (_id: string): void => {
+    window.api.ipcRenderer.send('competition-clone-request', _id);
+};

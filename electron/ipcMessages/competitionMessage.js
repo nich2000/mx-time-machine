@@ -2,7 +2,8 @@ const {
     competitionFindAll,
     competitionInsert,
     competitionUpdate,
-    competitionDelete
+    competitionDelete,
+    competitionClone
 } = require('../repository/competitionRepository');
 
 const { ipcMain } = require('electron');
@@ -26,4 +27,9 @@ ipcMain.on('competition-update-request', async (e, _id, competition) => {
 ipcMain.on('competition-delete-request', async (e, _id) => {
     const count = await competitionDelete(_id);
     sendToAllMessage('competition-delete-response', count);
+});
+
+ipcMain.on('competition-clone-request', async (e, _id) => {
+    const count = await competitionClone(_id);
+    sendToAllMessage('competition-clone-response', count);
 });

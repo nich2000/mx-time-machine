@@ -64,4 +64,41 @@ const competitionDelete = async (_id) => {
     return count;
 };
 
-module.exports = { competitionFindAll, competitionFindById, competitionInsert, competitionUpdate, competitionDelete };
+const competitionClone = async (_id) => {
+    const competition = await db.competition.findOne({ _id });
+    if (competition) {
+        competition._id = undefined;
+        competition.selected = false;
+        competition.name = competition.name + ' clone';
+
+        let _competition = await db.competition.insert(competition);
+
+        let _sportsman = await db.sportsman.find({ competitionId: _id });
+        for (const s of _sportsman) {
+            s._id = undefined;
+            s.competitionId = _competition._id;
+
+            await db.sportsman.insert(s);
+        }
+
+        let _team = await db.team.find({ competitionId: _id });
+        for (const t of _team) {
+            t._id = undefined;
+            t.competitionId = _competition._id;
+
+            await db.team.insert(t);
+        }
+
+        let _round = await db.round.find({ competitionId: _id });
+        for (const r of _round) {
+            r._id = undefined;
+            r.competitionId = _competition._id;
+
+            await db.round.insert(r);
+        }
+
+        return true;
+    }
+}
+
+module.exports = { competitionFindAll, competitionFindById, competitionInsert, competitionUpdate, competitionDelete, competitionClone };

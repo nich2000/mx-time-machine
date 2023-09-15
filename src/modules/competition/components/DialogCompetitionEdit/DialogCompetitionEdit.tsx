@@ -32,7 +32,8 @@ import { DialogGateEdit } from '@/modules/competition/components/DIalogGateEdit/
 import {
     competitionDeleteAction,
     competitionInsertAction,
-    competitionUpdateAction
+    competitionUpdateAction,
+    competitionCloneAction
 } from '@/actions/actionCompetitionRequest';
 import { story } from '@/story/story';
 
@@ -350,6 +351,13 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
         }
     }, [competition, onClose]);
 
+    const handleClone = useCallback(() => {
+        if (competition && window.confirm('Are you sure you want to clone the competition?')) {
+            competitionCloneAction(competition._id);
+            onClose();
+        }
+    }, [competition, onClose]);
+
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{competition ? 'Edit' : 'New'} competition</DialogTitle>
@@ -615,6 +623,11 @@ export const DialogCompetitionEdit: FC<IProps> = observer(({ open, onClose, comp
                 {!!competition && (
                     <Button onClick={handleDelete} style={{ marginRight: 'auto' }} color="error">
                         Delete
+                    </Button>
+                )}
+                {!!competition && (
+                    <Button onClick={handleClone} color="success">
+                        Clone
                     </Button>
                 )}
                 <Button onClick={onClose}>Close</Button>

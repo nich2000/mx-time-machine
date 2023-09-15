@@ -21,9 +21,11 @@ export const init = () => {
     window.api.ipcRenderer.removeAllListeners('competition-insert-response');
     window.api.ipcRenderer.removeAllListeners('competition-update-response');
     window.api.ipcRenderer.removeAllListeners('competition-delete-response');
+    window.api.ipcRenderer.removeAllListeners('competition-clone-response');
     window.api.ipcRenderer.on('competition-insert-response', () => loadCompetitionsAction());
     window.api.ipcRenderer.on('competition-update-response', () => loadCompetitionsAction());
     window.api.ipcRenderer.on('competition-delete-response', () => loadCompetitionsAction());
+    window.api.ipcRenderer.on('competition-clone-response', () => loadCompetitionsAction());
 };
 
 export const initByRound = (round?: IRound) => {
