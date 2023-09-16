@@ -68,12 +68,13 @@ export const MXLapsReport: FC<IProps> = observer(({ report }) => {
     }
 
     function pilotByDevice(device: number | undefined) {
-        const pilots = story.sportsmen;
-        for (let i = 0; i < pilots.length; i++) {
-            const pilot = pilots[i];
+        const sportsmen = story.sportsmen;
+        for (let i = 0; i < sportsmen.length; i++) {
+            const pilot = sportsmen[i];
             const _device: number = pilot?.transponders[0] !== undefined ? pilot?.transponders[0] : 0;
-            if (_device === device) {
-                return pilots[i].lastName;
+
+            if (_device == device) {
+                return sportsmen[i].lastName;
             }
         }
         return device;

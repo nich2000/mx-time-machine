@@ -64,6 +64,26 @@ export const MXResultsReport: FC<IProps> = observer(({ report }) => {
         return _speed.toFixed(2);
     }
 
+    function pilotByDevice(device: number | undefined) {
+        const sportsmen = story.sportsmen;
+        for (let i = 0; i < sportsmen.length; i++) {
+            const pilot = sportsmen[i];
+            const _device: number = pilot?.transponders[0] !== undefined ? pilot?.transponders[0] : 0;
+
+            if (_device == device) {
+                return sportsmen[i].lastName;
+            }
+        }
+        return device;
+    }
+
+    function sportsmanS(sportsman: string | undefined) {
+        sportsman = sportsman === undefined ? '' : sportsman;
+
+        // return sportsman;
+        return pilotByDevice(parseInt(sportsman, 10));
+    }
+
     function millisToTime(time: number | undefined) {
         let _time = time === undefined ? 0.0 : time;
 
@@ -176,7 +196,7 @@ export const MXResultsReport: FC<IProps> = observer(({ report }) => {
                     {rows.map((item, index) => (
                         <TableRow>
                             <TableCell>{index + 1}</TableCell>
-                            <TableCell>{item?.sportsman}</TableCell>
+                            <TableCell>{sportsmanS(item?.sportsman)}</TableCell>
                             <TableCell>{item?.laps}</TableCell>
                             <TableCell>{speedF(item?.best_speed)}</TableCell>
                             <TableCell>{millisToTime(item?.best_time)}</TableCell>
