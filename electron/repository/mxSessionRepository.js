@@ -4,8 +4,8 @@ const mxSessionInsert = (session) => {
     return db.mx_session.insert(session);
 };
 
-const mxSessions = async () => {
-    let result = await db.mx_session.find({}).sort({sessionId: -1});
+const mxSessions = async (competitionId) => {
+    let result = await db.mx_session.find({competitionId} | undefined).sort({sessionId: -1});
     return result;
 };
 

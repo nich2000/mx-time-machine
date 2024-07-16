@@ -1,7 +1,7 @@
 const { db } = require('./repository');
 
 const competitionFindAll = () => {
-    return db.competition.find({});
+    return db.competition.find({}).sort({name: 1});
 };
 
 const competitionFindById = (_id) => {

@@ -7,8 +7,9 @@ export interface IMXLap {
     max_speed: number;
     num: number;
     sectors: number;
-    session: string;
+    session: string; // TODO rename to mxSessionId
     sportsman: string;
     status: number;
     time: number;
+    // _id: string;
 }

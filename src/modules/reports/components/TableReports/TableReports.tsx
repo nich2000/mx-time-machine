@@ -32,6 +32,7 @@ export const TableReports: FC<IProps> = ({ reports, onDelete, onEdit, onOpen }: 
                 <TableHead>
                     <TableRow>
                         <TableCell>Name</TableCell>
+                        <TableCell>Type</TableCell>
                         <TableCell />
                     </TableRow>
                 </TableHead>
@@ -40,6 +41,9 @@ export const TableReports: FC<IProps> = ({ reports, onDelete, onEdit, onOpen }: 
                         <TableRow key={report._id}>
                             <TableCell>
                                 <Button onClick={handleOpenReport(report)}>{report.name}</Button>
+                            </TableCell>
+                            <TableCell>
+                                <span>{report.type}</span>
                             </TableCell>
                             <TableCell>
                                 <div className={styles.actions}>

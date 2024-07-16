@@ -12,7 +12,8 @@ export interface IMXResult {
     max_speed: number;
     plus_5sec_count: number;
     refresh_time: number;
-    session: string;
+    session: string; // TODO rename to mxSessionId
     sportsman: string;
     total_time: number;
+    // _id: string;
 }

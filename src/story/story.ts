@@ -71,7 +71,7 @@ export class Story {
     public competitions: Array<ICompetition> = []; // MX
     public connected: boolean = false; // ?
     public connectorMessage: string | undefined = undefined; // ?
-    public curSession: string = ''; // MX
+    public curMXSession: string = ''; // MX
     public groupInRace: IGroup | undefined = undefined; // ?
     public groups: Array<IGroup> = []; // MX
     public laps: Array<ILap> = []; // not MX
@@ -207,7 +207,7 @@ export class Story {
                 beep(50, 1000, 1, 'square');
             } else {
                 newMXLap.num = mxLaps.size + 1;
-                newMXLap.session = story.curSession;
+                newMXLap.session = story.curMXSession;
                 newMXLap.sportsman = sportsman;
 
                 if (mxResult !== undefined) {
@@ -260,7 +260,7 @@ export class Story {
         } else {
             // Если это первый круг
             mxResult = {
-                session: story.curSession,
+                session: story.curMXSession,
                 sportsman: sportsman,
                 device: newMXLap.device,
                 laps: 1,

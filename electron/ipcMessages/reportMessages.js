@@ -30,8 +30,8 @@ ipcMain.on('report-delete-request', async (e, _id) => {
     sendToAllMessage('report-delete-response', count);
 });
 
-ipcMain.handle('load-mx-sessions-request', async (e) => {
-    return mxSessions();
+ipcMain.handle('load-mx-sessions-request', async (e, competitionId) => {
+    return mxSessions(competitionId);
 });
 
 ipcMain.handle('load-competition-request', async (e) => {

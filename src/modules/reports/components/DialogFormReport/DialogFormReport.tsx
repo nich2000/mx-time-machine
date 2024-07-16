@@ -22,6 +22,7 @@ import { dateTimeStr } from '@/utils/dateTimeUtils';
 import { loadCompetitionAction, loadMXSessionAction } from '@/actions/actionReportRequest';
 import { IMXSession } from '@/types/IMXSession';
 import { ICompetition } from '@/types/ICompetition';
+import { story } from '@/story/story';
 
 interface IProps {
     open: boolean;
@@ -145,10 +146,12 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
     const [competitions, setCompetitions] = useState<Array<ICompetition>>([]);
 
     useEffect(() => {
-        loadMXSessionAction().then(setSessions);
+        loadMXSessionAction(story.competition?._id).then(setSessions);
 
         loadCompetitionAction().then(setCompetitions);
     }, []);
+
+    const __ = ' ';
 
     return (
         <Dialog open={open} onClose={onClose}>
@@ -198,7 +201,13 @@ export const DialogFormReport: FC<IProps> = ({ open, onClose, onSave, onUpdate, 
                             onChange={handleChangeSessionId}
                         >
                             {sessions.map((item) => (
-                                <MenuItem value={item.sessionId}>{item.sessionId}</MenuItem>
+                                <MenuItem value={item.sessionId}>
+                                    {item.sessionId}
+                                    {__}
+                                    {item.competitionName}
+                                    {__}
+                                    {item.roundName}
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>

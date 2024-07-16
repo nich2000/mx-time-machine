@@ -24,8 +24,8 @@ export const reportDeleteAction = (_id: string): void => {
     window.api.ipcRenderer.send('report-delete-request', _id);
 };
 
-export const loadMXSessionAction = (): Promise<Array<IMXSession>> => {
-    return window.api.ipcRenderer.invoke('load-mx-sessions-request');
+export const loadMXSessionAction = (competitionId: string | undefined): Promise<Array<IMXSession>> => {
+    return window.api.ipcRenderer.invoke('load-mx-sessions-request', competitionId);
 };
 
 export const loadCompetitionAction = (): Promise<Array<ICompetition>> => {

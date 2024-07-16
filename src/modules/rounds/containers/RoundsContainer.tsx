@@ -241,11 +241,17 @@ export const RoundsContainer: FC = observer(() => {
             ) {
                 story.mxLaps?.clear();
 
-                story.curSession = dateTimeStr();
+                story.curMXSession = dateTimeStr();
 
                 story.startTime = DateTime.now().toMillis();
 
-                newSessionAction({ sessionId: story.curSession });
+                newSessionAction({
+                    sessionId: story.curMXSession,
+                    roundId: selectedRound?._id,
+                    roundName: selectedRound?.name,
+                    competitionId: story.competition?._id,
+                    competitionName: story.competition?.name
+                });
 
                 startRaceAction({
                     ..._.cloneDeep(selectedGroup),
@@ -255,7 +261,7 @@ export const RoundsContainer: FC = observer(() => {
             } else {
                 stopRaceAction();
 
-                story.curSession = '';
+                story.curMXSession = '';
 
                 story.finishTime = DateTime.now().toMillis();
             }
